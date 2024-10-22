@@ -29,16 +29,15 @@ class AuthController extends Controller
         $validatedData = $request->validated();
 
         try {
-            // Register user and associated startup details
+            // Register user and associated entrepreneur details
             $user = $this->userService->registerUser($validatedData);
             return ResponseHelper::created($user,'User registered successfully');
         } catch (Exception $e) {
-            // Handle the error, you can also log the error if necessary
+            // Handle the error
             return ResponseHelper::error('Failed to register user or startup details.',500,$e->getMessage());
         }
     }
     public function login(LoginRequest $request){
-
 
         $user = User::with(['user_role','user_status'])
         ->where('email', $request->email)

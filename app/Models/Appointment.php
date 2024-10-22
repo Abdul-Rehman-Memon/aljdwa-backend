@@ -3,15 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Lookup extends Model
+class Appointment extends Model
 {
-    // protected $table = 'lookups';
+    protected $table = 'appoitments';
+
+    use HasUuids;
 
     // Define fillable fields if needed
     protected $fillable = [
-        'name',
-        'description'
+        'user_name',
+        'phone',
+        'email',
+        'request_date_time',
+        'link',
+        'status',
+        'approved_by',
     ];
 
     // Add this to convert created_at into timestamp
@@ -26,10 +34,5 @@ class Lookup extends Model
         return strtotime($value); // Converts date to timestamp
     }
 
-    // Define relationships to  LookupDetails model
-    public function lookupdetails()
-    {
-        return $this->hasMany(LookupDetail::class, 'lookup_id');
-    }
 }
 

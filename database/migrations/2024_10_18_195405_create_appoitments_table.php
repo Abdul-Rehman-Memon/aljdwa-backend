@@ -19,15 +19,15 @@ return new class extends Migration
             $table->bigInteger('phone');
             $table->bigInteger('email');
             $table->timestamp('request_date_time');
-            $table->string('link');
+            $table->string('link')->nullable();
             // $table->integer('status');
             // $table->foreign('status')->references('id')->on('lookups');
-            $table->unsignedInteger('status');
+            $table->unsignedInteger('status')->nullable();
              $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
-            $table->foreignUuid('approved_by')->constrained('users')
+            $table->foreignUuid('approved_by')->nullable()->constrained('users')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 

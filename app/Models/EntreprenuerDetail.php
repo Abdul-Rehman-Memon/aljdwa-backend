@@ -27,6 +27,18 @@ class EntreprenuerDetail extends Model
         'patent',
     ];
 
+    // Add this to convert created_at into timestamp
+    public function getCreatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
+    // Add this to convert updated_at into timestamp
+    public function getUpdatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
     // Define relationships to User model)
     public function user()
     {

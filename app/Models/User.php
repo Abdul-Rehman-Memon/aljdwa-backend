@@ -17,6 +17,15 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasUuids,Notifiable,HasApiTokens;
 
+
+    public static function boot()
+    {
+        parent::boot();
+        // Override the created event
+        static::creating(function ($model) {
+            $model->updated_at = null;  // Set updated_at to null on creation
+        });
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -26,10 +35,14 @@ class User extends Authenticatable
         'project',
         'founder_name',
         'email',
-        'password',
         'country_code',
         'phone_number',
+        'password',
+        'linkedin_profile',
+        'reject_reason',
+        'approved_At',
         'role',
+        'status',
     ];
 
     /**
@@ -55,6 +68,19 @@ class User extends Authenticatable
         ];
     }
 
+    // Add this to convert created_at into timestamp
+    public function getCreatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
+    // Add this to convert updated_at into timestamp
+    public function getUpdatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
+    
     public function user_role()
     {
         return $this->belongsTo(LookupDetail::class,'role','id');

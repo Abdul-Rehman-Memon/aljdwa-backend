@@ -57,7 +57,12 @@ class RegisterRequest extends FormRequest
             //     'regex:/[@$!%*#?&]/', // At least one special character
             // ],
             'password' => 'required|min:8|',
+            'linkedin_profile' => 'nullable|string|url',
+            'reject_reason' => 'nullable|string',
+            'approved_At' => 'nullable|date',
             'role' => 'required|integer|in:1,2,3,4', // Allow roles 2 and 3
+            // 'status' => 'nullable|integer',
+
         ];
 
         // Add rules conditionally based on the role

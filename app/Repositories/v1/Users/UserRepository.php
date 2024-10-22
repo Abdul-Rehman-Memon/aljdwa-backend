@@ -10,7 +10,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = User::create($data);
         // Load the roles relationship
-        return $user->load('user_role'); // This loads the roles after creating the user
+        return $user->load(['user_role','user_status']); // This loads the roles after creating the user
 
     }
 }

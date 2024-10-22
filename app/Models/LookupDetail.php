@@ -15,6 +15,23 @@ class LookupDetail extends Model
         'value'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    // Add this to convert created_at into timestamp
+    public function getCreatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
+    // Add this to convert updated_at into timestamp
+    public function getUpdatedAtAttribute($value)
+    {
+        return strtotime($value); // Converts date to timestamp
+    }
+
     // Define relationships to  Lookup model
     public function lookups()
     {
