@@ -25,9 +25,8 @@ class AppointmentRequest extends FormRequest
                     'success' => false,
                     'message' => 'Validation errors',
                     'status_code' => 422,
-                    'errors' => $validator->errors(),
                 ],
-                'data' => null
+                'errors' => $validator->errors(),
             ], 422)
         );
     }
@@ -44,6 +43,10 @@ class AppointmentRequest extends FormRequest
             'user_name' => 'required|string|min:3',
             'phone' => 'required',
             'email' => 'required|email',
+            'request_date_time' => 'nullable|date',
+            'link' => 'nullable|string',
+            'status' => 'nullable|integer',
+            'approved_by' => 'nullable|string',
         ];
 
     }

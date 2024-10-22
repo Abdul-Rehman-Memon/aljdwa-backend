@@ -19,9 +19,6 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::prefix('visitor')->group(function () {
-    Route::post('/request-appointment', [AppointmentController::class, 'create_appointment']);
-});
 
 Route::prefix('v1')->group(base_path('routes/api/v1/api_v1.php'));
 

@@ -19,4 +19,26 @@ class AppointmentService
 
         return $appointment;
     }
+
+    public function getAllAppointments($limit, $offset)
+    {
+        $appointments = $this->appointmentRepository->getAllAppointments($limit, $offset);
+
+        return $appointments;
+    }
+
+    public function getSingleAppointment($appointmentId)
+    {
+        $appointment = $this->appointmentRepository->getSingleAppointment($appointmentId);
+
+        return $appointment;
+    }
+
+    public function updateAppointment($data, $appointmentId)
+    {
+        $appointment = $this->appointmentRepository->updateAppointment($data, $appointmentId);
+
+        return $appointment;
+    }
+
 }

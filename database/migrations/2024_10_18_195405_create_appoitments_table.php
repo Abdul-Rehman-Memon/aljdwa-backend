@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('appoitments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_name');
-            $table->bigInteger('phone');
-            $table->bigInteger('email');
+            $table->string('phone');
+            $table->string('email');
             $table->timestamp('request_date_time');
             $table->string('link')->nullable();
             // $table->integer('status');

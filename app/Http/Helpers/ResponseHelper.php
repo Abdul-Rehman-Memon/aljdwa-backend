@@ -37,23 +37,28 @@ class ResponseHelper
      /**
      * Success response with pagination
      */
-    public static function successWithPagination($data, $pagination, $message = 'Data retrieved successfully', $statusCode = 200)
+    public static function successWithPagination($data,$totalCount,$limit,$offset, $message = 'Data retrieved successfully', $statusCode = 200)
     {
         return response()->json([
             'meta_data' => [
                 'success' => true,
                 'message' => $message,
                 'status_code' => $statusCode,
-                'pagination' => [
-                    'total_count' => $pagination->total(),
-                    'limit' => $pagination->perPage(),
-                    'current_page' => $pagination->currentPage(),
-                    'total_pages' => $pagination->lastPage(),
-                    'next_page_url' => $pagination->nextPageUrl(),
-                    'prev_page_url' => $pagination->previousPageUrl(),
-                ]
+                'total_count' => $totalCount,
+                'limit' => $limit,
+                'offset' => $offset,
+                // 'pagination' => [
+                //     'total_count' => $pagination->total(),
+                //     'limit' => $pagination->perPage(),
+                //     'current_page' => $pagination->currentPage(),
+                //     'total_pages' => $pagination->lastPage(),
+                //     'next_page_url' => $pagination->nextPageUrl(),
+                //     'prev_page_url' => $pagination->previousPageUrl(),
+                // ]
+                   
+    
             ],
-            'data' => $data
+            'data' => $data,
         ], $statusCode);
     }
 
@@ -82,9 +87,8 @@ class ResponseHelper
                 'success' => false,
                 'message' => $message,
                 'status_code' => $statusCode,
-                'errors' => $errors
             ],
-            'data' => null
+            'error' => $errors
         ], $statusCode);
     }
 

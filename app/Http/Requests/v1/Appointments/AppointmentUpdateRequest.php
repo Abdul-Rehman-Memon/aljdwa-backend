@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\v1\Users;
+namespace App\Http\Requests\v1\Appointments;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
-class loginRequest extends FormRequest
+class AppointmentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,8 +40,9 @@ class loginRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'email' => 'required|email',
-            'password' => 'required',
+            'link' => 'required|string',
+            'status' => 'required|integer',
+            // 'approved_by' => 'nullable|string',
         ];
 
     }

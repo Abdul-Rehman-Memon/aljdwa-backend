@@ -25,9 +25,8 @@ class RegisterRequest extends FormRequest
                     'success' => false,
                     'message' => 'Validation errors',
                     'status_code' => 422,
-                    'errors' => $validator->errors(),
                 ],
-                'data' => null
+                'errors' => $validator->errors(),
             ], 422)
         );
     }

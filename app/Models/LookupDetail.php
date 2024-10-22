@@ -38,5 +38,10 @@ class LookupDetail extends Model
         return $this->belongsTo(Lookup::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 }
 

@@ -1,11 +1,17 @@
 <?php
 
 
-use App\Http\Controllers\Api\V1\Admin\UserController;
+use App\Http\Controllers\Api\v1\AppointmentController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/users', [UserController::class, 'index']); // List all users
-    Route::get('/users/{id}', [UserController::class, 'show']); // View a specific user
-    // Additional admin routes...
+use App\Http\Middleware\CheckRole;
+
+Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin')->group(function () {
+    Route::get('/get-appointments', [AppointmentController::class, 'getAllappointments']);
+    Route::get('/get-single-appointment/{id}', [AppointmentController::class, 'getSingleAppointment']);
+    Route::put('/update-appointment/{id}', [AppointmentController::class, 'updateAppointment']);
+});
+
+Route::prefix('visitor')->group(function () {
+    Route::post('/request-appointment', [AppointmentController::class, 'createAppointment']);
 });

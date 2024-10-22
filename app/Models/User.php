@@ -80,10 +80,15 @@ class User extends Authenticatable
         return strtotime($value); // Converts date to timestamp
     }
 
-    
     public function user_role()
     {
         return $this->belongsTo(LookupDetail::class,'role','id');
+    }
+
+    // Method to check if the user has a specific role
+    public function hasRole(string $roleName): bool
+    {
+        return $this->user_role && $this->user_role->value === $roleName; // Assuming your roles table has a 'value' field
     }
 
     public function user_status()
