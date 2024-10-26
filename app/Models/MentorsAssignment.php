@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class Appointment extends Model
+class MentorsAssignment extends Model
 {
-    protected $table = 'appointments';
+    protected $table = 'mentors_assignment';
 
     public static function boot()
     {
@@ -20,13 +19,8 @@ class Appointment extends Model
 
     // Define fillable fields if needed
     protected $fillable = [
-        'user_name',
-        'phone',
-        'email',
-        'request_date_time',
-        'link',
-        'status',
-        'approved_by',
+        'entrepreneur_details_id',
+        'mentor_id',
     ];
 
     protected $hidden = [
@@ -52,10 +46,10 @@ class Appointment extends Model
         return strtotime($value); // Converts date to timestamp
     }
     ////////////////////////////////////
-    public function appointment_status()
-    {
-        return $this->belongsTo(LookupDetail::class,'status','id');
-    }
+    // public function mentor_assign_status()
+    // {
+    //     return $this->belongsTo(LookupDetail::class,'status','id');
+    // }
 
 }
 

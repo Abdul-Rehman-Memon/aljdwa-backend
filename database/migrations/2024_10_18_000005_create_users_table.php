@@ -22,15 +22,15 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('password');
             $table->string('linkedin_profile')->nullable();  
-            $table->text('reject_reason')->nullable();
-            $table->timestamp('approved_At')->nullable();
+            // $table->text('reject_reason')->nullable();
+            // $table->timestamp('approved_At')->nullable();
 
             $table->unsignedInteger('role');
             $table->foreign('role')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
-            $table->unsignedInteger('status')->default(5);
+            $table->unsignedInteger('status')->default(10);
             $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('entreprenuer_details', function (Blueprint $table) {
+        Schema::create('entrepreneur_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             // $table->foreignUuid('userId')->constrained('users');
             $table->foreignUuid('user_id')->constrained('users')
@@ -39,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entreprenuer_details');
+        Schema::dropIfExists('entrepreneur_details');
     }
 };

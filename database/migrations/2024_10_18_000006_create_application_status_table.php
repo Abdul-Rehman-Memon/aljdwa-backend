@@ -13,17 +13,26 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('mentors_assignment', function (Blueprint $table) {
+        Schema::create('application_status', function (Blueprint $table) {
             $table->increments('id');
-            // $table->foreignUuid('startup_id')->constrained();
-            $table->foreignUuid('startup_id')->constrained('startup_details')
+
+            $table->foreignUuid('user_id')
+                  ->constrained('users') 
+                  ->cascadeOnUpdate() 
+                  ->cascadeOnDelete(); 
+
+            $table->unsignedInteger('status')->default(4);
+            $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
-            // $table->string('mentors_id');
-            // $table->foreign('mentors_id')->references('id')->on('users');
-            $table->foreignUuid('mentor_id')->constrained('users')
-            ->cascadeOnUpdate()
+
+            $table->text('reason')->nullable();
+
+            $table->foreignUuid('status_by')->nullable()
+            ->constrained('users') 
+            ->cascadeOnUpdate() 
             ->cascadeOnDelete();
+
             $table->timestamps();
         });
 
@@ -35,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mentors_assignment');
+        Schema::dropIfExists('application_status');
     }
 };

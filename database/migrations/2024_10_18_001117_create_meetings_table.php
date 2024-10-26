@@ -36,7 +36,7 @@ return new class extends Migration
             
             // $table->integer('resheduled_id');
             // $table->foreign('resheduled_id')->references('id')->on('meetings');
-            $table->unsignedInteger('resheduled_id');
+            $table->unsignedInteger('resheduled_id')->nullable();
              $table->foreign('resheduled_id')->references('id')->on('meetings')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('entreprenuer_agreement', function (Blueprint $table) {
+        Schema::create('entrepreneur_agreement', function (Blueprint $table) {
             $table->increments('id');
             // $table->foreignUuid('startup_id')->constrained();
-            $table->foreignUuid('entreprenuer_details_id')->constrained('entreprenuer_details')
+            $table->foreignUuid('entrepreneur_details_id')->constrained('entrepreneur_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('reject_reason')->nullable();;
             // $table->integer('status');
             // $table->foreign('status')->references('status')->on('lookups');
-            $table->unsignedInteger('status');
+            $table->unsignedInteger('status')->default(4);
             $table->foreign('status')->references('id')->on('lookup_details')
            ->cascadeOnUpdate()
            ->cascadeOnDelete();
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entreprenuer_agreement');
+        Schema::dropIfExists('entrepreneur_agreement');
     }
 };

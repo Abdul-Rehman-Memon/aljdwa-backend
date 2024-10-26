@@ -3,30 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Appointment extends Model
+class Meeting extends Model
 {
-    protected $table = 'appointments';
+    protected $table = 'meetings';
 
-    public static function boot()
-    {
-        parent::boot();
-        // Override the created event
-        static::creating(function ($model) {
-            $model->updated_at = null;  // Set updated_at to null on creation
-        });
-    }
+    use HasFactory;
 
     // Define fillable fields if needed
     protected $fillable = [
-        'user_name',
-        'phone',
-        'email',
-        'request_date_time',
+        'initiator_id',
+        'participant_id',
         'link',
+        'meeting_password',
+        'agenda',
+        'meeting_date_time',
         'status',
-        'approved_by',
     ];
 
     protected $hidden = [
@@ -46,13 +39,8 @@ class Appointment extends Model
         return strtotime($value); // Converts date to timestamp
     }
 
-    // Add this to convert request_date_time into timestamp
-    public function getRequestDateTimeAttribute($value)
-    {
-        return strtotime($value); // Converts date to timestamp
-    }
     ////////////////////////////////////
-    public function appointment_status()
+    public function meeting_status()
     {
         return $this->belongsTo(LookupDetail::class,'status','id');
     }

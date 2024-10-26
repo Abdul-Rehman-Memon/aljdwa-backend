@@ -2,19 +2,19 @@
 namespace App\Services\v1;
 
 use App\Repositories\v1\Users\UserRepositoryInterface;
-use App\Repositories\v1\Entreprenuer_details\EntreprenuerDetailsInterface;
+use App\Repositories\v1\Entrepreneur_details\EntrepreneurDetailsInterface;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 class UserService
 {
     protected $userRepository;
-    protected $entreprenuerDetailsRepository;
+    protected $entrepreneurDetailsRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository, EntreprenuerDetailsInterface $entreprenuerDetailsRepository)
+    public function __construct(UserRepositoryInterface $userRepository, EntrepreneurDetailsInterface $entrepreneurDetailsRepository)
     {
         $this->userRepository = $userRepository;
-        $this->entreprenuerDetailsRepository = $entreprenuerDetailsRepository;
+        $this->entrepreneurDetailsRepository = $entrepreneurDetailsRepository;
     }
 
     public function registerUser(array $data)
@@ -25,11 +25,15 @@ class UserService
             // Create user and get the user instance
             // Hash the password before saving
             $data['password'] = Hash::make($data['password']);
+
             $user = $this->userRepository->createUser($data);
 
-            if($user->user_role->value == 'Entreprenuer'){
-            // Prepare entreprenuer detail data, make sure to handle optional fields
-                $entreprenuerDetailData = [
+            $application_status = ['status' => 4,'user_id' => $user->id];
+            $application = $this->userRepository->applicationStatus($application_status);
+
+            if($user->user_role->value == 'Entrepreneur'){
+               // Prepare entrepreneur detail data, make sure to handle optional fields
+                $entrepreneurDetailData = [
                     'user_id' => $user->id, // Set the user ID here
                     'website' => $data['website'] ?? null,
                     'project_description' => $data['project_description'] ?? null,
@@ -41,11 +45,11 @@ class UserService
                     'patent' => $data['patent'] ?? null,
                 ];
 
-                // Create entreprenuer details using the EntrepreneurDetailsRepository
-                $this->entreprenuerDetailsRepository->createEntreprenuerDetails($entreprenuerDetailData);
+                // Create entrepreneur details using the entrepreneurDetailsRepository
+                $this->entrepreneurDetailsRepository->createEntrepreneurDetails($entrepreneurDetailData);
             }
             // Return the user instance, which is successful
-            return $user;
+            return $user->load('user_application_status.application_status');
         });
     }
 }

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class EntreprenuerDetail extends Model
+class EntrepreneurDetail extends Model
 {
-    protected $table = 'entreprenuer_details';
+    protected $table = 'entrepreneur_details';
 
     use HasUuids;
       // Ensure to set the key type and incrementing correctly for UUIDs

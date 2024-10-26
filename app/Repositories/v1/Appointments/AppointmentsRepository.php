@@ -13,7 +13,7 @@ class AppointmentsRepository implements AppointmentsInterface
         $data['request_date_time'] = Carbon::createFromTimestamp($timestamp)->toDateTimeString();
 
         // Disable timestamps for this model
-        Appointment::unsetEventDispatcher();
+        // Appointment::unsetEventDispatcher();
         return Appointment::create($data);
 
         // Re-enable event dispatcher if needed later in the application
