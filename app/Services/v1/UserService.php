@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\v1;
 
+use App\helpers\appHelpers;
 use App\Repositories\v1\Users\UserRepositoryInterface;
 use App\Repositories\v1\Entrepreneur_details\EntrepreneurDetailsInterface;
 
@@ -18,20 +19,18 @@ class UserService
     }
 
     public function registerUser(array $data)
-    {
-        
+    {  
         // Use a transaction to ensure data integrity
         return DB::transaction(function () use ($data) {
             // Create user and get the user instance
-            // Hash the password before saving
             $data['password'] = Hash::make($data['password']);
+            $data['role'] = appHelpers::lookUpId('role',$data['role']) ?? 3; 
 
             $user = $this->userRepository->createUser($data);
-
-            $application_status = ['status' => 4,'user_id' => $user->id];
+            $application_status = ['status' => 11,'user_id' => $user->id];
             $application = $this->userRepository->applicationStatus($application_status);
 
-            if($user->user_role->value == 'Entrepreneur'){
+            if($user->user_role->value === 'entrepreneur'){
                // Prepare entrepreneur detail data, make sure to handle optional fields
                 $entrepreneurDetailData = [
                     'user_id' => $user->id, // Set the user ID here

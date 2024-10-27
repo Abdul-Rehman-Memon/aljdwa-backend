@@ -49,7 +49,7 @@ class AppointmentsRepository implements AppointmentsInterface
     public function updateAppointment(array $data, int $appointmentId)
     {
         // $data['approved_by'] = Auth::
-        $appointment = Appointment::find($appointmentId);
+        $appointment = Appointment::with('appointment_status')->find($appointmentId);
         
         $appointment->update($data);
 
@@ -57,9 +57,13 @@ class AppointmentsRepository implements AppointmentsInterface
         
     }
 
-    public function AppointmentSchedules($id = null)
+    public function AppointmentSchedules(array $data)
     {
-        return AppointmentSchedule::get();
+        $date = $data['date'];
+        $dateFormat = Carbon::createFromTimestamp($date);
+        $weekday = Carbon::parse($dateFormat)->dayOfWeek;
+
+        return AppointmentSchedule::where('weekday', $weekday)->get();
 
     }
 
@@ -71,7 +75,8 @@ class AppointmentsRepository implements AppointmentsInterface
         $time = $data['time'];
 
         // return $dateFormat;
-        $availableSlotsQuery = AppointmentSchedule::query();
+        // $availableSlotsQuery = AppointmentSchedule::query();
+        $availableSlotsQuery = AppointmentSchedule::where('weekday', $weekday);
         if ($time) {
             $availableSlotsQuery->where('time', $time);
         }

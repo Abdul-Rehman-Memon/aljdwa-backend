@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('reject_reason')->nullable();;
             // $table->integer('status');
             // $table->foreign('status')->references('status')->on('lookups');
-            $table->unsignedInteger('status')->default(4);
+            $table->unsignedInteger('status')->default(20);
             $table->foreign('status')->references('id')->on('lookup_details')
            ->cascadeOnUpdate()
            ->cascadeOnDelete();

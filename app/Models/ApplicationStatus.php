@@ -20,8 +20,11 @@ class ApplicationStatus extends Model
     ];
 
     protected $hidden = [
+        'id',
         'created_at',
         'updated_at',
+        'user_id',
+        'status',
     ];
 
     // Add this to convert created_at into timestamp

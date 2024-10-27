@@ -23,7 +23,7 @@ class CheckRole {
           $user = Auth::user();
   
           // Check if the user has the required role
-          if (!$user->hasRole($roleName)) {
+          if (!$user->hasRole(strtolower($roleName))) {
             //   return response()->json(['message' => 'Forbidden'], 403);
               return ResponseHelper::forbidden();
           }

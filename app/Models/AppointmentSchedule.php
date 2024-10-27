@@ -23,7 +23,7 @@ class AppointmentSchedule extends Model
         'date',
         'time',
         'duration',
-        'week_day',
+        'weekday',
         'added_by',
         'status',
     ];

@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Auth;
 class appHelpers
 {
 
-    public static function lookUpId($name = null,$role = null) {
+    public static function lookUpId($name = null,$value = null) {
         $name = ucfirst(strtolower($name));
-        $role   = ucfirst(strtolower($role));
+        $value   = strtolower($value);
         $result =  Lookup::join('lookup_details','lookup_details.lookup_id','lookups.id')
         ->where('name',$name)
-        ->where('lookup_details.value',$role)
+        ->where('lookup_details.value',$value)
         ->first();
         if($result){
             return $result->id;

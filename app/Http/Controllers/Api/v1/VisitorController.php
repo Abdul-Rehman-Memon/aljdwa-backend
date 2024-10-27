@@ -38,13 +38,13 @@ class VisitorController extends Controller
         $data['time'] = $request->input('time') ?? NULL;
         try {
             $availabeSlots = $this->appointmentService->AvailableAppointmentSlots($data);
-            $allSlots = $this->appointmentService->AppointmentSchedules();
+            $allSlots = $this->appointmentService->AppointmentSchedules($data);
             $result['available_slots'] = $availabeSlots; 
             $result['all_slots'] = $allSlots; 
-            return ResponseHelper::success($result,'Appointment schedules retrieved successfully');
+            return ResponseHelper::success($result,'Appointment schedules slots retrieved successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to request appointment.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to retrieve appointment slots.',500,$e->getMessage());
         }
     }
 }

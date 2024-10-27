@@ -18,7 +18,15 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
     {
         $totalCount = User::has('entreprenuer_details')->count();
 
-        $entrepreneur_applications = User::with(['entreprenuer_details', 'user_role', 'user_status',])
+        $entrepreneur_applications = User::with([
+            'entreprenuer_details',
+            'user_role',
+            'user_status',
+            'user_application_status' => function ($query) {
+                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+            },
+            'user_application_status.application_status'
+        ])
         ->has('entreprenuer_details') // Ensure only users with entrepreneur details are fetched
         ->limit($limit)
         ->offset($offset)
@@ -34,7 +42,15 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 
     public function reviewEntrepreneurApplication(string $applicationId)
     {
-        return User::with(['entreprenuer_details', 'user_role', 'user_status',])
+        return User::with([
+            'entreprenuer_details', 
+            'user_role',  
+            'user_status',
+            'user_application_status' => function ($query) {
+                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+            },
+            'user_application_status.application_status'
+        ])
             ->has('entreprenuer_details') 
             ->where('id',$applicationId)->first();
     }

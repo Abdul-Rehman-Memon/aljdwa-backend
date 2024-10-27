@@ -40,7 +40,6 @@ class RegisterRequest extends FormRequest
     {
         // Initialize the common rules
         $rules = [
-            'project' => 'required|string|max:255',
             'founder_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'country_code' => 'required|integer',
@@ -57,16 +56,17 @@ class RegisterRequest extends FormRequest
             // ],
             'password' => 'required|min:8|',
             'linkedin_profile' => 'nullable|string|url',
-            // 'reject_reason' => 'nullable|string',
-            // 'approved_At' => 'nullable|date',
-            'role' => 'required|integer|in:1,2,3,4', // Allow roles 2 and 3
-            // 'status' => 'nullable|integer',
-
+            'role' => [
+                'required',
+                'string',
+                'regex:/^(mentor|entrepreneur|investor)$/i', // Case-insensitive role validation
+            ],
         ];
 
         // Add rules conditionally based on the role
-        if ($this->input('role') == 3) {
+        if ($this->input('role') === 'entrepreneur') {
             $rules = array_merge($rules, [
+                'project' => 'required|string|max:255',
                 'website' => 'string|url', // Assuming it's an array
                 // 'websites.*' => 'string|url', // Validate each website entry
                 'project_description' => 'required|string',
@@ -82,11 +82,12 @@ class RegisterRequest extends FormRequest
         return $rules;
     }
 
-    // public function messages()
-    // {
-    //     return [
-    //         'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-    //         'password.min' => 'Password must be at least 8 characters long.',
-    //     ];
-    // }
+    public function messages()
+    {
+        return [
+            // 'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            // 'password.min' => 'Password must be at least 8 characters long.',
+            'role.regex' => 'Role can be Mentor/Entrepreneur/Investor',
+        ];
+    }
 }

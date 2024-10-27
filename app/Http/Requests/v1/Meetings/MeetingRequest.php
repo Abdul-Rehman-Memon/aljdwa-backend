@@ -45,7 +45,6 @@ class MeetingRequest extends FormRequest
             'meeting_password' => 'required|string',
             'agenda' => 'required|string',
             'meeting_date_time' => 'required|date',
-            'status' => 'required|int|in:11',
         ];
 
     }

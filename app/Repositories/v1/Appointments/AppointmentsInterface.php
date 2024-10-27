@@ -8,6 +8,6 @@ interface AppointmentsInterface
     public function getAllAppointments($limit, $offset);
     public function getSingleAppointment(int $appointmentId );
     public function updateAppointment(array $data, int $appointmentId);
-    public function AppointmentSchedules($id = null);
+    public function AppointmentSchedules(array $data);
     public function AvailableAppointmentSlots(array $data);
 }

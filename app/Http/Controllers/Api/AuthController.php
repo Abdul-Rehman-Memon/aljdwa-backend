@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\helpers\appHelpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -39,7 +40,13 @@ class AuthController extends Controller
     }
     public function login(LoginRequest $request){
 
-        $user = User::with(['user_role','user_status'])
+        $user = User::with([
+                    'user_role', 'user_status', 
+                    'user_application_status' => function ($query) {
+                    $query->latest('id')->limit(1); // Fetch the last inserted record based on the ID
+                },
+                'user_application_status.application_status'
+        ])
         ->where('email', $request->email)
         ->first();
 
@@ -47,9 +54,13 @@ class AuthController extends Controller
             return ResponseHelper::unauthorized('Invalid Email/Password.');
         }
 
-        if($user->user_status->value == 'Pending'){
-            return ResponseHelper::forbidden('Your account is pending. Please wait for approval.');
-        }
+        $applicationStatus = $user->user_application_status; 
+        $applicationStatus = $applicationStatus[0]; 
+        $applicationStatus = $applicationStatus->application_status->value; 
+
+        // if($applicationStatus  === 'pending'){
+        //     return ResponseHelper::forbidden('Your account is pending. Please wait for approval.');
+        // }
 
         // Revoke all existing tokens
         $user->tokens()->delete();

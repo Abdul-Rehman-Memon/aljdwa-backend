@@ -17,15 +17,15 @@ return new class extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('email');
             $table->string('request_date');
             $table->string('request_time');
             $table->string('link')->nullable();
-            // $table->integer('status');
-            // $table->foreign('status')->references('id')->on('lookups');
-            $table->unsignedInteger('status')->nullable();
-             $table->foreign('status')->references('id')->on('lookup_details')
+            $table->string('meeting_password')->nullable();
+
+            $table->unsignedInteger('status')->default(8);
+            $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 

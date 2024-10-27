@@ -18,11 +18,12 @@ return new class extends Migration
             $table->string('date')->nullable();
             $table->string('time');
             $table->string('duration');
-            $table->integer('week_day')->nullable();
+            $table->integer('weekday')->nullable();
 
-             $table->foreign('status')->references('id')->on('lookup_details')
-            ->cascadeOnUpdate()
-            ->cascadeOnDelete();
+            $table->unsignedInteger('status')->default(24);
+            $table->foreign('status')->references('id')->on('lookup_details')
+           ->cascadeOnUpdate()
+           ->cascadeOnDelete();
 
             $table->foreignUuid('added_by')->nullable()->constrained('users')
             ->cascadeOnUpdate()

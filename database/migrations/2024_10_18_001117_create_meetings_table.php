@@ -42,7 +42,7 @@ return new class extends Migration
             ->cascadeOnDelete();
             
 
-            $table->unsignedInteger('status');
+            $table->unsignedInteger('status')->default(16);
              $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();

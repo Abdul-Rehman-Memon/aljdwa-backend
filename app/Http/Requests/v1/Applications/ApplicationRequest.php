@@ -40,10 +40,20 @@ class ApplicationRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            // 'user_id' => 'required|string',
-            'status' => 'required|int',
             'reason' => 'nullable|string',
+            'status' => [
+                'required',
+                'string',
+                'regex:/^(pending|returned|resubmit|rejected|approved)$/i', // Case-insensitive role validation
+            ],
         ];
 
+    }
+
+    public function messages()
+    {
+        return [
+            'status' => 'Staus can be Pending/Returned/Resubmit/Rejected/Approved',
+        ];
     }
 }

@@ -16,8 +16,10 @@ class LookupDetail extends Model
     ];
 
     protected $hidden = [
+        'id',
         'created_at',
         'updated_at',
+        'lookup_id',
     ];
 
     // Add this to convert created_at into timestamp

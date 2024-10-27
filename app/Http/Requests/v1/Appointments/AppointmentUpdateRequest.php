@@ -40,10 +40,21 @@ class AppointmentUpdateRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'link' => 'required|string',
-            'status' => 'required|integer',
-            // 'approved_by' => 'nullable|string',
+            'link' => 'required|url',
+            'meeting_password' => 'required|string',
+            'status' => [
+                'required',
+                'string',
+                'regex:/^(pending|booked|cancelled|completed)$/i', // Case-insensitive role validation
+            ],
         ];
 
+    }
+
+    public function messages()
+    {
+        return [
+            'status' => 'Staus can be Pending/Booked/Cancelled/Completed',
+        ];
     }
 }

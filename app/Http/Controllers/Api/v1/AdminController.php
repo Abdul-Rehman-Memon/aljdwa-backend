@@ -100,6 +100,8 @@ class AdminController extends Controller
                 return ResponseHelper::notFound('Appointment not found');
             }
 
+            $validatedData['status'] = appHelpers::lookUpId('Appointment_status',$validatedData['status']);
+
             $user = $this->appointmentService->updateAppointment($validatedData, $appointmentId);
             return ResponseHelper::success($user,'Appointment updated successfully');
 
@@ -161,6 +163,7 @@ class AdminController extends Controller
             if (!$application) {
                 return ResponseHelper::notFound('Application not found');
             }
+            $validatedData['status'] = appHelpers::lookUpId('Application_status',$validatedData['status']);
 
             $user = $this->entreprenuerDetailsService->updateEntrepreneurApplication($validatedData, $applicationId);
             return ResponseHelper::success($user,'Application updated successfully');

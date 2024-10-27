@@ -5,6 +5,8 @@ namespace App\Repositories\v1\Entrepreneur_agreement;
 use App\Models\EntrepreneurAgreement;
 use App\Models\EntrepreneurDetail;
 use App\Models\Payment;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +14,21 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 {
     public function createEntrepreneurAgreement(array $data)
     {
-        $data['admin_id'] = Auth::user()->id;
+        $file = $data['agreement_document'];
+        $userId  = Auth::user()->id;
+        $data['admin_id'] = $userId;
+
+        // Define the directory path: user_id/agreement/
+        $directory = "public/{$userId}/agreement";
+
+        // Check if directory exists, create it if it doesn’t
+        if (!File::exists(storage_path("app/{$directory}"))) {
+            File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
+        }
+        // Store the file with the original filename in the specified directory
+        // $filePath = $file->storeAs($directory, $file->getClientOriginalName());
+        $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
+        $data['agreement_document'] = $filePath;
         return EntrepreneurAgreement::create($data);
     }
 

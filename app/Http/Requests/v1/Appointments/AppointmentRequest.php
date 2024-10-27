@@ -42,13 +42,10 @@ class AppointmentRequest extends FormRequest
         return  [
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'phone' => 'required',
+            'phone' => 'nullable|string',
             'email' => 'required|email',
             'request_date' => 'required|string',
             'request_time' => 'required|string',
-            'link' => 'nullable|url',
-            'status' => 'nullable|integer',
-            'approved_by' => 'nullable|exists:users,id',
         ];
 
     }

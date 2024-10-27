@@ -42,7 +42,7 @@ class EntrepreneurAgreementRequest extends FormRequest
         return  [
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
             'agreement_details' => 'required|string',
-            // 'agreement_document' => 'required|int|in:11',
+            'agreement_document' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:4096',//4MB
         ];
 
     }
