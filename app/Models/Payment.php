@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\LookupDetail;
-use App\Models\EntrepreneurDetail;
-use App\Models\Payment;
 
-class EntrepreneurAgreement extends Model
+class Payment extends Model
 {
-    protected $table = 'entrepreneur_agreement';
+    protected $table = 'payments';
 
     public static function boot()
     {
@@ -23,12 +21,13 @@ class EntrepreneurAgreement extends Model
 
     // Define fillable fields if needed
     protected $fillable = [
+        'payments_details',
+        'payment_refrence',
+        'entrepreneur_id',
         'entrepreneur_details_id',
-        'admin_id',
-        'signed_At',
-        'agreement_details',
-        'agreement_document',
-        'reject_reason',
+        'invoice_Id',
+        'amount',
+        'payment_date',
         'status',
     ];
 
@@ -49,20 +48,15 @@ class EntrepreneurAgreement extends Model
         return strtotime($value); // Converts date to timestamp
     }
 
-    // Add this to convert request_date_time into timestamp
-    public function getRequestDateTimeAttribute($value)
+    // Add this to convert payment_date into timestamp
+    public function getPaymentDateAttribute($value)
     {
         return strtotime($value); // Converts date to timestamp
     }
     ////////////////////////////////////
-    public function agreement_status()
+    public function payment_status()
     {
         return $this->belongsTo(LookupDetail::class,'status','id');
-    }
-
-    public function agreement_entrepreneur_detail()
-    {
-        return $this->belongsTo(EntrepreneurDetail::class,'entrepreneur_details_id','id');
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App\Services\v1;
 
-use App\Repositories\v1\Mentors_assignemnt\MentorsAssignmentInterface;
+use App\Repositories\v1\Mentors_assignment\MentorsAssignmentInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 class MentorsAssignmentService

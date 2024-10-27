@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\v1\Appointments;
+namespace App\Http\Requests\v1\Mentor_assignment;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AppointmentRequest extends FormRequest
+class MentorAssignmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,15 +40,8 @@ class AppointmentRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'first_name' => 'required|string|min:3',
-            'last_name' => 'required|string|min:3',
-            'phone' => 'required',
-            'email' => 'required|email',
-            'request_date' => 'required|string',
-            'request_time' => 'required|string',
-            'link' => 'nullable|url',
-            'status' => 'nullable|integer',
-            'approved_by' => 'nullable|exists:users,id',
+            'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
+            'mentor_id' => 'required|exists:users,id',
         ];
 
     }

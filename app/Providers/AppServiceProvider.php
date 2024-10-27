@@ -19,8 +19,8 @@ use App\Repositories\v1\Meetings\MeetingsRepository as MeetingsRepositoryV1;
 use App\Repositories\v1\Entrepreneur_agreement\EntrepreneurAgreementInterface as EntrepreneurAgreementInterfaceV1;
 use App\Repositories\v1\Entrepreneur_agreement\EntrepreneurAgreementRepository as EntrepreneurAgreementRepositoryV1;
 
-use App\Repositories\v1\Mentors_assignemnt\MentorsAssignmentInterface as MentorsAssignmentInterfaceV1;
-use App\Repositories\v1\Mentors_assignemnt\MentorsAssignmentRepository as MentorsAssignmentRepositoryV1;
+use App\Repositories\v1\Mentors_assignment\MentorsAssignmentInterface as MentorsAssignmentInterfaceV1;
+use App\Repositories\v1\Mentors_assignment\MentorsAssignmentRepository as MentorsAssignmentRepositoryV1;
 
 class AppServiceProvider extends ServiceProvider
 {

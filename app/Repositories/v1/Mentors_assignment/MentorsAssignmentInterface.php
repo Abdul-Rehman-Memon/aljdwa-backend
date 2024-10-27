@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\v1\Mentors_assignemnt;
+namespace App\Repositories\v1\Mentors_assignment;
 
 interface MentorsAssignmentInterface
 {

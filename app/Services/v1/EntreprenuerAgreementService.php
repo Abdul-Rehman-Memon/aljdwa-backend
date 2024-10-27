@@ -15,8 +15,15 @@ class EntreprenuerAgreementService
     
     public function createAgreement(array $data)
     {
-        $appointment = $this->entreprenuerAgreementRepository->createEntrepreneurAgreement($data);
+        $agreement = $this->entreprenuerAgreementRepository->createEntrepreneurAgreement($data);
 
-        return $appointment;
+        return $agreement;
+    }
+
+    public function getEntrepreneurAgreementWithPayment(string $entrepreneurDetailsId)
+    {
+        $agreement = $this->entreprenuerAgreementRepository->getEntrepreneurAgreementWithPayment($entrepreneurDetailsId);
+
+        return $agreement;
     }
 }

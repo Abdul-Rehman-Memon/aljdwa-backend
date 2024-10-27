@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
+use App\Models\Payment;
+
 class EntrepreneurDetail extends Model
 {
     protected $table = 'entrepreneur_details';
@@ -44,5 +46,12 @@ class EntrepreneurDetail extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function entrepreneur_details_payment()
+    {
+        return $this->hasOne(Payment::class,'entrepreneur_details_id','id');
+    }
+
+    
 }
 

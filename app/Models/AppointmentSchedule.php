@@ -3,14 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-use App\Models\LookupDetail;
-use App\Models\EntrepreneurDetail;
-use App\Models\Payment;
-
-class EntrepreneurAgreement extends Model
+class AppointmentSchedule extends Model
 {
-    protected $table = 'entrepreneur_agreement';
+    protected $table = 'appointments_schedule';
 
     public static function boot()
     {
@@ -23,12 +20,11 @@ class EntrepreneurAgreement extends Model
 
     // Define fillable fields if needed
     protected $fillable = [
-        'entrepreneur_details_id',
-        'admin_id',
-        'signed_At',
-        'agreement_details',
-        'agreement_document',
-        'reject_reason',
+        'date',
+        'time',
+        'duration',
+        'week_day',
+        'added_by',
         'status',
     ];
 
@@ -48,21 +44,15 @@ class EntrepreneurAgreement extends Model
     {
         return strtotime($value); // Converts date to timestamp
     }
-
-    // Add this to convert request_date_time into timestamp
-    public function getRequestDateTimeAttribute($value)
-    {
-        return strtotime($value); // Converts date to timestamp
-    }
     ////////////////////////////////////
-    public function agreement_status()
+    public function appointment_schedule_status()
     {
         return $this->belongsTo(LookupDetail::class,'status','id');
     }
 
-    public function agreement_entrepreneur_detail()
+    public function appointments()
     {
-        return $this->belongsTo(EntrepreneurDetail::class,'entrepreneur_details_id','id');
+        return $this->hasMany(Appointment::class);
     }
 
 }

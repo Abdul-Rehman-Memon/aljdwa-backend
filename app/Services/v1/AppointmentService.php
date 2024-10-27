@@ -41,4 +41,18 @@ class AppointmentService
         return $appointment;
     }
 
+    public function AppointmentSchedules($id = null)
+    {
+        $appointment_schedule = $this->appointmentRepository->AppointmentSchedules($id);
+
+        return $appointment_schedule;
+    }
+
+    public function AvailableAppointmentSlots($data)
+    {
+        $appointment_schedule = $this->appointmentRepository->AvailableAppointmentSlots($data);
+
+        return $appointment_schedule;
+    }
+
 }

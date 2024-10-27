@@ -25,6 +25,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function applicationStatus(array $data)
     {
-        $user = ApplicationStatus::create($data);
+        return ApplicationStatus::create($data);
+    }
+
+    public function getUser(string $userId)
+    {
+        return User::find($userId)->load('user_role');
     }
 }

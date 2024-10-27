@@ -13,21 +13,18 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('appointments_schedule', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('user_name');
-            $table->string('phone');
-            $table->string('email');
-            $table->timestamp('request_date_time');
-            $table->string('link')->nullable();
-            // $table->integer('status');
-            // $table->foreign('status')->references('id')->on('lookups');
-            $table->unsignedInteger('status')->nullable();
+            $table->string('date')->nullable();
+            $table->string('time');
+            $table->string('duration');
+            $table->integer('week_day')->nullable();
+
              $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
-            $table->foreignUuid('approved_by')->nullable()->constrained('users')
+            $table->foreignUuid('added_by')->nullable()->constrained('users')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
@@ -42,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('appointments_schedule');
     }
 };

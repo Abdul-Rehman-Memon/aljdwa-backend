@@ -52,4 +52,9 @@ class UserService
             return $user->load('user_application_status.application_status');
         });
     }
+
+    public function getUser($userId){
+
+        return $this->userRepository->getUser($userId);
+    }
 }

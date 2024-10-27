@@ -20,10 +20,12 @@ class Appointment extends Model
 
     // Define fillable fields if needed
     protected $fillable = [
-        'user_name',
+        'first_name',
+        'last_name',
         'phone',
         'email',
-        'request_date_time',
+        'request_date',
+        'request_time',
         'link',
         'status',
         'approved_by',
@@ -42,12 +44,6 @@ class Appointment extends Model
 
     // Add this to convert updated_at into timestamp
     public function getUpdatedAtAttribute($value)
-    {
-        return strtotime($value); // Converts date to timestamp
-    }
-
-    // Add this to convert request_date_time into timestamp
-    public function getRequestDateTimeAttribute($value)
     {
         return strtotime($value); // Converts date to timestamp
     }

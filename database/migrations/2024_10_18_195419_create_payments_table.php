@@ -18,14 +18,18 @@ return new class extends Migration
             $table->text('payments_details');
             // $table->integer('payment_refrence');
             // $table->foreign('payment_refrence')->references('id')->on('lookups');
-
-            $table->unsignedInteger('payment_refrence');
-             $table->foreign('payment_refrence')->references('id')->on('lookup_details')
-            ->cascadeOnUpdate()
-            ->cascadeOnDelete();
+            $table->bigInteger('payment_refrence');
+            // $table->unsignedInteger('payment_refrence');
+            // $table->foreign('payment_refrence')->references('id')->on('lookup_details')
+            // ->cascadeOnUpdate()
+            // ->cascadeOnDelete();
 
             // $table->integer('entrepreneur');
             $table->foreignUuid('entrepreneur_id')->constrained('users')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+
+            $table->foreignUuid('entrepreneur_details_id')->constrained('entrepreneur_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 

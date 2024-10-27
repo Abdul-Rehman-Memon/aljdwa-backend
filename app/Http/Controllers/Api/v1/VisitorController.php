@@ -8,6 +8,7 @@ use App\Http\Requests\v1\Appointments\AppointmentRequest;
 use App\Services\v1\AppointmentService;
 use Exception;
 use App\Http\Helpers\ResponseHelper;
+use Carbon\Carbon;
 
 class VisitorController extends Controller
 {
@@ -25,6 +26,22 @@ class VisitorController extends Controller
         try {
             $user = $this->appointmentService->createAppointment($validatedData);
             return ResponseHelper::created($user,'Appointment requested successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to request appointment.',500,$e->getMessage());
+        }
+    }
+
+    public function getAppointmentSchedules(Request $request){
+
+        $data['date'] = $request->input('date') ?? Carbon::now()->startOfDay()->timestamp;
+        $data['time'] = $request->input('time') ?? NULL;
+        try {
+            $availabeSlots = $this->appointmentService->AvailableAppointmentSlots($data);
+            $allSlots = $this->appointmentService->AppointmentSchedules();
+            $result['available_slots'] = $availabeSlots; 
+            $result['all_slots'] = $allSlots; 
+            return ResponseHelper::success($result,'Appointment schedules retrieved successfully');
         } catch (Exception $e) {
             // Handle the error
             return ResponseHelper::error('Failed to request appointment.',500,$e->getMessage());

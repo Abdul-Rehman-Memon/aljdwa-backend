@@ -27,7 +27,7 @@ class Lookup extends Model
     }
 
     // Define relationships to  LookupDetails model
-    public function lookupdetails()
+    public function lookup_details()
     {
         return $this->hasMany(LookupDetail::class, 'lookup_id');
     }

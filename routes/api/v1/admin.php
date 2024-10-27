@@ -45,4 +45,8 @@ Route::prefix('visitor')->group(function () {
     Route::prefix('appointment-management')->group(function () {
         Route::post('/request-appointment', [VisitorController::class, 'createAppointment']);
     });
+
+    Route::prefix('appointment-schedule-management')->group(function () {
+        Route::get('/appointment-schedules', [VisitorController::class, 'getAppointmentSchedules']);
+    });
 });
