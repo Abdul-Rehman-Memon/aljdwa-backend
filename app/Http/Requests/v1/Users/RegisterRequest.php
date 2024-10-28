@@ -44,18 +44,18 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'country_code' => 'required|integer',
             'phone_number' => 'required|string|max:255',
-            // 'password' => [
-            //     'required',
-            //     'string',
-            //     'min:8', // Minimum length of 8 characters
-            //     'max:255',
-            //     'regex:/[A-Z]/', // At least one uppercase letter
-            //     'regex:/[a-z]/', // At least one lowercase letter
-            //     'regex:/[0-9]/', // At least one number
-            //     'regex:/[@$!%*#?&]/', // At least one special character
-            // ],
-            'password' => 'required|min:8|',
-            'linkedin_profile' => 'nullable|string|url',
+            'password' => [
+                'required',
+                'string',
+                'min:8', // Minimum length of 8 characters
+                'max:16',
+                'regex:/[A-Z]/', // At least one uppercase letter
+                'regex:/[a-z]/', // At least one lowercase letter
+                'regex:/[0-9]/', // At least one number
+                'regex:/[@$!%*#?&]/', // At least one special character
+            ],
+            // 'password' => 'required|min:8|',
+            'linkedin_profile' => 'required|string|url',
             'role' => [
                 'required',
                 'string',
@@ -85,8 +85,8 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            // 'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            // 'password.min' => 'Password must be at least 8 characters long.',
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+            'password.min' => 'Password must be at least 8 characters long.',
             'role.regex' => 'Role can be Mentor/Entrepreneur/Investor',
         ];
     }
