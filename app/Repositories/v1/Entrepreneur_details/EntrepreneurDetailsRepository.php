@@ -7,10 +7,35 @@ use App\Models\EntrepreneurDetail;
 use App\Models\ApplicationStatus;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 {
     public function createEntrepreneurDetails(array $data)
     {
+        // return $username  = $data['founder_name'];
+
+        if (isset($data['resume'])) {
+            $fileInfo['file'] = $data['resume']; 
+            $fileInfo['fileName'] = 'resume'; 
+            $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
+            $data['resume'] = $filePath;
+        }
+
+        if (isset($data['business_model'])) {
+            $fileInfo['file'] = $data['business_model']; 
+            $fileInfo['fileName'] = 'business_model'; 
+            $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
+            $data['business_model'] = $filePath;
+        }
+
+        if (isset($data['patent'])) {
+            $fileInfo['file'] = $data['patent']; 
+            $fileInfo['fileName'] = 'patent'; 
+            $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
+            $data['patent'] = $filePath;
+        }
         return EntrepreneurDetail::create($data);
     }
 
@@ -61,5 +86,23 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         $data['status_by'] = Auth::user()->id;
         return ApplicationStatus::create($data);  
           
+    }
+
+    public function uploadEntrepreneurDetailsFile(array $data)
+    {
+
+        $username = 'entrepreneur';
+        $file = $data['file'];
+        $fileName = $data['fileName'].'_'.time();
+        // Define the directory path: user_id/fileName/
+        $directory = "public/{$username}/{$fileName}";
+
+        // Check if directory exists, create it if it doesn’t
+        if (!File::exists(storage_path("app/{$directory}"))) {
+            File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
+        }
+        $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
+
+        return $filePath;
     }
 }

@@ -40,6 +40,7 @@ class RegisterRequest extends FormRequest
     {
         // Initialize the common rules
         $rules = [
+            'project_name' => 'required|string|max:255',
             'founder_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'country_code' => 'required|integer',
@@ -66,7 +67,10 @@ class RegisterRequest extends FormRequest
         // Add rules conditionally based on the role
         if ($this->input('role') === 'entrepreneur') {
             $rules = array_merge($rules, [
-                'project' => 'required|string|max:255',
+               
+                'position' => 'required|string', 
+                'major' => 'required|string', 
+                'resume' => 'required|file|mimes:pdf|max:5120',//5MB
                 'website' => 'string|url', // Assuming it's an array
                 // 'websites.*' => 'string|url', // Validate each website entry
                 'project_description' => 'required|string',
@@ -74,8 +78,8 @@ class RegisterRequest extends FormRequest
                 'solution_offering' => 'required|string',
                 'previous_investment' => 'nullable|numeric', // Allow null or numeric
                 'industry_sector' => 'required|string',
-                'business_model' => 'required|string',
-                'patent' => 'nullable|string', // Allow null or string
+                'business_model' => 'required|file|mimes:pdf,doc,docx|max:5120',//5MB
+                'patent' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB
             ]);
         }
 
@@ -88,6 +92,10 @@ class RegisterRequest extends FormRequest
             // 'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
             // 'password.min' => 'Password must be at least 8 characters long.',
             'role.regex' => 'Role can be Mentor/Entrepreneur/Investor',
+            'business_model' => 'File can be Pdf/Doc/Docs',
+            'business_model.max' => 'FIle size should not exceed than 5MB',
+            'patent' => 'File can be Pdf/Doc/Docs',
+            'patent.max' => 'FIle size should not exceed than 5MB',
         ];
     }
 }

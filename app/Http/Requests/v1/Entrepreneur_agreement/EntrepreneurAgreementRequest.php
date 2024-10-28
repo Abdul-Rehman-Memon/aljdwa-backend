@@ -42,8 +42,16 @@ class EntrepreneurAgreementRequest extends FormRequest
         return  [
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
             'agreement_details' => 'required|string',
-            'agreement_document' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:4096',//4MB
+            'agreement_document' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:5120',//5MB
         ];
 
+    }
+
+    public function messages()
+    {
+        return [
+            'agreement_document' => 'File can be Pdf/Doc/Docs',
+            'agreement_document.max' => 'FIle size should not exceed than 5MB',
+        ];
     }
 }

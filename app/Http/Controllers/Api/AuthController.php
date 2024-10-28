@@ -35,7 +35,7 @@ class AuthController extends Controller
             return ResponseHelper::created($user,'User registered successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to register user or startup details.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to register user or entrepreneur details.',500,$e->getMessage());
         }
     }
     public function login(LoginRequest $request){

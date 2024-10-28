@@ -8,4 +8,5 @@ interface EntrepreneurDetailsInterface
     public function getEntrepreneurApplications($limit, $offset);
     public function reviewEntrepreneurApplication(string $applicationId );
     public function updateEntrepreneurApplication(array $data, string $applicationId);
+    public function uploadEntrepreneurDetailsFile(array $data);
 }

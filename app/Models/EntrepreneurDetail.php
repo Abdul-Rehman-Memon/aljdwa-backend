@@ -19,6 +19,9 @@ class EntrepreneurDetail extends Model
     // Define fillable fields if needed
     protected $fillable = [
         'user_id',
+        'position',
+        'major',
+        'resume',
         'website',
         'project_description',
         'problem_solved',

@@ -19,7 +19,9 @@ return new class extends Migration
             $table->foreignUuid('user_id')->constrained('users')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
-
+            $table->string('position');
+            $table->string('major');
+            $table->text('resume');
             $table->string('website');
             $table->text('project_description');
             $table->text('problem_solved');
@@ -27,7 +29,7 @@ return new class extends Migration
             $table->text('previous_investment');
             $table->text('industry_sector');
             $table->text('business_model');
-            $table->string('patent');
+            $table->text('patent')->nullable();
             $table->timestamps();
         });
 

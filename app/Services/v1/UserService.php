@@ -34,6 +34,9 @@ class UserService
                // Prepare entrepreneur detail data, make sure to handle optional fields
                 $entrepreneurDetailData = [
                     'user_id' => $user->id, // Set the user ID here
+                    'position' => $data['position'] ?? null,
+                    'major' => $data['major'] ?? null,
+                    'resume' => $data['resume'] ?? null,
                     'website' => $data['website'] ?? null,
                     'project_description' => $data['project_description'] ?? null,
                     'problem_solved' => $data['problem_solved'] ?? null,
