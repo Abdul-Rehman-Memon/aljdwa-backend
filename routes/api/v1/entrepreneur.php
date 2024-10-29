@@ -10,6 +10,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
 
     //Entrepreneur Application Request
     Route::prefix('application-management')->group(function () {
+        Route::get('/entrepreneur-applications', [EntrepreneurController::class, 'reviewEntrepreneurApplication']);
         Route::put('/entrepreneur-applications/{id}', [EntrepreneurController::class, 'updateEntrepreneurApplication']);
     });
     //Meetings
@@ -22,7 +23,8 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
 
     //Entrepreneur Agreement
     Route::prefix('agreement-management')->group(function () {
-        Route::post('/agreements', [EntrepreneurController::class, 'createAgreement']);
+        Route::get('/agreements', [EntrepreneurController::class, 'getAgreement']);
+        Route::put('/agreements/{id}', [EntrepreneurController::class, 'updateAgreement']);
     });
 
     //Mentor Assignment

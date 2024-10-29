@@ -56,4 +56,38 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
             
     }
+
+    public function getEntrepreneurAgreement()
+    {
+        $userId = Auth::user()->id;
+        $result = EntrepreneurAgreement::with(
+            ['agreement_status', ////entrepreneur_agreement -> lookup_details,
+             'agreement_entrepreneur_detail' => function ($query) use ($userId){
+                $query->where('entrepreneur_details.user_id',$userId); 
+                },
+            ])
+            ->first();
+
+            if($result){
+                return  $result;
+            }
+            return false;
+            
+    }
+
+    public function updateEntrepreneurAgreement(array $data, int $agreementId)
+    {
+        $agreement = EntrepreneurAgreement::with(['agreement_status', ////entrepreneur_agreement -> lookup_details,
+             'agreement_entrepreneur_detail'
+            ])->find($agreementId);
+        
+        if ($agreement && $agreement->update($data)) {
+            return $agreement->fresh(
+                ['agreement_status', ////entrepreneur_agreement -> lookup_details,
+                'agreement_entrepreneur_detail'
+               ]);
+        }
+          
+        return false;
+    }
 }

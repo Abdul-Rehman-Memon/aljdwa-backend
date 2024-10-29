@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\v1\Applications\UpdateApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
-use App\Http\Requests\v1\Entrepreneur_agreement\EntrepreneurAgreementRequest;
+use App\Http\Requests\v1\Entrepreneur_agreement\UpdateEntrepreneurAgreementRequest;
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 
 use App\Services\v1\UserService;
@@ -16,6 +16,8 @@ use App\Services\v1\EntreprenuerDetailsService;
 use App\Services\v1\MeetingService;
 use App\Services\v1\EntreprenuerAgreementService;
 use App\Services\v1\MentorsAssignmentService;
+use Illuminate\Support\Facades\Auth;
+
 
 use Exception;
 use App\Http\Helpers\ResponseHelper;
@@ -65,6 +67,23 @@ class EntrepreneurController extends Controller
         }
     }
 
+    public function reviewEntrepreneurApplication()
+    {
+        $applicationId = Auth::user()->id;
+        try {
+            $application = $this->entreprenuerDetailsService->reviewEntrepreneurApplication($applicationId);
+
+            if($application){
+                return ResponseHelper::success($application,'Entreprenuer Application retrieved successfully');
+            }else{
+                return ResponseHelper::notFound('Entreprenuer Application not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
     /*********** Meeting ***********/
     public function createMeeting(MeetingRequest $request)
     {
@@ -80,16 +99,34 @@ class EntrepreneurController extends Controller
     }
 
     /*********** Entrepeneur Agreement ***********/
-    public function createAgreement(EntrepreneurAgreementRequest $request)
+    public function getAgreement()
+    {
+        try {
+            $agreement = $this->entreprenuerAgreementService->getEntrepreneurAgreement();
+            return ResponseHelper::success($agreement,'Entrepreneur agreement retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to fetch entrepreneur agreement.',500,$e->getMessage());
+        }
+    }
+
+    public function updateAgreement(UpdateEntrepreneurAgreementRequest $request,$agreementId)
     {
         $validatedData = $request->validated();
 
         try {
-            $agreement = $this->entreprenuerAgreementService->createAgreement($validatedData);
-            return ResponseHelper::created($agreement,'Entrepreneur agreement created successfully');
+            $agreement= $this->entreprenuerAgreementService->getEntrepreneurAgreement($agreementId);
+            if (!$agreement) {
+                return ResponseHelper::notFound('Agreement not found');
+            }
+            $validatedData['status'] = appHelpers::lookUpId('Agreement_status',$validatedData['status']);
+
+            $user = $this->entreprenuerAgreementService->updateEntrepreneurAgreement($validatedData, $agreementId);
+            return ResponseHelper::success($user,'Agreement updated successfully');
+
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to create entrepreneur agreement.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to update agreement.',500,$e->getMessage());
         }
     }
 

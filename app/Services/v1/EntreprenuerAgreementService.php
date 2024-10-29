@@ -26,4 +26,18 @@ class EntreprenuerAgreementService
 
         return $agreement;
     }
+
+    public function getEntrepreneurAgreement()
+    {
+        $agreement = $this->entreprenuerAgreementRepository->getEntrepreneurAgreement();
+
+        return $agreement;
+    }
+
+    public function updateEntrepreneurAgreement($data, $agreementId)
+    {
+        $agreement = $this->entreprenuerAgreementRepository->updateEntrepreneurAgreement($data, $agreementId);
+
+        return $agreement;
+    }
 }

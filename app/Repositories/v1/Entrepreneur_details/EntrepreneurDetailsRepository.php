@@ -65,7 +65,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         ];    
     }
 
-    public function reviewEntrepreneurApplication(string $applicationId)
+    public function reviewEntrepreneurApplication(string $applicationId = null)
     {
         return User::with([
             'entreprenuer_details', 
