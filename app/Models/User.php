@@ -34,7 +34,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'project',
+        'project_name',
         'founder_name',
         'email',
         'country_code',
@@ -96,6 +96,11 @@ class User extends Authenticatable
     public function user_application_status()
     {
         return $this->hasMany(ApplicationStatus::class, 'user_id');
+    }
+
+    public function latest_application_status()
+    {
+        return $this->hasOne(ApplicationStatus::class,'user_id')->latestOfMany();
     }
 
     public function user_status()

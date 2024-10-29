@@ -28,6 +28,29 @@ class UserRepository implements UserRepositoryInterface
         return ApplicationStatus::create($data);
     }
 
+    public function updateUser(array $data, string $userId)
+    {
+        $user = User::find($userId);
+       
+        // Load the roles relationship
+        if ($user && $user->update($data)) {
+            // Send email
+            // Mail::to($user->email)->send(new UserRegistered($user->founder_name));
+            // Load the 'entrepreneur_details' relationship            
+            return $user->load([
+                'entreprenuer_details',
+                'user_role',
+                'user_status',
+                'user_application_status' => function ($query) {
+                    $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+                },
+                'user_application_status.application_status'
+            ]);
+        }
+
+        return false;
+    }
+
     public function getUser(string $userId)
     {
         return User::find($userId)->load('user_role');

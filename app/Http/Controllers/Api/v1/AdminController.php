@@ -153,7 +153,7 @@ class AdminController extends Controller
         }
     }
 
-    public function updateEntrepreneurApplication(ApplicationRequest $request, $applicationId)
+    public function updateEntrepreneurApplicationStatusByAdmin(ApplicationRequest $request, $applicationId)
     {
 
         $validatedData = $request->validated();
@@ -165,7 +165,7 @@ class AdminController extends Controller
             }
             $validatedData['status'] = appHelpers::lookUpId('Application_status',$validatedData['status']);
 
-            $user = $this->entreprenuerDetailsService->updateEntrepreneurApplication($validatedData, $applicationId);
+            $user = $this->entreprenuerDetailsService->updateEntrepreneurApplicationStatusByAdmin($validatedData, $applicationId);
             return ResponseHelper::success($user,'Application updated successfully');
 
         } catch (Exception $e) {

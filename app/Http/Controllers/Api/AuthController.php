@@ -69,6 +69,6 @@ class AuthController extends Controller
 
         $user['token'] = $token; 
 
-        return ResponseHelper::created($user ,'You are logged in');
+        return ResponseHelper::success($user ,'You are logged in');
     }
 }

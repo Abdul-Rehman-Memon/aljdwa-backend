@@ -80,11 +80,24 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
             ->where('id',$applicationId)->first();
     }
 
-    public function updateEntrepreneurApplication(array $data, string $applicationId)
+    public function updateEntrepreneurApplicationStatusByAdmin(array $data, string $applicationId)
     {
         $data['user_id'] = $applicationId;
         $data['status_by'] = Auth::user()->id;
         return ApplicationStatus::create($data);  
+          
+    }
+
+    // Entrepreneur will update his application
+    public function updateEntrepreneurApplication(array $data, string $applicationId)
+    {
+        $entrepreneurDetail = EntrepreneurDetail::where('user_id', $applicationId)->first();
+
+        if ($entrepreneurDetail && $entrepreneurDetail->update($data)) {
+            return $entrepreneurDetail;
+        }
+
+        return false;
           
     }
 

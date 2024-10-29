@@ -19,7 +19,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
     Route::prefix('application-management')->group(function () {
         Route::get('/entrepreneur-applications', [AdminController::class, 'getEntrepreneurApplications']);
         Route::get('/entrepreneur-applications/{id}/review', [AdminController::class, 'reviewEntrepreneurApplication']);
-        Route::put('/entrepreneur-applications/{id}', [AdminController::class, 'updateEntrepreneurApplication']);
+        Route::put('/entrepreneur-applications/{id}', [AdminController::class, 'updateEntrepreneurApplicationStatusByAdmin']);
     });
     //Meetings
     Route::prefix('meeting-management')->group(function () {
