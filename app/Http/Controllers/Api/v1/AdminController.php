@@ -6,6 +6,7 @@ use App\helpers\appHelpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\v1\Appointments_schedule\AppointmentScheduleRequest;
 use App\Http\Requests\v1\Appointments\AppointmentUpdateRequest;
 use App\Http\Requests\v1\Applications\ApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
@@ -13,6 +14,7 @@ use App\Http\Requests\v1\Entrepreneur_agreement\EntrepreneurAgreementRequest;
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 
 use App\Services\v1\UserService;
+use App\Services\v1\AppointmentsScheduleService;
 use App\Services\v1\AppointmentService;
 use App\Services\v1\EntreprenuerDetailsService;
 use App\Services\v1\MeetingService;
@@ -25,6 +27,7 @@ use App\Http\Helpers\ResponseHelper;
 class AdminController extends Controller
 {
     protected $userService;
+    protected $appointmentsScheduleService;
     protected $appointmentService;
     protected $entreprenuerDetailsService;
     protected $meetingsService;
@@ -33,6 +36,7 @@ class AdminController extends Controller
     
     public function __construct(
         UserService $userService,
+        AppointmentsScheduleService $appointmentsScheduleService,
         AppointmentService $appointmentService,
         EntreprenuerDetailsService $entreprenuerDetailsService,
         MeetingService $meetingsService,
@@ -41,12 +45,27 @@ class AdminController extends Controller
         )
     {
         $this->userService = $userService;
+        $this->appointmentsScheduleService = $appointmentsScheduleService;
         $this->appointmentService = $appointmentService;
         $this->entreprenuerDetailsService = $entreprenuerDetailsService;
         $this->meetingsService = $meetingsService;
         $this->entreprenuerAgreementService = $entreprenuerAgreementService;
         $this->mentorsAssignmentService = $mentorsAssignmentService;
         
+    }
+
+    /*********** Appointments Schedule ***********/
+    public function createAppointmentSchedule(AppointmentScheduleRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        try {
+            $appointment_schedule = $this->appointmentsScheduleService->createAppointmentSchedule($validatedData);
+            return ResponseHelper::created($appointment_schedule,'Appointment schedules created successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to create appointment schedule.',500,$e->getMessage());
+        }
     }
 
     /*********** Appointment Request ***********/

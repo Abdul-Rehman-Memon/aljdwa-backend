@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\v1\Users\UserRepositoryInterface as UserRepositoryV1;
 use App\Repositories\v1\Users\UserRepository as UserRepositoryImplV1;
 
+use App\Repositories\v1\Appointments_schedule\AppointmentsScheduleInterface as AppointmentsScheduleInterfaceV1;
+use App\Repositories\v1\Appointments_schedule\AppointmentsScheduleRepository as AppointmentsScheduleRepositoryV1;
+
 use App\Repositories\v1\Appointments\AppointmentsInterface as AppointmentsInterfaceV1;
 use App\Repositories\v1\Appointments\AppointmentsRepository as AppointmentsRepositoryV1;
 
@@ -31,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Bind for v1 - User Repository
         $this->app->bind(UserRepositoryV1::class, UserRepositoryImplV1::class);
+
+        // Bind for v1 - Appointments Schedule Repository
+        $this->app->bind(AppointmentsScheduleInterfaceV1::class, AppointmentsScheduleRepositoryV1::class);
 
         // Bind for v1 - Appointments Repository
         $this->app->bind(AppointmentsInterfaceV1::class, AppointmentsRepositoryV1::class);

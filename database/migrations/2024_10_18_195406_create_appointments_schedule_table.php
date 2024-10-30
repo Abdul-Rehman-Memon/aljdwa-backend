@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('duration');
             $table->integer('weekday')->nullable();
 
-            $table->unsignedInteger('status')->default(24);
+            $table->unsignedInteger('status')->default(5);
             $table->foreign('status')->references('id')->on('lookup_details')
            ->cascadeOnUpdate()
            ->cascadeOnDelete();

@@ -9,6 +9,10 @@ use App\Http\Middleware\CheckRole;
 
 Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin')->group(function () {
 
+    //Appointments Schedules
+    Route::prefix('appointment-schedule-management')->group(function () {
+        Route::post('/appointment-schedules', [AdminController::class, 'createAppointmentSchedule']);
+    });
     //Appointments Request
     Route::prefix('appointment-management')->group(function () {
         Route::get('/appointments', [AdminController::class, 'indexAppointments']);
