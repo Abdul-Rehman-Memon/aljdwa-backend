@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone')->nullable();
             $table->string('email');
+            $table->text('message')->nullable();
             $table->string('request_date');
             $table->string('request_time');
             $table->string('link')->nullable();

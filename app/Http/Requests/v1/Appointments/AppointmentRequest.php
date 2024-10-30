@@ -44,6 +44,7 @@ class AppointmentRequest extends FormRequest
             'last_name' => 'required|string|min:3',
             'phone' => 'nullable|string',
             'email' => 'required|email',
+            'message' => 'required|string',
             'request_date' => 'required|string',
             'request_time' => 'required|string',
         ];

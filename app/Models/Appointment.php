@@ -24,6 +24,7 @@ class Appointment extends Model
         'last_name',
         'phone',
         'email',
+        'message',
         'request_date',
         'request_time',
         'link',
