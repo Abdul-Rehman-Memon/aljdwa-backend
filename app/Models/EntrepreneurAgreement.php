@@ -25,7 +25,7 @@ class EntrepreneurAgreement extends Model
     protected $fillable = [
         'entrepreneur_details_id',
         'admin_id',
-        'signed_At',
+        'signed_at',
         'agreement_details',
         'agreement_document',
         'reject_reason',
@@ -49,8 +49,8 @@ class EntrepreneurAgreement extends Model
         return strtotime($value); // Converts date to timestamp
     }
 
-    // Add this to convert request_date_time into timestamp
-    public function getRequestDateTimeAttribute($value)
+    // Add this to convert signed_At into timestamp
+    public function getSignedAtAttribute($value)
     {
         return strtotime($value); // Converts date to timestamp
     }

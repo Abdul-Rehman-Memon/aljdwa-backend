@@ -15,9 +15,21 @@ class MentorsAssignmentService
 
     public function createMentorAssignment(array $data)
     {
-        $appointment = $this->mentorsAssignmentRepository->createMentorAssignment($data);
+        $mentor_assignment = $this->mentorsAssignmentRepository->createMentorAssignment($data);
 
-        return $appointment;
+        return $mentor_assignment;
+    }
+
+    public function getAssignedMentorToEntrepreneur($id = null)
+    {
+        $mentor_assignment = $this->mentorsAssignmentRepository->getAssignedMentorToEntrepreneur($id);
+
+        return $mentor_assignment;
+    }
+
+    public function getEntrepreneurAssignedToMentor(){
+
+        return $this->mentorsAssignmentRepository->getEntrepreneurAssignedToMentor();
     }
 
 }

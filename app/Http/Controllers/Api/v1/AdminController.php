@@ -233,9 +233,9 @@ class AdminController extends Controller
             $isMentor = appHelpers::isMentor($mentor_id);
             if(!$isMentor)
             return ResponseHelper::notFound('Invalid Mentor id/Not Mentor role');
-            $agreement = $this->entreprenuerAgreementService->getEntrepreneurAgreementWithPayment($entrepreneur_details_id);
-            if($agreement['agreement_status'] !== 'Accepted' || $agreement['payment_status'] !== 'Paid')
-            return ResponseHelper::error('Agreement not accepted/payment not paid .',400,$agreement);
+            $agreementPayment = $this->entreprenuerAgreementService->getEntrepreneurAgreementWithPayment($entrepreneur_details_id);
+            if(!$agreementPayment)
+            return ResponseHelper::error('Agreement not accepted/payment not paid .',400,$agreementPayment);
             $mentor_assignment = $this->mentorsAssignmentService->createMentorAssignment($validatedData);
             return ResponseHelper::created($mentor_assignment,'Mentor assignment created successfully');
         } catch (Exception $e) {

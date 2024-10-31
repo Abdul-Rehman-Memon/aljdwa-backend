@@ -55,4 +55,5 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::find($userId)->load('user_role');
     }
+
 }

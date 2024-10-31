@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\v1\Appointments_schedule;
+namespace App\Http\Requests\v1\Payments;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AppointmentScheduleRequest extends FormRequest
+class PaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,17 +40,22 @@ class AppointmentScheduleRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'date' => 'nullable|string|min:5',
-            'time' => 'required|string|min:5',
-            'duration' => 'required|string|min:5',
-            'weekday' => 'required|int|in:0,1,2,3,4,5,6',
+            'payments_details' => 'required|string',
+            'payment_refrence' => 'required|int',
+            // 'entrepreneur_id' => 'required|exists:users,id',
+            'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
+            'invoice_Id' => 'required|int',
+            'amount' => 'required|int',
+            // 'payment_date' => 'required|date',
+            'status' => 'required|string|in:paid,unpaid',
         ];
+
     }
 
     public function messages()
     {
         return [
-            'weekday' => 'Weekday can be between 0-6 number',
+            'status' => 'Staus can be Paid/Unpaid',
         ];
     }
 }

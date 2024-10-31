@@ -37,7 +37,7 @@ return new class extends Migration
             $table->bigInteger('amount');
             // $table->integer('status');
             // $table->foreign('status')->references('id')->on('lookups');
-            $table->unsignedInteger('status');
+            $table->unsignedInteger('status')->default(23);
              $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();

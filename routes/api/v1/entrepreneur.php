@@ -15,10 +15,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
     });
     //Meetings
     Route::prefix('meeting-management')->group(function () {
-        Route::post('/meetings', [EntrepreneurController::class, 'createMeeting']);
-        // Route::get('/meetings', [AdminController::class, '']);
-        // Route::get('/meetings/{id}/review', [AdminController::class, '']);
-        // Route::put('/meetings/{id}', [AdminController::class, '']);
+        Route::post('/meetings', [AdminController::class, 'createMeeting']);
     });
 
     //Entrepreneur Agreement
@@ -27,8 +24,13 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
         Route::put('/agreements/{id}', [EntrepreneurController::class, 'updateAgreement']);
     });
 
+    //Entrepreneur Payment
+    Route::prefix('payment-management')->group(function () {
+        Route::post('/payments', [EntrepreneurController::class, 'createPayment']);
+    });
+
     //Mentor Assignment
     Route::prefix('mentor-assignment-management')->group(function () {
-        Route::post('/mentor-assignments', [EntrepreneurController::class, 'createMentorAssignement']);
+        Route::get('/mentor-assignments', [EntrepreneurController::class, 'getAssignedMentorToEntrepreneur']);
     });
 });

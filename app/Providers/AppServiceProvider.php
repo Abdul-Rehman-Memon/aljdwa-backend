@@ -22,6 +22,9 @@ use App\Repositories\v1\Meetings\MeetingsRepository as MeetingsRepositoryV1;
 use App\Repositories\v1\Entrepreneur_agreement\EntrepreneurAgreementInterface as EntrepreneurAgreementInterfaceV1;
 use App\Repositories\v1\Entrepreneur_agreement\EntrepreneurAgreementRepository as EntrepreneurAgreementRepositoryV1;
 
+use App\Repositories\v1\Payments\PaymentsInterface as PaymentsInterfaceV1;
+use App\Repositories\v1\Payments\PaymentsRepository as PaymentsRepositoryV1;
+
 use App\Repositories\v1\Mentors_assignment\MentorsAssignmentInterface as MentorsAssignmentInterfaceV1;
 use App\Repositories\v1\Mentors_assignment\MentorsAssignmentRepository as MentorsAssignmentRepositoryV1;
 
@@ -49,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind for v1 - Entrepreneur Agreement Repository
         $this->app->bind(EntrepreneurAgreementInterfaceV1::class, EntrepreneurAgreementRepositoryV1::class);
+
+        // Bind for v1 - Entrepreneur Payment Repository
+         $this->app->bind(PaymentsInterfaceV1::class, PaymentsRepositoryV1::class);
 
         // Bind for v1 - Mentor Assignemnt Repository
         $this->app->bind(MentorsAssignmentInterfaceV1::class, MentorsAssignmentRepositoryV1::class);

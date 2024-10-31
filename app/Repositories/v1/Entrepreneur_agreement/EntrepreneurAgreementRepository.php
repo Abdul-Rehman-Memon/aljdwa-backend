@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 {
@@ -34,27 +35,19 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
     public function getEntrepreneurAgreementWithPayment(string $entrepreneurDetailsId)
     {
-        $result = EntrepreneurAgreement::with(
-            ['agreement_entrepreneur_detail', //entrepreneur_agreement -> entrepreneur_details
-             'agreement_status', ////entrepreneur_agreement -> lookup_details
-             'agreement_entrepreneur_detail.entrepreneur_details_payment',//entrepreneur_agreement -> entrepreneur_details -> payment
-             'agreement_entrepreneur_detail.entrepreneur_details_payment.payment_status', ////entrepreneur_agreement -> entrepreneur_details -> payment -> lookup_details
-            ])
-            ->where('entrepreneur_details_id',$entrepreneurDetailsId)->first();
-
-            if($result){
-                return  [
-                    'agreement_status' => $result->agreement_status->value,
-                    'payment_status' => $result->agreement_entrepreneur_detail->entrepreneur_details_payment->payment_status->value,
-                ];
-            }
-
-            return  [
-                'agreement_status' => null,
-                'payment_status' => null,
-            ];
-
-            
+        return EntrepreneurAgreement::with([
+            'agreement_entrepreneur_detail',  // Fetches entrepreneur details for the agreement
+            'agreement_status',               // Fetches agreement status (e.g., lookup details)
+            'agreement_entrepreneur_detail.entrepreneur_details_payment', // Fetches payments related to entrepreneur details
+            'agreement_entrepreneur_detail.entrepreneur_details_payment.payment_status', // Fetches status of each payment
+        ])
+        ->whereHas('agreement_entrepreneur_detail', function ($query) use ($entrepreneurDetailsId) {
+            $query->where('entrepreneur_details_id', $entrepreneurDetailsId);
+        })
+        ->whereHas('agreement_entrepreneur_detail.entrepreneur_details_payment', function ($query) use ($entrepreneurDetailsId) {
+            $query->where('entrepreneur_details_id', $entrepreneurDetailsId);
+        })
+        ->first();         
     }
 
     public function getEntrepreneurAgreement()
@@ -77,6 +70,7 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
     public function updateEntrepreneurAgreement(array $data, int $agreementId)
     {
+        $data['signed_At'] = Carbon::now()->toDateTimeString();
         $agreement = EntrepreneurAgreement::with(['agreement_status', ////entrepreneur_agreement -> lookup_details,
              'agreement_entrepreneur_detail'
             ])->find($agreementId);

@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\LookupDetail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Payment extends Model
 {
+    use HasFactory, HasUuids;
     protected $table = 'payments';
 
     public static function boot()

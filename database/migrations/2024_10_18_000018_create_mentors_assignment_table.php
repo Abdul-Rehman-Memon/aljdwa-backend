@@ -24,6 +24,13 @@ return new class extends Migration
             $table->foreignUuid('mentor_id')->constrained('users')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+           
+
+            $table->unsignedInteger('status')->default(5);
+             $table->foreign('status')->references('id')->on('lookup_details')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+
             $table->timestamps();
         });
 

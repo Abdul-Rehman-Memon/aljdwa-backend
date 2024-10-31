@@ -40,16 +40,16 @@ class appHelpers
     
     public static function isMentor($userId = null) {
         $user =  User::find($userId)->load('user_role');
-        return ($user->user_role->value === 'Mentor') ?? false;
+        return ($user->user_role->value === 'mentor') ?? false;
     }
     
     public static function isEntrepreneur($userId = null) {
         $user =  User::find($userId)->load('user_role');
-        return ($user->user_role->value === 'Entrepreneur') ?? false;
+        return ($user->user_role->value === 'entrepreneur') ?? false;
     }
     
     public static function isInvestor($userId = null) {
         $user =  User::find($userId)->load('user_role');
-        return ($user->user_role->value === 'Investor') ?? false;
+        return ($user->user_role->value === 'investor') ?? false;
     }
 }

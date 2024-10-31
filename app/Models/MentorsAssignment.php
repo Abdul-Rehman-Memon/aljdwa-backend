@@ -21,11 +21,13 @@ class MentorsAssignment extends Model
     protected $fillable = [
         'entrepreneur_details_id',
         'mentor_id',
+        'status',
     ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
+        'status',
     ];
 
     // Add this to convert created_at into timestamp
@@ -46,10 +48,20 @@ class MentorsAssignment extends Model
         return strtotime($value); // Converts date to timestamp
     }
     ////////////////////////////////////
-    // public function mentor_assign_status()
-    // {
-    //     return $this->belongsTo(LookupDetail::class,'status','id');
-    // }
+    public function mentor_assign_status()
+    {
+        return $this->belongsTo(LookupDetail::class,'status','id');
+    }
+
+    public function entrepreneur_details()
+    {
+        return $this->belongsTo(EntrepreneurDetail::class,'entrepreneur_details_id','id');
+    }
+
+    public function mentor_details()
+    {
+        return $this->belongsTo(User::class,'mentor_id','id');
+    }
 
 }
 

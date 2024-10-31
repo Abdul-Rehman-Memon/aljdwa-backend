@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 use App\Http\Requests\v1\Applications\UpdateApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\UpdateEntrepreneurAgreementRequest;
+use App\Http\Requests\v1\Payments\PaymentRequest;
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 
 use App\Services\v1\UserService;
 use App\Services\v1\EntreprenuerDetailsService;
 use App\Services\v1\MeetingService;
 use App\Services\v1\EntreprenuerAgreementService;
+use App\Services\v1\PaymentsService;
 use App\Services\v1\MentorsAssignmentService;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,6 +30,7 @@ class EntrepreneurController extends Controller
     protected $entreprenuerDetailsService;
     protected $meetingsService;
     protected $entreprenuerAgreementService;
+    protected $paymentService;
     protected $mentorsAssignmentService;
     
     public function __construct(
@@ -35,6 +38,7 @@ class EntrepreneurController extends Controller
         EntreprenuerDetailsService $entreprenuerDetailsService,
         MeetingService $meetingsService,
         EntreprenuerAgreementService $entreprenuerAgreementService,
+        PaymentsService $paymentService,
         MentorsAssignmentService $mentorsAssignmentService,
         )
     {
@@ -42,6 +46,7 @@ class EntrepreneurController extends Controller
         $this->entreprenuerDetailsService = $entreprenuerDetailsService;
         $this->meetingsService = $meetingsService;
         $this->entreprenuerAgreementService = $entreprenuerAgreementService;
+        $this->paymentService = $paymentService;
         $this->mentorsAssignmentService = $mentorsAssignmentService;
         
     }
@@ -85,18 +90,7 @@ class EntrepreneurController extends Controller
     }
 
     /*********** Meeting ***********/
-    public function createMeeting(MeetingRequest $request)
-    {
-        $validatedData = $request->validated();
 
-        try {
-            $meeting = $this->meetingsService->createMeeting($validatedData);
-            return ResponseHelper::created($meeting,'Meeting scheduled successfully');
-        } catch (Exception $e) {
-            // Handle the error
-            return ResponseHelper::error('Failed to schedule meeting.',500,$e->getMessage());
-        }
-    }
 
     /*********** Entrepeneur Agreement ***********/
     public function getAgreement()
@@ -130,26 +124,30 @@ class EntrepreneurController extends Controller
         }
     }
 
-    /*********** Mentor Assignment ***********/
-    public function createMentorAssignement(MentorAssignmentRequest $request)
+    /*********** Entrepeneur Payment ***********/
+    public function createPayment(PaymentRequest $request)
     {
         $validatedData = $request->validated();
-        $entrepreneur_details_id = $validatedData['entrepreneur_details_id'];
-        $mentor_id = $validatedData['mentor_id'];
+
         try {
-            // $isMentor = appHelpers::lookUpId('status','Pending');
-            // return response()->json($isMentor);
-            $isMentor = appHelpers::isMentor($mentor_id);
-            if(!$isMentor)
-            return ResponseHelper::notFound('Invalid Mentor id/Not Mentor role');
-            $agreement = $this->entreprenuerAgreementService->getEntrepreneurAgreementWithPayment($entrepreneur_details_id);
-            if($agreement['agreement_status'] !== 'Accepted' || $agreement['payment_status'] !== 'Paid')
-            return ResponseHelper::error('Agreement not accepted/payment not paid .',400,$agreement);
-            $mentor_assignment = $this->mentorsAssignmentService->createMentorAssignment($validatedData);
-            return ResponseHelper::created($mentor_assignment,'Mentor assignment created successfully');
+            $validatedData['status'] = appHelpers::lookUpId('Payment_status',$validatedData['status']);
+            $payment = $this->paymentService->createPayment($validatedData);
+            return ResponseHelper::created($payment,'Entrepreneur payment created successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to create mentor assignment.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to create entrepreneur payment.',500,$e->getMessage());
+        }
+    }
+
+    /*********** Mentor Assignment ***********/
+    public function getAssignedMentorToEntrepreneur(){
+       
+        try {
+            $mentor_assignment = $this->mentorsAssignmentService->getAssignedMentorToEntrepreneur();
+            return ResponseHelper::success($mentor_assignment,'Mentors assignment retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to fetch mentors assignment.',500,$e->getMessage());
         }
     }
 
