@@ -32,6 +32,15 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
 
     public function getEntrepreneurAssignedToMentor()
     {
-        // return User::find($userId)->load('user_role');
+        $userId = Auth::user()->id;
+
+        return MentorsAssignment::with([
+            'mentor_assign_status',
+            'entrepreneur_details',
+            'entrepreneur_details.user',
+            // 'mentor_details'
+            ])
+            ->where('mentor_id', $userId)
+            ->first();
     }
 }

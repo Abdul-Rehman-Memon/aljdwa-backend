@@ -40,7 +40,6 @@ class RegisterRequest extends FormRequest
     {
         // Initialize the common rules
         $rules = [
-            'project_name' => 'required|string|max:255',
             'founder_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'country_code' => 'required|integer',
@@ -56,18 +55,26 @@ class RegisterRequest extends FormRequest
                 'regex:/[@$!%*#?&]/', // At least one special character
             ],
             // 'password' => 'required|min:8|',
-            'linkedin_profile' => 'required|string|url',
+           
             'role' => [
                 'required',
                 'string',
-                'regex:/^(mentor|entrepreneur|investor)$/i', // Case-insensitive role validation
+                'regex:/^(admin|mentor|entrepreneur|investor)$/i', // Case-insensitive role validation
             ],
         ];
 
         // Add rules conditionally based on the role
-        if ($this->input('role') === 'entrepreneur') {
+        if ($this->input('role') === 'mentor') {
             $rules = array_merge($rules, [
                
+                'linkedin_profile' => 'required|string|url',
+                'project_name' => 'required|string|max:255',
+            ]);
+        }
+        elseif ($this->input('role') === 'entrepreneur') {
+            $rules = array_merge($rules, [
+                'linkedin_profile' => 'required|string|url',
+                'project_name' => 'required|string|max:255',
                 'position' => 'required|string', 
                 'major' => 'required|string', 
                 'resume' => 'required|file|mimes:pdf|max:5120',//5MB
