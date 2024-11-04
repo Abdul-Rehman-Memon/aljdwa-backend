@@ -20,16 +20,28 @@ class MentorsAssignmentService
         return $mentor_assignment;
     }
 
-    public function getAssignedMentorToEntrepreneur($id = null)
+    public function getAllAssignedMentorToEntrepreneur()
+    {
+        $mentor_assignment = $this->mentorsAssignmentRepository->getAllAssignedMentorToEntrepreneur();
+
+        return $mentor_assignment;
+    }
+
+    public function getAssignedMentorToEntrepreneur(int $id)
     {
         $mentor_assignment = $this->mentorsAssignmentRepository->getAssignedMentorToEntrepreneur($id);
 
         return $mentor_assignment;
     }
 
-    public function getEntrepreneurAssignedToMentor(){
+    public function getAllEntrepreneurAssignedToMentor(){
 
-        return $this->mentorsAssignmentRepository->getEntrepreneurAssignedToMentor();
+        return $this->mentorsAssignmentRepository->getAllEntrepreneurAssignedToMentor();
+    }
+
+    public function getEntrepreneurAssignedToMentor(int $id){
+
+        return $this->mentorsAssignmentRepository->getEntrepreneurAssignedToMentor($id);
     }
 
 }

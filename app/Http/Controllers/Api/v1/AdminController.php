@@ -206,6 +206,72 @@ class AdminController extends Controller
             return ResponseHelper::error('Failed to schedule meeting.',500,$e->getMessage());
         }
     }
+    public function getAllAdminScheduledMeetings(Request $request)
+    {
+
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+
+        try {
+            $meetings = $this->meetingsService->getAllAdminScheduledMeetings($limit, $offset);
+            $data = $meetings['meetings'];
+            $totalCount = $meetings['totalCount'];
+            $limit = $meetings['limit'];
+            $offset = $meetings['offset'];
+            $message =  'Meetings retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('meeting not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
+    public function getAllMeetings(Request $request)
+    {
+
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+
+        try {
+            $meetings = $this->meetingsService->getAllMeetings($limit, $offset);
+            $data = $meetings['meetings'];
+            $totalCount = $meetings['totalCount'];
+            $limit = $meetings['limit'];
+            $offset = $meetings['offset'];
+            $message =  'Meetings retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('meeting not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
+    public function getMeeting($id)
+    {
+        try {
+            $meeting = $this->meetingsService->getMeeting($id);
+
+            if($meeting){
+                return ResponseHelper::success($meeting,'meeting retrieved successfully.'); 
+            }else{
+                return ResponseHelper::notFound('meeting not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
 
     /*********** Entrepeneur Agreement ***********/
     public function createAgreement(EntrepreneurAgreementRequest $request)

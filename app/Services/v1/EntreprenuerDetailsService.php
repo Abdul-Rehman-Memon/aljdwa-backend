@@ -5,6 +5,9 @@ use App\Repositories\v1\Users\UserRepositoryInterface;
 use App\Repositories\v1\Entrepreneur_details\EntrepreneurDetailsInterface;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserProfileUpdatedNotification;
+
 use DB;
 
 class EntreprenuerDetailsService
@@ -44,7 +47,7 @@ class EntreprenuerDetailsService
 
     public function updateEntrepreneurApplication($data, $applicationId)
     {
-        $applicationId = Auth::user()->id;//here I get UserId/applicationId from users table for further security
+        $applicationId = Auth::user()->id;
 
         DB::beginTransaction();
 
@@ -76,10 +79,9 @@ class EntreprenuerDetailsService
             }
 
             DB::commit(); // Commit if both updates succeed
-            // Send email
-            // Mail::to($user->email)->send(new UserRegistered($user->founder_name));
+         
             // Reload 'entrepreneur_details' to ensure it reflects any recent changes
-            return $userUpdated->fresh([
+            $userUpdated = $userUpdated->fresh([
                 'entreprenuer_details',
                 'user_role',
                 'user_status',
@@ -88,6 +90,9 @@ class EntreprenuerDetailsService
                 },
                 'user_application_status.application_status'
             ]);
+
+            return $userUpdated;
+
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback on any exception
             throw new \Exception('An error occurred: ' . $e->getMessage().' Line '.$e->getLine());

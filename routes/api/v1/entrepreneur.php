@@ -13,11 +13,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
         Route::get('/entrepreneur-applications', [EntrepreneurController::class, 'reviewEntrepreneurApplication']);
         Route::put('/entrepreneur-applications/{id}', [EntrepreneurController::class, 'updateEntrepreneurApplication']);
     });
-    //Meetings
-    Route::prefix('meeting-management')->group(function () {
-        Route::post('/meetings', [AdminController::class, 'createMeeting']);
-    });
-
+   
     //Entrepreneur Agreement
     Route::prefix('agreement-management')->group(function () {
         Route::get('/agreements', [EntrepreneurController::class, 'getAgreement']);
@@ -31,6 +27,20 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
 
     //Mentor Assignment
     Route::prefix('mentor-assignment-management')->group(function () {
-        Route::get('/mentor-assignments', [EntrepreneurController::class, 'getAssignedMentorToEntrepreneur']);
+        Route::get('/mentor-assignments', [EntrepreneurController::class, 'getAllAssignedMentorToEntrepreneur']);
+        Route::get('/mentor-assignments/{id}', [EntrepreneurController::class, 'getAssignedMentorToEntrepreneur']);
+    });
+
+    //Meetings
+    Route::prefix('meeting-management')->group(function () {
+        Route::post('/meetings', [EntrepreneurController::class, 'createMeeting']);
+        Route::get('/meetings', [EntrepreneurController::class, 'getAllMeetings']);
+        Route::get('/meetings/{id}/review', [EntrepreneurController::class, 'getMeeting']); 
+    });
+
+    //Messages
+    Route::prefix('message-management')->group(function () {
+        Route::post('/messages', [EntrepreneurController::class, 'sendMessageToMentor']);
+        Route::get('/messages/{id}', [EntrepreneurController::class, 'getMentorMessages']);
     });
 });

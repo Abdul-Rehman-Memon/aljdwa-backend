@@ -16,8 +16,29 @@ class MeetingService
 
     public function createMeeting(array $data)
     {
-        $appointment = $this->meetingRepository->createMeeting($data);
+        $meeting = $this->meetingRepository->createMeeting($data);
 
-        return $appointment;
+        return $meeting;
+    }
+
+    public function getAllAdminScheduledMeetings($limit, $offset)
+    {
+        $meeting = $this->meetingRepository->getAllAdminScheduledMeetings($limit, $offset);
+
+        return $meeting;
+    }
+
+    public function getAllMeetings($limit, $offset)
+    {
+        $meeting = $this->meetingRepository->getAllMeetings($limit, $offset);
+
+        return $meeting;
+    }
+
+    public function getMeeting($id)
+    {
+        $meeting = $this->meetingRepository->getMeeting($id);
+
+        return $meeting;
     }
 }

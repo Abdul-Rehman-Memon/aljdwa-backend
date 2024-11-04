@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\LookupDetail;
 use App\Http\Requests\v1\Users\RegisterRequest;
 use App\Http\Requests\v1\Users\LoginRequest;
+use App\Http\Requests\v1\Users\ForgetPasswordRequest;
 use App\Services\v1\UserService;
 use Illuminate\Database\QueryException;
 use Exception;
@@ -70,5 +71,22 @@ class AuthController extends Controller
         $user['token'] = $token; 
 
         return ResponseHelper::success($user ,'You are logged in');
+    }
+
+    public function forgetPassword(ForgetPasswordRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        try {
+            // Send password recovery email
+            $user = $this->userService->forgetPassword($validatedData);
+            if(!$user)
+            return ResponseHelper::notFound('No user found with the provided email address.');
+        
+            return ResponseHelper::created($user, 'An email has been sent to your email address to recover your password.');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to send password recovery email.', 500, $e->getMessage());
+        }
     }
 }

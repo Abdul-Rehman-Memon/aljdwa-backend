@@ -5,6 +5,7 @@ namespace App\helpers;
 use App\Models\User;
 use App\Models\Lookup;
 use App\Models\LookupDetail;
+use App\Models\MentorsAssignment;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -52,4 +53,14 @@ class appHelpers
         $user =  User::find($userId)->load('user_role');
         return ($user->user_role->value === 'investor') ?? false;
     }
+
+    /* check is mentor assigned to current logged in entrepreneur */
+    public static function isMentorAssigned($entrepreneurId,$mentorId) {
+        return MentorsAssignment::whereHas('entrepreneur_details', function ($query) use ($entrepreneurId) {
+                $query->where('user_id', $entrepreneurId);
+            })
+            ->where('mentor_id',$mentorId)
+            ->first();
+    }
+
 }

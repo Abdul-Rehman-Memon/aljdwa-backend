@@ -28,6 +28,9 @@ use App\Repositories\v1\Payments\PaymentsRepository as PaymentsRepositoryV1;
 use App\Repositories\v1\Mentors_assignment\MentorsAssignmentInterface as MentorsAssignmentInterfaceV1;
 use App\Repositories\v1\Mentors_assignment\MentorsAssignmentRepository as MentorsAssignmentRepositoryV1;
 
+use App\Repositories\v1\Messages\MessagesInterface as MessagesInterfaceV1;
+use App\Repositories\v1\Messages\MessagesRepository as MessagesRepositoryV1;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -58,6 +61,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind for v1 - Mentor Assignemnt Repository
         $this->app->bind(MentorsAssignmentInterfaceV1::class, MentorsAssignmentRepositoryV1::class);
+
+        // Bind for v1 - Messages Repository
+        $this->app->bind(MessagesInterfaceV1::class, MessagesRepositoryV1::class);
     }
 
     /**

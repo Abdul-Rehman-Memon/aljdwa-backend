@@ -45,5 +45,17 @@ class Meeting extends Model
         return $this->belongsTo(LookupDetail::class,'status','id');
     }
 
+       // Relationship to get the initiator details
+       public function initiator()
+       {
+           return $this->belongsTo(User::class, 'initiator_id');
+       }
+   
+       // Relationship to get the participant details
+       public function participant()
+       {
+           return $this->belongsTo(User::class, 'participant_id');
+       }
+
 }
 

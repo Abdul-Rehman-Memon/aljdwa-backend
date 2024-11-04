@@ -28,9 +28,9 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
     //Meetings
     Route::prefix('meeting-management')->group(function () {
         Route::post('/meetings', [AdminController::class, 'createMeeting']);
-        // Route::get('/meetings', [AdminController::class, '']);
-        // Route::get('/meetings/{id}/review', [AdminController::class, '']);
-        // Route::put('/meetings/{id}', [AdminController::class, '']);
+        Route::get('/admin-scheduled-meetings', [AdminController::class, 'getAllAdminScheduledMeetings']);
+        Route::get('/meetings', [AdminController::class, 'getAllMeetings']);
+        Route::get('/meetings/{id}/review', [AdminController::class, 'getMeeting']); 
     });
 
     //Entrepreneur Agreement

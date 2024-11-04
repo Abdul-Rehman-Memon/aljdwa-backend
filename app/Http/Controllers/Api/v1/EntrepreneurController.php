@@ -11,6 +11,7 @@ use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\UpdateEntrepreneurAgreementRequest;
 use App\Http\Requests\v1\Payments\PaymentRequest;
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
+use App\Http\Requests\v1\Messages\MessageRequest;
 
 use App\Services\v1\UserService;
 use App\Services\v1\EntreprenuerDetailsService;
@@ -18,6 +19,7 @@ use App\Services\v1\MeetingService;
 use App\Services\v1\EntreprenuerAgreementService;
 use App\Services\v1\PaymentsService;
 use App\Services\v1\MentorsAssignmentService;
+use App\Services\v1\MessageService;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -32,6 +34,7 @@ class EntrepreneurController extends Controller
     protected $entreprenuerAgreementService;
     protected $paymentService;
     protected $mentorsAssignmentService;
+    protected $messageService;
     
     public function __construct(
         UserService $userService,
@@ -40,6 +43,7 @@ class EntrepreneurController extends Controller
         EntreprenuerAgreementService $entreprenuerAgreementService,
         PaymentsService $paymentService,
         MentorsAssignmentService $mentorsAssignmentService,
+        MessageService $messageService,
         )
     {
         $this->userService = $userService;
@@ -48,6 +52,7 @@ class EntrepreneurController extends Controller
         $this->entreprenuerAgreementService = $entreprenuerAgreementService;
         $this->paymentService = $paymentService;
         $this->mentorsAssignmentService = $mentorsAssignmentService;
+        $this->messageService = $messageService;
         
     }
 
@@ -88,9 +93,6 @@ class EntrepreneurController extends Controller
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
         }
     }
-
-    /*********** Meeting ***********/
-
 
     /*********** Entrepeneur Agreement ***********/
     public function getAgreement()
@@ -140,14 +142,115 @@ class EntrepreneurController extends Controller
     }
 
     /*********** Mentor Assignment ***********/
-    public function getAssignedMentorToEntrepreneur(){
+    public function getAllAssignedMentorToEntrepreneur(){
        
         try {
-            $mentor_assignment = $this->mentorsAssignmentService->getAssignedMentorToEntrepreneur();
+            $mentor_assignment = $this->mentorsAssignmentService->getAllAssignedMentorToEntrepreneur();
             return ResponseHelper::success($mentor_assignment,'Mentors assignment retrieved successfully');
         } catch (Exception $e) {
             // Handle the error
             return ResponseHelper::error('Failed to fetch mentors assignment.',500,$e->getMessage());
+        }
+    }
+
+    public function getAssignedMentorToEntrepreneur($id){
+       
+        try {
+            $mentor_assignment = $this->mentorsAssignmentService->getAssignedMentorToEntrepreneur($id);
+            return ResponseHelper::success($mentor_assignment,'Mentors assignment retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to fetch mentors assignment.',500,$e->getMessage());
+        }
+    }
+    
+    /*********** Meeting ***********/
+    public function createMeeting(MeetingRequest $request){
+        
+        $userId = Auth::user()->id;
+        $validatedData = $request->validated();
+        try {
+            $mentor_assigned = appHelpers::isMentorAssigned($userId,$validatedData['participant_id']);
+            if(!$mentor_assigned)
+            return ResponseHelper::error('This mentor is not assigned to you.');
+            $meeting = $this->meetingsService->createMeeting($validatedData);
+            return ResponseHelper::created($meeting,'Meeting scheduled successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to schedule meeting.',500,$e->getMessage());
+        }
+    }
+
+    public function getAllMeetings(Request $request)
+    {
+
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+
+        try {
+            $meetings = $this->meetingsService->getAllMeetings($limit, $offset);
+            $data = $meetings['meetings'];
+            $totalCount = $meetings['totalCount'];
+            $limit = $meetings['limit'];
+            $offset = $meetings['offset'];
+            $message =  'Meetings retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('meeting not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
+    public function getMeeting($id)
+    {
+        try {
+            $meeting = $this->meetingsService->getMeeting($id);
+
+            if($meeting){
+                return ResponseHelper::success($meeting,'meeting retrieved successfully.'); 
+            }else{
+                return ResponseHelper::notFound('meeting not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
+    /*********** Messages ***********/
+    public function sendMessageToMentor(MessageRequest $request){
+        $userId = Auth::user()->id;
+        $validatedData = $request->validated();
+        try {
+            $mentor_assigned = appHelpers::isMentorAssigned($userId,$validatedData['receiver_id']);
+            if(!$mentor_assigned)
+            return ResponseHelper::error('This mentor is not assigned to you.');
+            
+            $message = $this->messageService->createMessage($validatedData);
+            return ResponseHelper::success($message,'Message Sent successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage());
+        }
+    }
+
+    public function getMentorMessages($mentorId){
+       $userId = Auth::user()->id;
+        try {
+            $mentor_assigned = appHelpers::isMentorAssigned($userId,$mentorId);
+            if(!$mentor_assigned)
+            return ResponseHelper::error('This mentor is not assigned to you.');
+
+            $message = $this->messageService->getMessage($mentorId);
+            return ResponseHelper::success($message,'Message retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to retrieve message.',500,$e->getMessage());
         }
     }
 

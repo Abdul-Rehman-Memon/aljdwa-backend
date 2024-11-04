@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserStatusNotification;
 
 class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 {
@@ -84,7 +86,23 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
     {
         $data['user_id'] = $applicationId;
         $data['status_by'] = Auth::user()->id;
-        return ApplicationStatus::create($data);  
+
+        $application_status = ApplicationStatus::create($data);
+        
+        $user = User::find($data['user_id']);
+       
+        if ($user) {
+            $user = $user->load([
+                'user_application_status' => function ($query) {
+                    $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+                },
+                'user_application_status.application_status'
+            ]);
+            $status = $user['user_application_status'][0]['application_status']['value']?? null;
+            Mail::to($user->email)->send(new UserStatusNotification($user->founder_name, $status));
+        }
+        
+        return $application_status;
           
     }
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\AppointmentController;
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);

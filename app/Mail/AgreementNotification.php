@@ -4,69 +4,47 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Attachment;
 
 class AgreementNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name;
+    public $userName;
     public $agreementDetails;
-    public $status;
-    public $attachmentPath;
+    public $agreementDocumentPath;
 
     /**
      * Create a new message instance.
-     */
-    public function __construct($name, $agreementDetails, $status = null, $attachmentPath = null)
-    {
-        $this->name = $name;
-        $this->agreementDetails = $agreementDetails;
-        $this->status = $status;
-        $this->attachmentPath = $attachmentPath;
-    }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: config('app.name').' - Agreement Notification',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.agreement',
-            with: [
-                'name' => $this->name,
-                'agreementDetails' => $this->agreementDetails,
-                'status' => $this->status,
-            ],
-        );
-    }
-
-    /**
-     * Attach the agreement document if provided.
      *
-     * @return array<int, Attachment>
+     * @param string $userName
+     * @param string $agreementDetails
+     * @param string|null $agreementDocumentPath
      */
-    public function attachments(): array
+    public function __construct($userName, $agreementDetails, $agreementDocumentPath = null)
     {
-        $attachments = [];
+        $this->userName = $userName;
+        $this->agreementDetails = $agreementDetails;
+        $this->agreementDocumentPath = $agreementDocumentPath;
+    }
 
-        if ($this->attachmentPath) {
-            $attachments[] = new Attachment($this->attachmentPath);
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        $email = $this->subject('New Agreement Created')
+                      ->view('emails.agreement.agreement_notification');
+
+        // Attach the agreement document if the path is provided
+        if ($this->agreementDocumentPath) {
+            // $email->attach(storage_path("app/{$this->agreementDocumentPath}"));
+            // $email->attach($this->agreementDocumentPath);
+            // $email->attach('http://localhost:8000/storage/public/9d5ce373-bf60-433e-8795-a1fe6533bb64/agreement/file-sample_150kB.pdf');
         }
 
-        return $attachments;
+        return $email;
     }
 }

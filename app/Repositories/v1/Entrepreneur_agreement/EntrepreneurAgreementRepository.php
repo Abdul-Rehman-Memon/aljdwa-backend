@@ -4,6 +4,7 @@ namespace App\Repositories\v1\Entrepreneur_agreement;
 
 use App\Models\EntrepreneurAgreement;
 use App\Models\EntrepreneurDetail;
+use App\Models\User;
 use App\Models\Payment;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -11,26 +12,48 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AgreementNotification;
+use App\Mail\AgreementResponseNotification;
+
 class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 {
     public function createEntrepreneurAgreement(array $data)
     {
-        $file = $data['agreement_document'];
-        $userId  = Auth::user()->id;
-        $data['admin_id'] = $userId;
 
-        // Define the directory path: user_id/agreement/
-        $directory = "public/{$userId}/agreement";
+        $entrepreneur_details_id = $data['entrepreneur_details_id'];
+
+        $entrepreneur = EntrepreneurDetail::with('user')
+       ->where('id',$entrepreneur_details_id)->first();
+
+        $file = $data['agreement_document'];
+        $data['admin_id'] =  Auth::id();
+
+        // Define the directory path: entrepreneur_details_id/agreement/
+        $directory = "public/{$entrepreneur_details_id}/agreement";
 
         // Check if directory exists, create it if it doesn’t
         if (!File::exists(storage_path("app/{$directory}"))) {
             File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
         }
-        // Store the file with the original filename in the specified directory
-        // $filePath = $file->storeAs($directory, $file->getClientOriginalName());
+
         $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
         $data['agreement_document'] = $filePath;
-        return EntrepreneurAgreement::create($data);
+        $agreement = EntrepreneurAgreement::create($data);
+
+        // Send email notification to the entrepreneur user
+        $user = User::find($entrepreneur['user']['id']); // Assuming user_id is passed in $data
+        $userName = $user->founder_name;
+        $agreementDetails = $data['agreement_details'];
+
+        // $appDomain = config('app.url');
+        // $appDomain =  "$appDomain/storage/";
+        // $agreementDocumentPath = $appDomain.''.$filePath ?? null;
+        $agreementDocumentPath = $filePath ?? null;
+
+        Mail::to($user->email)->send(new AgreementNotification($userName, $agreementDetails, $agreementDocumentPath));
+
+        return $agreement;
     }
 
     public function getEntrepreneurAgreementWithPayment(string $entrepreneurDetailsId)
@@ -76,12 +99,26 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
             ])->find($agreementId);
         
         if ($agreement && $agreement->update($data)) {
-            return $agreement->fresh(
+            $updatedAgreement = $agreement->fresh(
                 ['agreement_status', ////entrepreneur_agreement -> lookup_details,
-                'agreement_entrepreneur_detail'
+                'agreement_entrepreneur_detail',
+                'agreement_entrepreneur_detail.user',
                ]);
+
+            // Get the user's response status (accepted/rejected)
+            $responseStatus = $updatedAgreement['agreement_status']['value'];
+            $userName = $updatedAgreement->agreement_entrepreneur_detail->user->founder_name ?? 'User';
+            $agreementDetails = $updatedAgreement->agreement_details;
+
+            // Define the admin email
+            $adminEmail = config('mail.admin_email');
+
+            // Send the email to admin about the user's response
+            Mail::to($adminEmail)->send(new AgreementResponseNotification($userName, $agreementDetails, $responseStatus));
+
+            return $updatedAgreement;   
         }
-          
+  
         return false;
     }
 }

@@ -4,49 +4,49 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class MeetingScheduled extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name;
-    public $meetingStatus;
-    public $meetingLink;
+    public $senderName;
+    public $receiverName;
+    public $link;
     public $meetingPassword;
+    public $agenda;
+    public $meetingDateTime;
+    public $status;
 
-    public function __construct($name, $meetingStatus, $meetingLink, $meetingPassword)
+    /**
+     * Create a new message instance.
+     *
+     * @param string $senderName
+     * @param string $receiverName
+     * @param string $link
+     * @param string $meetingPassword
+     * @param string $agenda
+     * @param string $meetingDateTime
+     * @param string $status
+     */
+    public function __construct($senderName, $receiverName, $link, $meetingPassword, $agenda, $meetingDateTime, $status)
     {
-        $this->name = $name;
-        $this->meetingStatus = $meetingStatus;
-        $this->meetingLink = $meetingLink;
+        $this->senderName = $senderName;
+        $this->receiverName = $receiverName;
+        $this->link = $link;
         $this->meetingPassword = $meetingPassword;
+        $this->agenda = $agenda;
+        $this->meetingDateTime = $meetingDateTime;
+        $this->status = $status;
     }
 
-    public function envelope(): Envelope
+    /**
+     * Build the message.
+     */
+    public function build()
     {
-        return new Envelope(
-            subject: config('app.name').' - Meeting Notification',
-        );
-    }
-
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.meeting',
-            with: [
-                'name' => $this->name,
-                'meetingStatus' => $this->meetingStatus,
-                'meetingLink' => $this->meetingLink,
-                'meetingPassword' => $this->meetingPassword,
-            ],
-        );
-    }
-
-    public function attachments(): array
-    {
-        return [];
+        $subject = "Meeting Notification - Status: {$this->status}";
+        return $this->subject($subject)
+                    ->view('emails.meeting.meeting_scheduled'); // Create a corresponding Blade view
     }
 }

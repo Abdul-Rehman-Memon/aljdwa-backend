@@ -55,6 +55,11 @@ class UserService
         });
     }
 
+    public function forgetPassword(array $data){
+
+        return $this->userRepository->forgetPassword($data);
+    }
+
     public function getUser($userId){
 
         return $this->userRepository->getUser($userId);
