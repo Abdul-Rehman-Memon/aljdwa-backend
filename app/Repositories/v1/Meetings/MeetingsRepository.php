@@ -44,43 +44,43 @@ class MeetingsRepository implements MeetingsInterface
 
         if ($userRole === 'admin') {  
             // Send email to the participant
-            Mail::to($participant->email)
-                ->send(new MeetingScheduledByAdmin(
-                    $meetingDetails['senderName'],
-                    $meetingDetails['receiverName'],
-                    $meetingDetails['link'],
-                    $meetingDetails['meetingPassword'],
-                    $meetingDetails['agenda'],
-                    $meetingDetails['meetingDateTime'],
-                    $meetingDetails['status']
-                ));
+            // Mail::to($participant->email)
+            //     ->send(new MeetingScheduledByAdmin(
+            //         $meetingDetails['senderName'],
+            //         $meetingDetails['receiverName'],
+            //         $meetingDetails['link'],
+            //         $meetingDetails['meetingPassword'],
+            //         $meetingDetails['agenda'],
+            //         $meetingDetails['meetingDateTime'],
+            //         $meetingDetails['status']
+            //     ));
         }
         else{
             
-            Mail::to($participant->email)
-            ->send(new MeetingScheduled(
-                $meetingDetails['senderName'],
-                $meetingDetails['receiverName'],
-                $meetingDetails['link'],
-                $meetingDetails['meetingPassword'],
-                $meetingDetails['agenda'],
-                $meetingDetails['meetingDateTime'],
-                $meetingDetails['status']
-            ));
+            // Mail::to($participant->email)
+            // ->send(new MeetingScheduled(
+            //     $meetingDetails['senderName'],
+            //     $meetingDetails['receiverName'],
+            //     $meetingDetails['link'],
+            //     $meetingDetails['meetingPassword'],
+            //     $meetingDetails['agenda'],
+            //     $meetingDetails['meetingDateTime'],
+            //     $meetingDetails['status']
+            // ));
 
-            $adminEmail = config('mail.admin_email');
-            Mail::to($adminEmail)
-            ->send(new AdminMeetingNotification(
-                $meetingDetails['senderName'],
-                $meetingDetails['receiverName'],
-                $meetingDetails['senderRole'],
-                $meetingDetails['receiverRole'],
-                $meetingDetails['link'],
-                $meetingDetails['meetingPassword'],
-                $meetingDetails['agenda'],
-                $meetingDetails['meetingDateTime'],
-                $meetingDetails['status'], 
-            ));             
+            // $adminEmail = config('mail.admin_email');
+            // Mail::to($adminEmail)
+            // ->send(new AdminMeetingNotification(
+            //     $meetingDetails['senderName'],
+            //     $meetingDetails['receiverName'],
+            //     $meetingDetails['senderRole'],
+            //     $meetingDetails['receiverRole'],
+            //     $meetingDetails['link'],
+            //     $meetingDetails['meetingPassword'],
+            //     $meetingDetails['agenda'],
+            //     $meetingDetails['meetingDateTime'],
+            //     $meetingDetails['status'], 
+            // ));             
         }
 
         return $meeting; 

@@ -51,7 +51,7 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
         // $agreementDocumentPath = $appDomain.''.$filePath ?? null;
         $agreementDocumentPath = $filePath ?? null;
 
-        Mail::to($user->email)->send(new AgreementNotification($userName, $agreementDetails, $agreementDocumentPath));
+        // Mail::to($user->email)->send(new AgreementNotification($userName, $agreementDetails, $agreementDocumentPath));
 
         return $agreement;
     }
@@ -114,7 +114,7 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
             $adminEmail = config('mail.admin_email');
 
             // Send the email to admin about the user's response
-            Mail::to($adminEmail)->send(new AgreementResponseNotification($userName, $agreementDetails, $responseStatus));
+            // Mail::to($adminEmail)->send(new AgreementResponseNotification($userName, $agreementDetails, $responseStatus));
 
             return $updatedAgreement;   
         }

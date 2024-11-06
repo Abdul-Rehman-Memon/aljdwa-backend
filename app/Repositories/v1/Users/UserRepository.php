@@ -23,13 +23,13 @@ class UserRepository implements UserRepositoryInterface
         $user = User::create($data);
 
         // Send email to the admin
-        $adminEmail = config('mail.admin_email'); // Make sure the admin email is set in .env as MAIL_ADMIN_EMAIL
-        if ($adminEmail) {
-            Mail::to($adminEmail)->send(new NewUserRegistrationForAdmin($user->founder_name, $user->email));
-        }
+        // $adminEmail = config('mail.admin_email'); // Make sure the admin email is set in .env as MAIL_ADMIN_EMAIL
+        // if ($adminEmail) {
+        //     Mail::to($adminEmail)->send(new NewUserRegistrationForAdmin($user->founder_name, $user->email));
+        // }
     
         // Send welcome email to the user
-        Mail::to($user->email)->send(new UserWelcomeNotification($user->founder_name));
+        // Mail::to($user->email)->send(new UserWelcomeNotification($user->founder_name));
     
         // Load additional relationships if needed
         return $user->load(['user_role', 'user_status']);
@@ -60,7 +60,7 @@ class UserRepository implements UserRepositoryInterface
         $toEmail = $user->email;
 
         // Send an email to the user with the new password
-        Mail::to($toEmail)->send(new ResetPasswordEmail($user, $newPassword)); // Pass the user object and the new password
+        // Mail::to($toEmail)->send(new ResetPasswordEmail($user, $newPassword)); // Pass the user object and the new password
     }
 
     public function applicationStatus(array $data)
@@ -122,8 +122,8 @@ class UserRepository implements UserRepositoryInterface
 
             $user['status'] = 'resubmit';
 
-            $adminEmail = config('mail.admin_email');
-            Mail::to($adminEmail)->send(new UserProfileUpdatedNotification($user));
+            // $adminEmail = config('mail.admin_email');
+            // Mail::to($adminEmail)->send(new UserProfileUpdatedNotification($user));
             return $user;
         }
 

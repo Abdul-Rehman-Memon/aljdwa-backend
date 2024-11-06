@@ -34,11 +34,11 @@ class AppointmentsRepository implements AppointmentsInterface
 
 
         // Send email to visitor
-        Mail::to($data['email'])->send(new AppointmentConfirmationForVisitor($data));
+        // Mail::to($data['email'])->send(new AppointmentConfirmationForVisitor($data));
 
         // Send email to admin
-        $adminEmail = config('mail.admin_email'); // Make sure this is configured in your .env
-        Mail::to($adminEmail)->send(new AppointmentNotificationForAdmin($data));
+        // $adminEmail = config('mail.admin_email'); // Make sure this is configured in your .env
+        // Mail::to($adminEmail)->send(new AppointmentNotificationForAdmin($data));
 
         return $appointment;    
     }
@@ -87,7 +87,7 @@ class AppointmentsRepository implements AppointmentsInterface
         $email_data = $appointment;
         $email_data['status'] = $email_data['appointment_status']['value'];
         // Send notification email based on the status
-        Mail::to($appointment->email)->send(new AppointmentStatusNotification($email_data));
+        // Mail::to($appointment->email)->send(new AppointmentStatusNotification($email_data));
 
         return $appointment;
         

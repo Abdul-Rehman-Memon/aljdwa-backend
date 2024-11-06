@@ -31,9 +31,9 @@ class PaymentsRepository implements PaymentsInterface
 
         $adminEmail = config('mail.admin_email'); // Ensure this is set in the .env
         // Send email to user
-        Mail::to($userEmail)->send(new PaymentConfirmationForUser($userName, $amount, $paymentDate));
+        // Mail::to($userEmail)->send(new PaymentConfirmationForUser($userName, $amount, $paymentDate));
         // Send email to admin
-        Mail::to($adminEmail)->send(new PaymentNotificationForAdmin($userName, $amount, $paymentDate));
+        // Mail::to($adminEmail)->send(new PaymentNotificationForAdmin($userName, $amount, $paymentDate));
 
         return $payment;
     }

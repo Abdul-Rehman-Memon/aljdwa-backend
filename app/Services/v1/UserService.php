@@ -94,7 +94,7 @@ class UserService
                     'user_application_status.application_status'
                 ]);
                 $status = $user['user_application_status'][0]['application_status']['value']?? null;
-                Mail::to($user->email)->send(new UserStatusNotification($user->founder_name, $status));
+                // Mail::to($user->email)->send(new UserStatusNotification($user->founder_name, $status));
             }
         }
          

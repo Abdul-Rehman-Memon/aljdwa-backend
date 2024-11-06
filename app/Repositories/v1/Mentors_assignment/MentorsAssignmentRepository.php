@@ -24,8 +24,8 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
             $entrepreneurName = $entrepreneur->user->founder_name; // Assuming there's a user relation
             $mentorName = $mentor->founder_name;
             // Send emails
-            Mail::to($mentor->email)->send(new MentorAssignedNotification($entrepreneurName, $mentorName));
-            Mail::to($entrepreneur->user->email)->send(new EntrepreneurAssignedNotification($entrepreneurName, $mentorName));
+            // Mail::to($mentor->email)->send(new MentorAssignedNotification($entrepreneurName, $mentorName));
+            // Mail::to($entrepreneur->user->email)->send(new EntrepreneurAssignedNotification($entrepreneurName, $mentorName));
             
         }
         return $assignment;
