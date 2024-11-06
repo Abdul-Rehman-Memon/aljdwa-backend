@@ -184,7 +184,69 @@ class AdminController extends Controller
             }
             $validatedData['status'] = appHelpers::lookUpId('Application_status',$validatedData['status']);
 
-            $user = $this->entreprenuerDetailsService->updateEntrepreneurApplicationStatusByAdmin($validatedData, $applicationId);
+            $user = $this->userService->updateApplicationStatusByAdmin($validatedData, $applicationId);
+            return ResponseHelper::success($user,'Application updated successfully');
+
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to update application.',500,$e->getMessage());
+        }
+    }
+
+    /*********** Mentor Application ***********/
+    public function getMentorApplications(Request $request)
+    {
+        $limit = $request->input('limit', 10);
+        $offset = $request->input('offset', 0);
+
+        try {
+            $application = $this->userService->getMentorApplications($limit, $offset);
+            $data = $application['users'];
+            $totalCount = $application['totalCount'];
+            $limit = $application['limit'];
+            $offset = $application['offset'];
+            $message =  'Mentor users retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('Mentor user not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve mentor users.', 500, $e->getMessage());
+        }
+    }
+
+    public function reviewMentorApplication($applicationId)
+    {
+        try {
+            $application = $this->userService->reviewMentorApplication($applicationId);
+
+            if($application){
+                return ResponseHelper::success($application,'Mentor user retrieved successfully');
+            }else{
+                return ResponseHelper::notFound('Mentor User not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve mentor user.', 500, $e->getMessage());
+        }
+    }
+
+    public function updateMentorApplicationStatusByAdmin(ApplicationRequest $request, $applicationId)
+    {
+
+        $validatedData = $request->validated();
+
+        try {
+            $application = $this->userService->reviewMentorApplication($applicationId);
+            if (!$application) {
+                return ResponseHelper::notFound('Application not found');
+            }
+            $validatedData['status'] = appHelpers::lookUpId('Application_status',$validatedData['status']);
+
+            $user = $this->userService->updateApplicationStatusByAdmin($validatedData, $applicationId);
             return ResponseHelper::success($user,'Application updated successfully');
 
         } catch (Exception $e) {

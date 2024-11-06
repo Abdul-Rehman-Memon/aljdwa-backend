@@ -68,7 +68,7 @@ class EntreprenuerDetailsService
                 return false; // Rollback if entrepreneur update fails
             }
 
-            $applicationData['status'] = 13;
+            $applicationData['status'] = 13;//resubmit
             $applicationData['user_id'] = $applicationId;
             $applicationData['status_by'] = $applicationId;//here user update his status
 

@@ -2,11 +2,18 @@
 namespace App\Services\v1;
 
 use App\helpers\appHelpers;
+use App\Models\User;
+use App\Models\ApplicationStatus;
 use App\Repositories\v1\Users\UserRepositoryInterface;
 use App\Repositories\v1\Entrepreneur_details\EntrepreneurDetailsInterface;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserStatusNotification;
+
+
 class UserService
 {
     protected $userRepository;
@@ -58,6 +65,40 @@ class UserService
     public function forgetPassword(array $data){
 
         return $this->userRepository->forgetPassword($data);
+    }
+
+    public function getMentorApplications($limit, $offset){
+
+        return $this->userRepository->getMentorApplications($limit, $offset);
+    }
+
+    public function reviewMentorApplication($applicationId){
+
+        return $this->userRepository->reviewMentorApplication($applicationId);
+    }
+
+    public function updateApplicationStatusByAdmin(array $data, string $applicationId){
+        $data['user_id'] = $applicationId;
+        $data['status_by'] = Auth::user()->id;
+
+        $application_status = $this->userRepository->applicationStatus($data);
+
+        if($application_status){
+            $user = User::find($data['user_id']);
+       
+            if ($user) {
+                $user = $user->load([
+                    'user_application_status' => function ($query) {
+                        $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+                    },
+                    'user_application_status.application_status'
+                ]);
+                $status = $user['user_application_status'][0]['application_status']['value']?? null;
+                Mail::to($user->email)->send(new UserStatusNotification($user->founder_name, $status));
+            }
+        }
+         
+        return $application_status;
     }
 
     public function getUser($userId){

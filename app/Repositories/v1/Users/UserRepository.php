@@ -68,6 +68,51 @@ class UserRepository implements UserRepositoryInterface
         return ApplicationStatus::create($data);
     }
 
+    public function getMentorApplications($limit, $offset)
+    {
+
+        $totalCount = User::where('role',2)->count();
+        $users = User::with([
+            'entreprenuer_details',
+            'user_role',
+            'user_status',
+            'user_application_status' => function ($query) {
+                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+            },
+            'user_application_status.application_status'
+        ])
+        ->where('role',2) //2 = mentor
+        ->limit($limit)
+        ->offset($offset)
+        ->get();
+
+        return [
+            'totalCount' => $totalCount,
+            'limit' => $limit,
+            'offset' => $offset,
+            'users' => $users
+        ]; 
+    }
+
+    public function reviewMentorApplication(string $applicationId)
+    {
+        $user = User::where('role',2)->find($applicationId);
+        return $user ? $user->load([
+            'user_role',
+            'user_status',
+            'user_application_status' => function ($query) {
+                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+            },
+            'user_application_status.application_status'
+        ]) : null;
+    }
+
+    public function getUser(string $userId)
+    {
+        $user = User::find($userId);
+        return $user ? $user->load('user_role') : null;
+    }
+
     public function updateUser(array $data, string $userId)
     {
        
@@ -83,11 +128,6 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return false;
-    }
-
-    public function getUser(string $userId)
-    {
-        return User::find($userId)->load('user_role');
     }
 
 }
