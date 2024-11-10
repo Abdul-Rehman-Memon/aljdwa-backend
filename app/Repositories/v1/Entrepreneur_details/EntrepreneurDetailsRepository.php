@@ -16,9 +16,9 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 {
     public function createEntrepreneurDetails(array $data)
     {
-        // return $username  = $data['founder_name'];
 
         if (isset($data['resume'])) {
+            $fileInfo['user_id'] = $data['user_id']; 
             $fileInfo['file'] = $data['resume']; 
             $fileInfo['fileName'] = 'resume'; 
             $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
@@ -26,6 +26,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         }
 
         if (isset($data['business_model'])) {
+            $fileInfo['user_id'] = $data['user_id']; 
             $fileInfo['file'] = $data['business_model']; 
             $fileInfo['fileName'] = 'business_model'; 
             $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
@@ -33,6 +34,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         }
 
         if (isset($data['patent'])) {
+            $fileInfo['user_id'] = $data['user_id']; 
             $fileInfo['file'] = $data['patent']; 
             $fileInfo['fileName'] = 'patent'; 
             $filePath = $this->uploadEntrepreneurDetailsFile($fileInfo);
@@ -122,18 +124,24 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
     public function uploadEntrepreneurDetailsFile(array $data)
     {
 
-        $username = 'entrepreneur';
+        $userRole = 'entrepreneur';
+        $userId = $data['user_id'];
         $file = $data['file'];
-        $fileName = $data['fileName'].'_'.time();
-        // Define the directory path: user_id/fileName/
-        $directory = "public/{$username}/{$fileName}";
+        $fileName = $data['fileName'];
+        // Define the directory path: user_role/user_id/fileName/
+        $directory = "public/{$userRole}/{$userId}/{$fileName}";
 
         // Check if directory exists, create it if it doesn’t
         if (!File::exists(storage_path("app/{$directory}"))) {
             File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
         }
-        $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
 
-        return $filePath;
+        $timestamp = time();
+        $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
+
+         // Generate the full URL for accessing the file
+        $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
+
+        return $fullUrl;
     }
 }

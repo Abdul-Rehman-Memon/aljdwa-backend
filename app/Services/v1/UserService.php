@@ -58,7 +58,7 @@ class UserService
                 $this->entrepreneurDetailsRepository->createEntrepreneurDetails($entrepreneurDetailData);
             }
             // Return the user instance, which is successful
-            return $user->load('user_application_status.application_status');
+            return $user->load('latest_application_status.application_status');
         });
     }
 

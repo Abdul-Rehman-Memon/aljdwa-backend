@@ -12,6 +12,8 @@ use App\Mail\PaymentNotificationForAdmin;
 
 class PaymentsRepository implements PaymentsInterface
 {
+    
+    /*********** For Entrepeneur User ***********/
     public function createPayment(array $data)
     {
         $data['entrepreneur_id'] = Auth::user()->id;
@@ -36,5 +38,22 @@ class PaymentsRepository implements PaymentsInterface
         // Mail::to($adminEmail)->send(new PaymentNotificationForAdmin($userName, $amount, $paymentDate));
 
         return $payment;
+    }
+
+    public function getEntrepreneurPayment()
+    {
+        $userId = Auth::user()->id;
+        $result = Payment::with(
+            ['payment_status', ////payment -> lookup_details,
+             'payment_entrepreneur_detail' => function ($query) use ($userId){
+                $query->where('entrepreneur_details.user_id',$userId); 
+                },
+            ])
+            ->first();
+
+            if($result){
+                return  $result;
+            }
+            return false;      
     }
 }

@@ -62,5 +62,10 @@ class Payment extends Model
         return $this->belongsTo(LookupDetail::class,'status','id');
     }
 
+    public function payment_entrepreneur_detail()
+    {
+        return $this->belongsTo(EntrepreneurDetail::class,'entrepreneur_details_id','id');
+    }
+
 }
 

@@ -141,6 +141,17 @@ class EntrepreneurController extends Controller
         }
     }
 
+    public function getEntrepreneurPayment()
+    {
+        try {
+            $payment = $this->paymentService->getEntrepreneurPayment();
+            return ResponseHelper::success($payment,'Entrepreneur payment retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to fetch entrepreneur payment.',500,$e->getMessage());
+        }
+    }
+
     /*********** Mentor Assignment ***********/
     public function getAllAssignedMentorToEntrepreneur(){
        

@@ -20,4 +20,11 @@ class PaymentsService
 
         return $payment;
     }
+
+    public function getEntrepreneurPayment()
+    {
+        $payment = $this->paymentsRepository->getEntrepreneurPayment();
+
+        return $payment;
+    }
 }
