@@ -43,10 +43,10 @@ class AuthController extends Controller
 
         $user = User::with([
                     'user_role', 'user_status', 
-                    'user_application_status' => function ($query) {
-                    $query->latest('id')->limit(1); // Fetch the last inserted record based on the ID
-                },
-                'user_application_status.application_status'
+                //     'latest_application_status' => function ($query) {
+                //     $query->latest('id')->limit(1); // Fetch the last inserted record based on the ID
+                // },
+                'latest_application_status.application_status'
         ])
         ->where('email', $request->email)
         ->first();
@@ -55,9 +55,9 @@ class AuthController extends Controller
             return ResponseHelper::unauthorized('Invalid Email/Password.');
         }
 
-        $applicationStatus = $user->user_application_status; 
-        $applicationStatus = $applicationStatus[0]; 
-        $applicationStatus = $applicationStatus->application_status->value; 
+        // $applicationStatus = $user->user_application_status; 
+        // $applicationStatus = $applicationStatus[0]; 
+        // $applicationStatus = $applicationStatus->application_status->value; 
 
         // if($applicationStatus  === 'pending'){
         //     return ResponseHelper::forbidden('Your account is pending. Please wait for approval.');
