@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('link')->nullable();
             $table->string('meeting_password')->nullable();
 
-            $table->unsignedInteger('status')->default(8);
+            $table->unsignedInteger('status')->default(7);
             $table->foreign('status')->references('id')->on('lookup_details')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
