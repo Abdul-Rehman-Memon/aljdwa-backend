@@ -39,13 +39,13 @@ class AppointmentUpdateRequest extends FormRequest
     public function rules(): array
     {
         // Initialize the common rules
-        return  [
-            'link' => 'required|url',
-            'meeting_password' => 'required|string',
+        return [
+            'link' => 'nullable|url|required_if:status,booked',  // Required if status is 'booked'
+            'meeting_password' => 'nullable|string|required_if:status,booked',  // Required if status is 'booked'
             'status' => [
                 'required',
                 'string',
-                'regex:/^(pending|booked|cancelled|completed)$/i', // Case-insensitive role validation
+                'regex:/^(pending|booked|cancelled|completed)$/i', // Case-insensitive status validation
             ],
         ];
 
@@ -54,7 +54,9 @@ class AppointmentUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'status' => 'Staus can be Pending/Booked/Cancelled/Completed',
+            'status.regex' => 'Status can be Pending/Booked/Cancelled/Completed',
+            'link.required_if' => 'The link field is required when the status is booked.',
+            'meeting_password.required_if' => 'The meeting password is required when the status is booked.',
         ];
     }
 }
