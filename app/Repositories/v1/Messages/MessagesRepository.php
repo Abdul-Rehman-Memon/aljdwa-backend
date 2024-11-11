@@ -2,6 +2,7 @@
 
 namespace App\Repositories\v1\Messages;
 
+use App\helpers\appHelpers;
 use App\Models\User;
 use App\Models\EntrepreneurDetail;
 use App\Models\Message;
@@ -15,18 +16,20 @@ class MessagesRepository implements MessagesInterface
 {
     public function createMessage(array $data)
     {
-        $userId  = Auth::user()->id;
+        $userId   = Auth::user()->id;
+        $userRole = appHelpers::getUserRole($userId);
         $data['sender_id'] = $userId;
+
 
         $file = $data['attachment'] ?? NULL;
 
         if ($file) {
-            $directory = "public/{$userId}/attachment";
-            // Check if directory exists, create it if it doesn’t
-            if (!File::exists(storage_path("app/{$directory}"))) {
-                File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
-            }
-            $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
+
+            $fileInfo['userId'] = $userId; 
+            $fileInfo['userRole'] = $userRole; 
+            $fileInfo['fileName'] = 'attachment'; 
+            $fileInfo['file'] = $file; 
+            $filePath = $this->uploadAttachmentFile($fileInfo);
             $data['attachment_url'] = $filePath;
         }
 
@@ -48,6 +51,23 @@ class MessagesRepository implements MessagesInterface
         ->get();  
     }
 
+    public function uploadAttachmentFile(array $data)
+    {
+        extract($data);
+        // Define the directory path: user_role/user_id/fileName/
+        $directory = "public/{$userRole}/{$userId}/{$fileName}";
+        // Check if directory exists, create it if it doesn’t
+        if (!File::exists(storage_path("app/{$directory}"))) {
+            File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
+        }
+        
+        $timestamp = time();
+        $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
 
-  
+        // Generate the full URL for accessing the file
+        $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
+
+        return $fullUrl;
+    }
+
 }
