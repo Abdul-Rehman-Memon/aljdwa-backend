@@ -246,7 +246,7 @@ class EntrepreneurController extends Controller
             return ResponseHelper::success($message,'Message Sent successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage()."Line no :".$e->getLine());
         }
     }
 
