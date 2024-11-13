@@ -2,6 +2,7 @@
 
 namespace App\Repositories\v1\Entrepreneur_agreement;
 
+use App\helpers\appHelpers;
 use App\Models\EntrepreneurAgreement;
 use App\Models\EntrepreneurDetail;
 use App\Models\User;
@@ -120,5 +121,51 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
         }
   
         return false;
+    }
+
+    /*********** Admin Section - Agreements ***********/
+    public function getAllAgreements(object $data = null)
+    {
+
+        $limit = $data['limit'] ?? 10;
+        $offset = $data['offset'] ?? 0;
+        $status = $data['status'] ? appHelpers::lookUpId('Agreement_status',$data['status']) : 0;
+
+        $totalCount = EntrepreneurAgreement::has('agreement_entrepreneur_detail')->count();
+
+        $result = EntrepreneurAgreement::with([
+            'agreement_entrepreneur_detail',  // Fetches entrepreneur details for the agreement
+            'agreement_status',               // Fetches agreement status (e.g., lookup details)
+            'agreement_entrepreneur_detail.entrepreneur_details_payment', // Fetches payments related to entrepreneur details
+            'agreement_entrepreneur_detail.entrepreneur_details_payment.payment_status', // Fetches status of each payment
+        ])
+        ->has('agreement_entrepreneur_detail')
+        ->limit($limit)
+        ->offset($offset);
+
+        if($status){
+            $result = $result->where('entrepreneur_agreement.status',$status);
+        }  
+
+        $result = $result->get();
+
+        return [
+            'totalCount' => $totalCount,
+            'limit' => $limit,
+            'offset' => $offset,
+            'agreements' => $result
+        ];        
+    }
+
+    public function getAgreement(int $agreementId)
+    {
+        return EntrepreneurAgreement::with([
+            'agreement_entrepreneur_detail',  // Fetches entrepreneur details for the agreement
+            'agreement_status',               // Fetches agreement status (e.g., lookup details)
+            'agreement_entrepreneur_detail.entrepreneur_details_payment', // Fetches payments related to entrepreneur details
+            'agreement_entrepreneur_detail.entrepreneur_details_payment.payment_status', // Fetches status of each payment
+        ])
+        ->where('id',$agreementId)
+        ->first();         
     }
 }

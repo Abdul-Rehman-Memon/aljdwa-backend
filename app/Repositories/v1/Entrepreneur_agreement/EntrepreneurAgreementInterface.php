@@ -8,4 +8,6 @@ interface EntrepreneurAgreementInterface
     public function getEntrepreneurAgreementWithPayment(string $entrepreneurDetailsId);
     public function getEntrepreneurAgreement();
     public function updateEntrepreneurAgreement(array $data, int $agreementId);
+    public function getAllAgreements(object $data = null);
+    public function getAgreement(int $agreementId);
 }

@@ -349,6 +349,43 @@ class AdminController extends Controller
         }
     }
 
+    public function getAllAgreements(Request $request)
+    {
+        try {
+            $agreement = $this->entreprenuerAgreementService->getAllAgreements($request);
+            $data = $agreement['agreements'];
+            $totalCount = $agreement['totalCount'];
+            $limit = $agreement['limit'];
+            $offset = $agreement['offset'];
+            $message =  'Agreements retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('agreement not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve agreements.', 500, $e->getMessage());
+        }
+    }
+
+    public function getAgreement($id)
+    {
+        try {
+            $meeting = $this->entreprenuerAgreementService->getAgreement($id);
+
+            if($meeting){
+                return ResponseHelper::success($meeting,'agreement retrieved successfully.'); 
+            }else{
+                return ResponseHelper::notFound('agreement not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve agreement.', 500, $e->getMessage());
+        }
+    }
+
     /*********** Mentor Assignment ***********/
     public function createMentorAssignement(MentorAssignmentRequest $request)
     {

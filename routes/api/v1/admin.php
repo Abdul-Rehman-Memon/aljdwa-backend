@@ -43,6 +43,8 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
     //Entrepreneur Agreement
     Route::prefix('agreement-management')->group(function () {
         Route::post('/agreements', [AdminController::class, 'createAgreement']);
+        Route::get('/agreements', [AdminController::class, 'getAllAgreements']);
+        Route::get('/agreements/{id}/review', [AdminController::class, 'getAgreement']);
     });
 
     //Mentor Assignment

@@ -40,4 +40,19 @@ class EntreprenuerAgreementService
 
         return $agreement;
     }
+
+    /***********Admin Section - Agreements ***********/
+    public function getAllAgreements($data)
+    {
+        $agreement = $this->entreprenuerAgreementRepository->getAllAgreements($data);
+
+        return $agreement; 
+    }
+
+    public function getAgreement($agreementId)
+    {
+        $agreement = $this->entreprenuerAgreementRepository->getAgreement($agreementId);
+
+        return $agreement; 
+    }
 }
