@@ -35,6 +35,7 @@ return new class extends Migration
 
             $table->bigInteger('invoice_Id');
             $table->bigInteger('amount');
+            $table->text('voucher')->nullable();
             // $table->integer('status');
             // $table->foreign('status')->references('id')->on('lookups');
             $table->unsignedInteger('status')->default(23);

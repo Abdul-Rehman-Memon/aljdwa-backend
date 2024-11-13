@@ -27,4 +27,26 @@ class PaymentsService
 
         return $payment;
     }
+
+    /***********Admin Section - Payments ***********/
+    public function getAllPayments($data)
+    {
+        $payment = $this->paymentsRepository->getAllPayments($data);
+
+        return $payment; 
+    }
+
+    public function getPayment($id)
+    {
+        $payment = $this->paymentsRepository->getPayment($id);
+
+        return $payment; 
+    }
+
+    public function updatePayment($data, $id)
+    {
+        $payment = $this->paymentsRepository->updatePayment($data, $id);
+
+        return $payment; 
+    }
 }

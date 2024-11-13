@@ -2,6 +2,7 @@
 
 namespace App\Repositories\v1\Mentors_assignment;
 
+use App\helpers\appHelpers;
 use App\Models\EntrepreneurDetail;
 use App\Models\MentorsAssignment;
 use App\Models\User;
@@ -14,6 +15,7 @@ use App\Mail\EntrepreneurAssignedNotification;
 
 class MentorsAssignmentRepository implements MentorsAssignmentInterface
 {
+    /*********** Admin Section ***********/
     public function createMentorAssignment(array $data)
     {
         $entrepreneur = EntrepreneurDetail::with('user')->find($data['entrepreneur_details_id']);
@@ -30,6 +32,52 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
         }
         return $assignment;
     }
+    
+    public function getAllMentorAssignments(object $data = null)
+    {
+
+        $limit = $data['limit'] ?? 10;
+        $offset = $data['offset'] ?? 0;
+        $status = $data['status'] ? appHelpers::lookUpId('Active_status',$data['status']) : 0;
+
+        $totalCount = MentorsAssignment::has('entrepreneur_details')->count();
+
+        $result = MentorsAssignment::with([
+            'mentor_assign_status',
+            'entrepreneur_details',
+            'entrepreneur_details.user',
+            'mentor_details'
+            ])
+        ->limit($limit)
+        ->offset($offset);
+
+        if($status){
+            $result = $result->where('mentors_assignment.status',$status);
+        }  
+
+        $result = $result->get();
+
+        return [
+            'totalCount' => $totalCount,
+            'limit' => $limit,
+            'offset' => $offset,
+            'mentor_assignment' => $result
+        ];        
+    }
+
+    public function MentorAssignment(int $id)
+    {
+        return MentorsAssignment::with([
+            'mentor_assign_status',
+            'entrepreneur_details',
+            'entrepreneur_details.user',
+            'mentor_details'
+            ])
+        ->where('id',$id)
+        ->first();         
+    }
+
+    /*********** Entrepreneur Section ***********/
     public function getAllAssignedMentorToEntrepreneur()
     {
         $userId = Auth::user()->id;
@@ -64,6 +112,7 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
 
     }
 
+    /*********** Mentor Section ***********/
     public function getAllEntrepreneurAssignedToMentor()
     {
         $userId = Auth::user()->id;
@@ -92,4 +141,5 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
             ->where('mentors_assignment.id',$id)
             ->first();
     }
+ 
 }

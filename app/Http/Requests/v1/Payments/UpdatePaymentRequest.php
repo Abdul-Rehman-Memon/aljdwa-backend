@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\v1\Meetings;
+namespace App\Http\Requests\v1\Payments;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MeetingRequest extends FormRequest
+class UpdatePaymentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,12 +40,23 @@ class MeetingRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'participant_id' => 'required|exists:users,id',
-            'link' => 'required|string',
-            'meeting_password' => 'required|string',
-            'agenda' => 'required|string',
-            'meeting_date_time' => 'required|date',
+            'payments_details' => 'nullable|string',
+            'payment_refrence' => 'nullable|int',
+            'invoice_Id' => 'nullable|int',
+            'amount' => 'nullable|int',
+            'voucher' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
+            'payment_date' => 'nullable|date',
+            'status' => 'required|string|in:paid,unpaid',
         ];
 
+    }
+
+    public function messages()
+    {
+        return [
+            'status' => 'Staus can be Paid/Unpaid',
+            'voucher' => 'File can be pdf/jpg/jpeg/png',
+            'voucher.max' => 'FIle size should not exceed than 5MB',
+        ];
     }
 }

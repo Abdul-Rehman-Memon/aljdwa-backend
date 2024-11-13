@@ -30,6 +30,7 @@ class Payment extends Model
         'entrepreneur_details_id',
         'invoice_Id',
         'amount',
+        'voucher',
         'payment_date',
         'status',
     ];

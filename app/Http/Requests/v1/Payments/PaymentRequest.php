@@ -46,6 +46,7 @@ class PaymentRequest extends FormRequest
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
             'invoice_Id' => 'required|int',
             'amount' => 'required|int',
+            'voucher' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
             // 'payment_date' => 'required|date',
             'status' => 'required|string|in:paid,unpaid',
         ];
@@ -56,6 +57,8 @@ class PaymentRequest extends FormRequest
     {
         return [
             'status' => 'Staus can be Paid/Unpaid',
+            'voucher' => 'File can be pdf/jpg/jpeg/png',
+            'voucher.max' => 'FIle size should not exceed than 5MB',
         ];
     }
 }

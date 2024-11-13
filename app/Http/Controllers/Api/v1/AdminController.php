@@ -11,6 +11,8 @@ use App\Http\Requests\v1\Appointments\AppointmentUpdateRequest;
 use App\Http\Requests\v1\Applications\ApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\EntrepreneurAgreementRequest;
+use App\Http\Requests\v1\Payments\UpdatePaymentRequest;
+
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 
 use App\Services\v1\UserService;
@@ -19,6 +21,7 @@ use App\Services\v1\AppointmentService;
 use App\Services\v1\EntreprenuerDetailsService;
 use App\Services\v1\MeetingService;
 use App\Services\v1\EntreprenuerAgreementService;
+use App\Services\v1\PaymentsService;
 use App\Services\v1\MentorsAssignmentService;
 
 use Exception;
@@ -32,6 +35,7 @@ class AdminController extends Controller
     protected $entreprenuerDetailsService;
     protected $meetingsService;
     protected $entreprenuerAgreementService;
+    protected $paymentService;
     protected $mentorsAssignmentService;
     
     public function __construct(
@@ -41,6 +45,7 @@ class AdminController extends Controller
         EntreprenuerDetailsService $entreprenuerDetailsService,
         MeetingService $meetingsService,
         EntreprenuerAgreementService $entreprenuerAgreementService,
+        PaymentsService $paymentService,
         MentorsAssignmentService $mentorsAssignmentService,
         )
     {
@@ -50,6 +55,7 @@ class AdminController extends Controller
         $this->entreprenuerDetailsService = $entreprenuerDetailsService;
         $this->meetingsService = $meetingsService;
         $this->entreprenuerAgreementService = $entreprenuerAgreementService;
+        $this->paymentService = $paymentService;
         $this->mentorsAssignmentService = $mentorsAssignmentService;
         
     }
@@ -406,6 +412,103 @@ class AdminController extends Controller
         } catch (Exception $e) {
             // Handle the error
             return ResponseHelper::error('Failed to create mentor assignment.',500,$e->getMessage());
+        }
+    }
+
+    public function getAllMentorAssignments(Request $request)
+    {
+        try {
+            $result = $this->mentorsAssignmentService->getAllMentorAssignments($request);
+            $data = $result['mentor_assignment'];
+            $totalCount = $result['totalCount'];
+            $limit = $result['limit'];
+            $offset = $result['offset'];
+            $message =  'Mentor Assignments retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('mentor assignment not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve mentor assignments.', 500, $e->getMessage());
+        }
+    }
+
+    public function MentorAssignment($id)
+    {
+        try {
+            $result = $this->mentorsAssignmentService->MentorAssignment($id);
+
+            if($result){
+                return ResponseHelper::success($result,'mentor assignment retrieved successfully.'); 
+            }else{
+                return ResponseHelper::notFound('mentor assignment not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve mentor assignment.', 500, $e->getMessage());
+        }
+    }
+
+     /*********** Payments ***********/
+     public function getAllPayments(Request $request)
+     {
+         try {
+             $result = $this->paymentService->getAllPayments($request);
+             $data = $result['payments'];
+             $totalCount = $result['totalCount'];
+             $limit = $result['limit'];
+             $offset = $result['offset'];
+             $message =  'Payments retrieved successfully';
+ 
+             if(count($data) === 0){
+                 return ResponseHelper::notFound('payment not found'); 
+             }else{
+                 return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+             }
+             
+         } catch (Exception $e) {
+             return ResponseHelper::error('Failed to retrieve payments.', 500, $e->getMessage());
+         }
+     }
+ 
+    public function getPayment($id)
+    {
+        try {
+            $result = $this->paymentService->getPayment($id);
+
+            if($result){
+                return ResponseHelper::success($result,'payments retrieved successfully.'); 
+            }else{
+                return ResponseHelper::notFound('payment not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve payments.', 500, $e->getMessage());
+        }
+    }
+
+    public function updatePayment(UpdatePaymentRequest $request, $id)
+    {
+        
+        $validatedData = $request->validated();
+
+        try {
+            $appointment = $this->paymentService->getPayment($id);
+            if (!$appointment) {
+                return ResponseHelper::notFound('payment not found');
+            }
+
+            $validatedData['status'] = appHelpers::lookUpId('payment_status',$validatedData['status']);
+
+            $user = $this->paymentService->updatePayment($validatedData, $id);
+            return ResponseHelper::success($user,'Payment updated successfully');
+
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to update payment.',500,$e->getMessage());
         }
     }
 

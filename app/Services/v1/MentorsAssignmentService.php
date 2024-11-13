@@ -44,4 +44,19 @@ class MentorsAssignmentService
         return $this->mentorsAssignmentRepository->getEntrepreneurAssignedToMentor($id);
     }
 
+     /***********Admin Section - Agreements ***********/
+     public function getAllMentorAssignments($data)
+     {
+         $mentor_assignment = $this->mentorsAssignmentRepository->getAllMentorAssignments($data);
+ 
+         return $mentor_assignment; 
+     }
+ 
+     public function MentorAssignment($id)
+     {
+         $mentor_assignment = $this->mentorsAssignmentRepository->MentorAssignment($id);
+ 
+         return $mentor_assignment; 
+     }
+
 }

@@ -50,6 +50,16 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
     //Mentor Assignment
     Route::prefix('mentor-assignment-management')->group(function () {
         Route::post('/mentor-assignments', [AdminController::class, 'createMentorAssignement']);
+        Route::get('/mentor-assignments', [AdminController::class, 'getAllMentorAssignments']);
+        Route::get('/mentor-assignments/{id}/review', [AdminController::class, 'MentorAssignment']);
+    });
+
+    //Entrepreneur Payment
+    Route::prefix('payment-management')->group(function () {
+        Route::get('/payments', [AdminController::class, 'getAllPayments']);
+        Route::get('/payments/{id}/review', [AdminController::class, 'getPayment']);
+        // Route::put('/payments/{id}', [AdminController::class, 'updatePayment']);
+        Route::post('/payments/{id}', [AdminController::class, 'updatePayment']);
     });
 });
 
