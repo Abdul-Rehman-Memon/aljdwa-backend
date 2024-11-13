@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+use App\Events\GotMessage;
+
 class MessagesRepository implements MessagesInterface
 {
     public function createMessage(array $data)
@@ -33,7 +35,10 @@ class MessagesRepository implements MessagesInterface
             $data['attachment_url'] = $filePath;
         }
 
-        return Message::create($data);
+        $message = Message::create($data);
+
+        broadcast(new GotMessage($message->toArray()))->toOthers(); 
+        return $message; 
     }
 
     public function getMessage(string $senderId)
