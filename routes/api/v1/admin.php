@@ -52,6 +52,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
         Route::post('/mentor-assignments', [AdminController::class, 'createMentorAssignement']);
         Route::get('/mentor-assignments', [AdminController::class, 'getAllMentorAssignments']);
         Route::get('/mentor-assignments/{id}/review', [AdminController::class, 'MentorAssignment']);
+        Route::get('/get-all-mentors-assigned-to-entrepreneur/{user_id}', [AdminController::class, 'MentorAssignmentByUserId']);
     });
 
     //Entrepreneur Payment

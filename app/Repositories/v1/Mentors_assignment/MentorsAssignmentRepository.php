@@ -77,6 +77,40 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
         ->first();         
     }
 
+    public function MentorAssignmentByUserId(object $data = null,string $userId)
+    {
+        $limit = $data['limit'] ?? 10;
+        $offset = $data['offset'] ?? 0;
+        $status = $data['status'] ? appHelpers::lookUpId('Active_status',$data['status']) : 0;
+
+        $totalCount = MentorsAssignment::has('entrepreneur_details')->count();
+
+        $result = MentorsAssignment::with([
+            'mentor_assign_status',
+            'entrepreneur_details',
+            'entrepreneur_details.user',
+            'mentor_details'
+            ])
+            ->whereHas('entrepreneur_details', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+        ->limit($limit)
+        ->offset($offset);
+
+        if($status){
+            $result = $result->where('mentors_assignment.status',$status);
+        }  
+
+        $result = $result->get();
+
+        return [
+            'totalCount' => $totalCount,
+            'limit' => $limit,
+            'offset' => $offset,
+            'mentor_assignment' => $result
+        ];        
+    }
+
     /*********** Entrepreneur Section ***********/
     public function getAllAssignedMentorToEntrepreneur()
     {

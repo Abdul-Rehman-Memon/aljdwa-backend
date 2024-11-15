@@ -46,17 +46,24 @@ class MentorsAssignmentService
 
      /***********Admin Section - Agreements ***********/
      public function getAllMentorAssignments($data)
-     {
-         $mentor_assignment = $this->mentorsAssignmentRepository->getAllMentorAssignments($data);
- 
-         return $mentor_assignment; 
-     }
- 
-     public function MentorAssignment($id)
-     {
-         $mentor_assignment = $this->mentorsAssignmentRepository->MentorAssignment($id);
- 
-         return $mentor_assignment; 
-     }
+    {
+        $mentor_assignment = $this->mentorsAssignmentRepository->getAllMentorAssignments($data);
+
+        return $mentor_assignment; 
+    }
+
+    public function MentorAssignment($id)
+    {
+        $mentor_assignment = $this->mentorsAssignmentRepository->MentorAssignment($id);
+
+        return $mentor_assignment; 
+    }
+
+    public function MentorAssignmentByUserId($data,$userId)
+    {
+        $mentor_assignment = $this->mentorsAssignmentRepository->MentorAssignmentByUserId($data,$userId);
+
+        return $mentor_assignment; 
+    }
 
 }

@@ -452,6 +452,26 @@ class AdminController extends Controller
         }
     }
 
+    public function MentorAssignmentByUserId(Request $request, $userId)
+    {
+        try {
+            $result = $this->mentorsAssignmentService->MentorAssignmentByUserId($request,$userId);
+            $data = $result['mentor_assignment'];
+            $totalCount = $result['totalCount'];
+            $limit = $result['limit'];
+            $offset = $result['offset'];
+            $message =  'Mentor Assignments retrieved successfully';
+
+            if(count($data) === 0){
+                return ResponseHelper::notFound('mentor assignment not found'); 
+            }else{
+                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve mentor assignments.', 500, $e->getMessage());
+        }
+    }
      /*********** Payments ***********/
      public function getAllPayments(Request $request)
      {

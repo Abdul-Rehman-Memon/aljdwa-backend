@@ -11,4 +11,5 @@ interface MentorsAssignmentInterface
     public function getEntrepreneurAssignedToMentor(int $id);
     public function getAllMentorAssignments(object $data);
     public function MentorAssignment(int $id);
+    public function MentorAssignmentByUserId(object $data,string $userId);
 }
