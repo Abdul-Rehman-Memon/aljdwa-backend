@@ -57,6 +57,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
             'user_application_status.application_status'
         ])
         ->has('entreprenuer_details') // Ensure only users with entrepreneur details are fetched
+        ->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
@@ -78,7 +79,11 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
             'user_application_status' => function ($query) {
                 $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
             },
-            'user_application_status.application_status'
+            'user_application_status.application_status',
+            'entreprenuer_details.entrepreneur_details_agreement',
+            'entreprenuer_details.entrepreneur_details_agreement.agreement_status',
+            'entreprenuer_details.entrepreneur_details_payment',
+            'entreprenuer_details.entrepreneur_details_payment.payment_status',
         ])
             ->has('entreprenuer_details') 
             ->where('id',$applicationId)->first();

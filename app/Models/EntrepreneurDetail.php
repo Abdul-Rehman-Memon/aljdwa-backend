@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 use App\Models\Payment;
+use App\Models\EntrepreneurAgreement;
 
 class EntrepreneurDetail extends Model
 {
@@ -50,10 +51,17 @@ class EntrepreneurDetail extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function entrepreneur_details_agreement()
+    {
+        return $this->hasMany(EntrepreneurAgreement::class,'entrepreneur_details_id','id');
+    }
+
     public function entrepreneur_details_payment()
     {
-        return $this->hasOne(Payment::class,'entrepreneur_details_id','id');
+        return $this->hasMany(Payment::class,'entrepreneur_details_id','id');
     }
+
+   
 
     
 }

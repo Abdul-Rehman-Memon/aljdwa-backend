@@ -45,7 +45,7 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
         // Send email notification to the entrepreneur user
         $user = User::find($entrepreneur['user']['id']); // Assuming user_id is passed in $data
         $userName = $user->founder_name;
-        $agreementDetails = $data['agreement_details'];
+        $agreementDetails = $data['agreement_details'] ?? null;
 
         // $appDomain = config('app.url');
         // $appDomain =  "$appDomain/storage/";

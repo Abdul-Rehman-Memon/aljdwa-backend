@@ -41,7 +41,7 @@ class EntrepreneurAgreementRequest extends FormRequest
         // Initialize the common rules
         return  [
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
-            'agreement_details' => 'required|string',
+            'agreement_details' => 'nullable|string',
             'agreement_document' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:5120',//5MB
         ];
 

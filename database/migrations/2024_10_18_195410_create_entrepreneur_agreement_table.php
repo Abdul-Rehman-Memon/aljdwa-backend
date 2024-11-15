@@ -26,7 +26,7 @@ return new class extends Migration
             ->cascadeOnDelete();
 
             $table->timestamp('signed_at')->nullable();
-            $table->text('agreement_details');
+            $table->text('agreement_details')->nullable();
             $table->string('agreement_document')->nullable();;
             $table->string('reject_reason')->nullable();;
             // $table->integer('status');
