@@ -79,23 +79,32 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
 
     public function MentorAssignmentByUserId(object $data = null,string $userId)
     {
+
+        $userRole = appHelpers::getUserRole($userId);
         $limit = $data['limit'] ?? 10;
         $offset = $data['offset'] ?? 0;
         $status = $data['status'] ? appHelpers::lookUpId('Active_status',$data['status']) : 0;
 
-        $totalCount = MentorsAssignment::has('entrepreneur_details')->count();
+        
 
         $result = MentorsAssignment::with([
             'mentor_assign_status',
             'entrepreneur_details',
             'entrepreneur_details.user',
             'mentor_details'
-            ])
-            ->whereHas('entrepreneur_details', function ($query) use ($userId) {
+        ]);
+        if ($userRole == 'entrepreneur') {
+            $result = $result->whereHas('entrepreneur_details', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
-            })
-        ->limit($limit)
-        ->offset($offset);
+            });
+
+            $totalCount = MentorsAssignment::has('entrepreneur_details')->where('user_id',$userId)->count();
+        }elseif($userRole == 'mentor'){
+            $result = $result->where('mentors_assignment.mentor_id',$userId);
+            $totalCount = MentorsAssignment::has('entrepreneur_details')->where('mentors_assignment.mentor_id',$userId)->count();
+        }
+           
+        $result = $result->limit($limit)->offset($offset);
 
         if($status){
             $result = $result->where('mentors_assignment.status',$status);
