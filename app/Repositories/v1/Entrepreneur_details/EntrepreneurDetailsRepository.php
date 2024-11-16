@@ -2,6 +2,7 @@
 
 namespace App\Repositories\v1\Entrepreneur_details;
 
+use App\helpers\appHelpers;
 use App\Models\User;
 use App\Models\EntrepreneurDetail;
 use App\Models\ApplicationStatus;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserStatusNotification;
+
+use Illuminate\Support\Carbon;
 
 class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 {
@@ -43,24 +46,66 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         return EntrepreneurDetail::create($data);
     }
 
-    public function getEntrepreneurApplications($limit, $offset)
+    public function getEntrepreneurApplications(object $data)
     {
-        $totalCount = User::has('entreprenuer_details')->count();
+
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Application_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+        $search   = $data->input('search') ?? NULL;
+
+        $totalCount = User::has('entreprenuer_details');
 
         $entrepreneur_applications = User::with([
             'entreprenuer_details',
             'user_role',
             'user_status',
-            'user_application_status' => function ($query) {
-                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
-            },
-            'user_application_status.application_status'
+            'latest_application_status',
+            'latest_application_status.application_status'
         ])
-        ->has('entreprenuer_details') // Ensure only users with entrepreneur details are fetched
-        ->orderBy('created_at','desc')
+        ->has('entreprenuer_details');
+        
+        // Ensure only users with entrepreneur details are fetched
+        if ($status) {
+            $entrepreneur_applications->where('users.status',$status);
+            $totalCount = $totalCount->where('users.status',$status);
+        }
+        
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $entrepreneur_applications->where('created_at', '>=', $fromDate);
+                $totalCount = $totalCount->where('users.created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $entrepreneur_applications->where('created_at', '<=', $toDate);
+                $totalCount = $totalCount->where('users.created_at', '<=', $toDate);
+            }
+        }
+
+        if ($search) {
+            $entrepreneur_applications = $entrepreneur_applications->where(function ($query) use ($search) {
+                $query->where('founder_name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
+            });
+    
+            $totalCount = $totalCount->where(function ($query) use ($search) {
+                $query->where('founder_name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
+            });
+        }
+
+
+        $entrepreneur_applications = $entrepreneur_applications->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
+
+        $totalCount = $totalCount->count();
 
         return [
             'totalCount' => $totalCount,

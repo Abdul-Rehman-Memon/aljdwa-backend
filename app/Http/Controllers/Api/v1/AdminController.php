@@ -77,12 +77,9 @@ class AdminController extends Controller
     /*********** Appointment Request ***********/
     public function indexAppointments(Request $request)
     {
-
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
     
         try {
-            $appointments = $this->appointmentService->getAllAppointments($limit, $offset);
+            $appointments = $this->appointmentService->getAllAppointments($request);
             $data = $appointments['appointments'];
             $totalCount = $appointments['totalCount'];
             $limit = $appointments['limit'];
@@ -143,7 +140,7 @@ class AdminController extends Controller
         $offset = $request->input('offset', 0);
 
         try {
-            $applications = $this->entreprenuerDetailsService->getEntrepreneurApplications($limit, $offset);
+            $applications = $this->entreprenuerDetailsService->getEntrepreneurApplications($request);
             $data = $applications['entrepreneur_applications'];
             $totalCount = $applications['totalCount'];
             $limit = $applications['limit'];
@@ -202,11 +199,9 @@ class AdminController extends Controller
     /*********** Mentor Application ***********/
     public function getMentorApplications(Request $request)
     {
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
 
         try {
-            $application = $this->userService->getMentorApplications($limit, $offset);
+            $application = $this->userService->getMentorApplications($request);
             $data = $application['users'];
             $totalCount = $application['totalCount'];
             $limit = $application['limit'];
@@ -277,11 +272,8 @@ class AdminController extends Controller
     public function getAllAdminScheduledMeetings(Request $request)
     {
 
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
-
         try {
-            $meetings = $this->meetingsService->getAllAdminScheduledMeetings($limit, $offset);
+            $meetings = $this->meetingsService->getAllAdminScheduledMeetings($request);
             $data = $meetings['meetings'];
             $totalCount = $meetings['totalCount'];
             $limit = $meetings['limit'];
@@ -302,11 +294,8 @@ class AdminController extends Controller
     public function getAllMeetings(Request $request)
     {
 
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
-
         try {
-            $meetings = $this->meetingsService->getAllMeetings($limit, $offset);
+            $meetings = $this->meetingsService->getAllMeetings($request);
             $data = $meetings['meetings'];
             $totalCount = $meetings['totalCount'];
             $limit = $meetings['limit'];
@@ -455,7 +444,12 @@ class AdminController extends Controller
     public function MentorAssignmentByUserId(Request $request, $userId)
     {
         try {
+            $user = $this->userService->getUser($userId);
+            if (!$user)
+                return ResponseHelper::notFound('Invalid User Id'); 
+
             $result = $this->mentorsAssignmentService->MentorAssignmentByUserId($request,$userId);
+
             $data = $result['mentor_assignment'];
             $totalCount = $result['totalCount'];
             $limit = $result['limit'];

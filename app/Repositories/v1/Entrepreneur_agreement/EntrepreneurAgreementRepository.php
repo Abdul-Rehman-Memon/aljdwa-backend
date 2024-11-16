@@ -127,27 +127,41 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
     public function getAllAgreements(object $data = null)
     {
 
-        $limit = $data['limit'] ?? 10;
-        $offset = $data['offset'] ?? 0;
-        $status = $data['status'] ? appHelpers::lookUpId('Agreement_status',$data['status']) : 0;
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Agreement_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
 
-        $totalCount = EntrepreneurAgreement::has('agreement_entrepreneur_detail')->count();
+        // $totalCount = EntrepreneurAgreement::has('agreement_entrepreneur_detail')->count();
 
-        $result = EntrepreneurAgreement::with([
+        $query = EntrepreneurAgreement::with([
             'agreement_entrepreneur_detail',  // Fetches entrepreneur details for the agreement
             'agreement_status',               // Fetches agreement status (e.g., lookup details)
             'agreement_entrepreneur_detail.entrepreneur_details_payment', // Fetches payments related to entrepreneur details
             'agreement_entrepreneur_detail.entrepreneur_details_payment.payment_status', // Fetches status of each payment
         ])
-        ->has('agreement_entrepreneur_detail')
+        ->has('agreement_entrepreneur_detail');
+
+        if ($status) {
+            $query->where('entrepreneur_agreement.status',$status);
+        }
+        
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $query->where('created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $query->where('created_at', '<=', $toDate);
+            }
+        }
+        $result = $query->orderBy('created_at','desc')
         ->limit($limit)
-        ->offset($offset);
+        ->offset($offset)
+        ->get();
 
-        if($status){
-            $result = $result->where('entrepreneur_agreement.status',$status);
-        }  
-
-        $result = $result->get();
+        $totalCount = $query->count();
 
         return [
             'totalCount' => $totalCount,

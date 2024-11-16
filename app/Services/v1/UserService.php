@@ -67,9 +67,9 @@ class UserService
         return $this->userRepository->forgetPassword($data);
     }
 
-    public function getMentorApplications($limit, $offset){
+    public function getMentorApplications($data){
 
-        return $this->userRepository->getMentorApplications($limit, $offset);
+        return $this->userRepository->getMentorApplications($data);
     }
 
     public function reviewMentorApplication($applicationId){

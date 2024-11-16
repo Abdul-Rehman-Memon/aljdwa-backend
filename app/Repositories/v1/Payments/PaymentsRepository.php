@@ -154,26 +154,39 @@ class PaymentsRepository implements PaymentsInterface
     /*********** Admin Section - Agreements ***********/
     public function getAllPayments(object $data = null)
     {
-        $limit = $data['limit'] ?? 10;
-        $offset = $data['offset'] ?? 0;
-        $status = $data['status'] ? appHelpers::lookUpId('Payment_status',$data['status']) : 0;
+  
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Payment_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
 
-        $totalCount = Payment::has('payment_entrepreneur_detail')->count();
-
-        $result = Payment::with(
+        $query = Payment::with(
             ['payment_status', ////payment -> lookup_details,
              'payment_entrepreneur_detail',
              'payment_entrepreneur_detail.user',
             ])
-        ->has('payment_entrepreneur_detail')
+        ->has('payment_entrepreneur_detail');
+
+        if ($status) {
+            $query->where('payments.status',$status);
+        }
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $query->where('created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $query->where('created_at', '<=', $toDate);
+            }
+        }
+
+        $result = $query->orderBy('created_at','desc')
         ->limit($limit)
-        ->offset($offset);
+        ->offset($offset)
+        ->get();
 
-        if($status){
-            $result = $result->where('payments.status',$status);
-        }  
-
-        $result = $result->get();
+        $totalCount = $query->count();
 
         return [
             'totalCount' => $totalCount,

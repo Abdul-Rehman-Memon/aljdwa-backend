@@ -205,11 +205,9 @@ class EntrepreneurController extends Controller
     public function getAllMeetings(Request $request)
     {
 
-        $limit = $request->input('limit', 10);
-        $offset = $request->input('offset', 0);
 
         try {
-            $meetings = $this->meetingsService->getAllMeetings($limit, $offset);
+            $meetings = $this->meetingsService->getAllMeetings($request);
             $data = $meetings['meetings'];
             $totalCount = $meetings['totalCount'];
             $limit = $meetings['limit'];

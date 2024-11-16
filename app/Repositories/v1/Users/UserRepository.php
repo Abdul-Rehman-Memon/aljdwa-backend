@@ -15,6 +15,8 @@ use App\Mail\UserWelcomeNotification;
 use App\Mail\UserStatusNotification;
 use App\Mail\UserProfileUpdatedNotification;
 
+use Illuminate\Support\Carbon;
+
 class UserRepository implements UserRepositoryInterface
 {
     public function createUser(array $data)
@@ -68,23 +70,64 @@ class UserRepository implements UserRepositoryInterface
         return ApplicationStatus::create($data);
     }
 
-    public function getMentorApplications($limit, $offset)
+    public function getMentorApplications(object $data)
     {
 
-        $totalCount = User::where('role',2)->count();
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Application_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+        $search   = $data->input('search') ?? NULL;
+
+        $totalCount = User::where('role',2);
         $users = User::with([
             'entreprenuer_details',
             'user_role',
             'user_status',
-            'user_application_status' => function ($query) {
-                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
-            },
-            'user_application_status.application_status'
+            'latest_application_status',
+            'latest_application_status.application_status'
         ])
-        ->where('role',2) //2 = mentor
+        ->where('role',2);//2 = mentor
+        
+        // Ensure only users with entrepreneur details are fetched
+        if ($status) {
+            $users->where('users.status',$status);
+            $totalCount = $totalCount->where('users.status',$status);
+        }
+        
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $users->where('created_at', '>=', $fromDate);
+                $totalCount = $totalCount->where('users.created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $users->where('created_at', '<=', $toDate);
+                $totalCount = $totalCount->where('users.created_at', '<=', $toDate);
+            }
+        }
+
+        if ($search) {
+            $users = $users->where(function ($query) use ($search) {
+                $query->where('founder_name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
+            });
+    
+            $totalCount = $totalCount->where(function ($query) use ($search) {
+                $query->where('founder_name', 'LIKE', "%{$search}%")
+                      ->orWhere('email', 'LIKE', "%{$search}%")
+                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $users = $users->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
+
+        $totalCount = $totalCount->count();
 
         return [
             'totalCount' => $totalCount,
@@ -93,7 +136,7 @@ class UserRepository implements UserRepositoryInterface
             'users' => $users
         ]; 
     }
-
+ 
     public function reviewMentorApplication(string $applicationId)
     {
         $user = User::where('role',2)->find($applicationId);

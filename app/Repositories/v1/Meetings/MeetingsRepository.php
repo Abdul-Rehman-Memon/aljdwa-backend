@@ -86,20 +86,48 @@ class MeetingsRepository implements MeetingsInterface
         return $meeting; 
     }
 
-    public function getAllAdminScheduledMeetings($limit, $offset)
+    public function getAllAdminScheduledMeetings(object $data)
     {
+
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Meeting_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+
         $userId = Auth::id();
-        $totalCount = Meeting::count();
+        $totalCount = Meeting::query();
 
         $meetings = Meeting::with([
             'initiator',
             'participant',
             'meeting_status',
         ])
-        ->where('initiator_id',$userId)
+        ->where('initiator_id',$userId);
+
+
+        if ($status) {
+            $meetings = $meetings->where('meetings.status',$status);
+            $totalCount = $totalCount->where('meetings.status',$status);
+        }
+        
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $meetings = $meetings->where('created_at', '>=', $fromDate);
+                $totalCount = $totalCount->where('meetings.created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $meetings = $meetings->where('created_at', '<=', $toDate);
+                $totalCount = $totalCount->where('meetings.created_at', '<=', $toDate);
+            }
+        }
+        $meetings = $meetings->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
+
+        $totalCount = $totalCount->count();
 
         return [
             'totalCount' => $totalCount,
@@ -109,8 +137,14 @@ class MeetingsRepository implements MeetingsInterface
         ];    
     }
 
-    public function getAllMeetings($limit, $offset)
+    public function getAllMeetings(object $data)
     {
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Meeting_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+
         $userId = Auth::id();
         $role = appHelpers::getUserRole($userId);
 
@@ -119,21 +153,39 @@ class MeetingsRepository implements MeetingsInterface
             'participant',
             'meeting_status',
         ]);
-       // Apply the condition if the role is not 'admin'
-        if ($role !== 'admin') {
+        
+        if ($role === 'admin') {
+            $query->where(function ($q) use ($userId) {
+                $q->where('initiator_id','!=', $userId)
+                ->Where('participant_id','!=', $userId);
+            });
+        }
+        else {
             $query->where(function ($q) use ($userId) {
                 $q->where('initiator_id', $userId)
                 ->orWhere('participant_id', $userId);
             });
         }
 
-        // Count total records after filtering (if needed)
-        $totalCount = $query->count();
+        if ($status) {
+            $query->where('meetings.status',$status);
+        }
+        
+        if ($fromDate || $toDate) {
 
-        // Apply limit and offset for pagination
-        $meetings = $query->limit($limit)
-            ->offset($offset)
-            ->get();
+            if ($fromDate) {
+                $query->where('created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $query->where('created_at', '<=', $toDate);
+            }
+        }
+        $meetings = $query->orderBy('created_at','desc')
+        ->limit($limit)
+        ->offset($offset)
+        ->get();
+
+        $totalCount = $query->count();
 
         return [
             'totalCount' => $totalCount,

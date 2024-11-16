@@ -21,16 +21,16 @@ class MeetingService
         return $meeting;
     }
 
-    public function getAllAdminScheduledMeetings($limit, $offset)
+    public function getAllAdminScheduledMeetings($data)
     {
-        $meeting = $this->meetingRepository->getAllAdminScheduledMeetings($limit, $offset);
+        $meeting = $this->meetingRepository->getAllAdminScheduledMeetings($data);
 
         return $meeting;
     }
 
-    public function getAllMeetings($limit, $offset)
+    public function getAllMeetings($data)
     {
-        $meeting = $this->meetingRepository->getAllMeetings($limit, $offset);
+        $meeting = $this->meetingRepository->getAllMeetings($data);
 
         return $meeting;
     }

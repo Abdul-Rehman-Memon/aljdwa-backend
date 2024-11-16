@@ -20,9 +20,9 @@ class AppointmentService
         return $appointment;
     }
 
-    public function getAllAppointments($limit, $offset)
+    public function getAllAppointments($data)
     {
-        $appointments = $this->appointmentRepository->getAllAppointments($limit, $offset);
+        $appointments = $this->appointmentRepository->getAllAppointments($data);
 
         return $appointments;
     }

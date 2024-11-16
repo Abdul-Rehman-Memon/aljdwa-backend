@@ -2,6 +2,7 @@
 
 namespace App\Repositories\v1\Appointments;
 
+use App\helpers\appHelpers;
 use App\Models\Appointment;
 use App\Models\AppointmentSchedule;
 use Carbon\Carbon;
@@ -43,14 +44,29 @@ class AppointmentsRepository implements AppointmentsInterface
         return $appointment;    
     }
 
-    public function getAllAppointments($limit, $offset)
+    public function getAllAppointments(object $data)
     {
-        $totalCount = Appointment::count();
+        $limit  = $data->input('limit', 10);
+        $offset = $data->input('offset', 0);
+        $status = $data->input('status') ? appHelpers::lookUpId('Appointment_status',$data->input('status'))  : NULL;
+        $date   = $data->input('date') ?? NULL;
+
+        $totalCount = Appointment::query();
 
         // Fetch the appointments with the linked status and apply pagination
-        $appointments = Appointment::with('appointment_status')
+        $appointments = Appointment::with('appointment_status');
+
+        if ($status) {
+            $appointments = $appointments->where('appointments.status',$status);
+            $totalCount = $totalCount->where('appointments.status',$status);
+        }
+
+        $totalCount = $totalCount->count();
+
+        $appointments = $appointments
             ->limit($limit)
             ->offset($offset)
+            ->orderBy('id', 'desc')
             ->get();
 
         return [
@@ -96,10 +112,16 @@ class AppointmentsRepository implements AppointmentsInterface
     public function AppointmentSchedules(array $data)
     {
         $date = $data['date'];
+        $status = $data['status'] ?? NULL;
         $dateFormat = Carbon::createFromTimestamp($date);
         $weekday = Carbon::parse($dateFormat)->dayOfWeek;
 
-        return AppointmentSchedule::where('weekday', $weekday)->get();
+        $result = AppointmentSchedule::with('appointment_schedule_status')->where('weekday', $weekday);
+        if ($status) {
+            $result = $result->where('status', $status);
+        }
+        
+        return $result = $result ->orderBy('id', 'desc')->get();
 
     }
 
@@ -108,13 +130,17 @@ class AppointmentsRepository implements AppointmentsInterface
         $date = $data['date'];
         $dateFormat = Carbon::createFromTimestamp($date);
         $weekday = Carbon::parse($dateFormat)->dayOfWeek; // Returns 0 (Sunday) to 6 (Saturday)
-        $time = $data['time'];
+        $time = $data['time'] ?? NULL;
+        $status = $data['status'] ?? NULL;
 
         // return $dateFormat;
         // $availableSlotsQuery = AppointmentSchedule::query();
-        $availableSlotsQuery = AppointmentSchedule::where('weekday', $weekday);
+        $availableSlotsQuery = AppointmentSchedule::with('appointment_schedule_status')->where('weekday', $weekday);
         if ($time) {
             $availableSlotsQuery->where('time', $time);
+        }
+        if ($status) {
+            $availableSlotsQuery->where('status', $status);
         }
 
         $availableSlots = $availableSlotsQuery->whereNotIn('time', function ($query) use ($date) {
@@ -127,7 +153,9 @@ class AppointmentsRepository implements AppointmentsInterface
                                   ->where('value', '!=', 'cancelled');
                                   // Add more exclusions if needed
                   });
-        })->get();
+        })
+        ->orderBy('id', 'desc')
+        ->get();
 
         return  $availableSlots->isEmpty() ? null : $availableSlots;
     }

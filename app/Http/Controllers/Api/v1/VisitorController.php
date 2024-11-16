@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\helpers\appHelpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\v1\Appointments\AppointmentRequest;
@@ -36,6 +37,7 @@ class VisitorController extends Controller
 
         $data['date'] = $request->input('date') ?? Carbon::now()->startOfDay()->timestamp;
         $data['time'] = $request->input('time') ?? NULL;
+        $data['status'] = $request->input('status') ? appHelpers::lookUpId('Active_status',$request->input('status')) : NULL;
         try {
             $availabeSlots = $this->appointmentService->AvailableAppointmentSlots($data);
             $allSlots = $this->appointmentService->AppointmentSchedules($data);
@@ -44,7 +46,7 @@ class VisitorController extends Controller
             return ResponseHelper::success($result,'Appointment schedules slots retrieved successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to retrieve appointment slots.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to retrieve appointment slots.',500,$e->getMessage()."Line no:".$e->getLine());
         }
     }
 }

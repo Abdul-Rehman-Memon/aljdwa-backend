@@ -8,6 +8,6 @@ interface UserRepositoryInterface
     public function applicationStatus(array $data);
     public function getUser(string $userId);
     public function updateUser(array $data,string $userId);
-    public function getMentorApplications($limit, $offset);
+    public function getMentorApplications(object $data);
     public function reviewMentorApplication(string $applicationId);
 }

@@ -23,8 +23,8 @@ class Meeting extends Model
     ];
 
     protected $hidden = [
-        'created_at',
-        'updated_at',
+        // 'created_at',
+        // 'updated_at',
     ];
 
     // Add this to convert created_at into timestamp

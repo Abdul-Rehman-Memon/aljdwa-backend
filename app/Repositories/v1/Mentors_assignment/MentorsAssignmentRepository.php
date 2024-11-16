@@ -36,26 +36,40 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
     public function getAllMentorAssignments(object $data = null)
     {
 
-        $limit = $data['limit'] ?? 10;
-        $offset = $data['offset'] ?? 0;
-        $status = $data['status'] ? appHelpers::lookUpId('Active_status',$data['status']) : 0;
+        $limit    = $data->input('limit', 10);
+        $offset   = $data->input('offset', 0);
+        $status   = $data->input('status')   ? appHelpers::lookUpId('Active_status',$data->input('status'))   : NULL;
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
 
-        $totalCount = MentorsAssignment::has('entrepreneur_details')->count();
 
-        $result = MentorsAssignment::with([
+        // $totalCount = MentorsAssignment::has('entrepreneur_details')->count();
+
+        $query = MentorsAssignment::with([
             'mentor_assign_status',
             'entrepreneur_details',
             'entrepreneur_details.user',
             'mentor_details'
-            ])
+        ]);
+        if ($status) {
+            $query->where('mentors_assignment.status',$status);
+        }
+        if ($fromDate || $toDate) {
+
+            if ($fromDate) {
+                $query->where('created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $query->where('created_at', '<=', $toDate);
+            }
+        }
+
+        $result = $query->orderBy('created_at','desc')
         ->limit($limit)
-        ->offset($offset);
+        ->offset($offset)
+        ->get();
 
-        if($status){
-            $result = $result->where('mentors_assignment.status',$status);
-        }  
-
-        $result = $result->get();
+        $totalCount = $query->count();
 
         return [
             'totalCount' => $totalCount,

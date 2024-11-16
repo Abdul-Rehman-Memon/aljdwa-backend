@@ -24,9 +24,9 @@ class EntreprenuerDetailsService
         $this->entreprenuerDetailsRepository = $entreprenuerDetailsRepository;
     }
 
-    public function getEntrepreneurApplications($limit, $offset)
+    public function getEntrepreneurApplications($data)
     {
-        $applications = $this->entreprenuerDetailsRepository->getEntrepreneurApplications($limit, $offset);
+        $applications = $this->entreprenuerDetailsRepository->getEntrepreneurApplications($data);
 
         return $applications;
     }
