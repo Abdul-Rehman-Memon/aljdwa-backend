@@ -101,31 +101,34 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
 
         
 
-        $result = MentorsAssignment::with([
+        $query = MentorsAssignment::with([
             'mentor_assign_status',
             'entrepreneur_details',
             'entrepreneur_details.user',
             'mentor_details'
         ]);
         if ($userRole == 'entrepreneur') {
-            $result = $result->whereHas('entrepreneur_details', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
+            $query->whereHas('entrepreneur_details', function ($qr) use ($userId) {
+                $qr->where('user_id', $userId);
             });
 
-            $totalCount = MentorsAssignment::has('entrepreneur_details')->where('user_id',$userId)->count();
+            // $totalCount = MentorsAssignment::has('entrepreneur_details')->where('user_id',$userId)->count();
         }elseif($userRole == 'mentor'){
-            $result = $result->where('mentors_assignment.mentor_id',$userId);
-            $totalCount = MentorsAssignment::has('entrepreneur_details')->where('mentors_assignment.mentor_id',$userId)->count();
+            $query->where('mentors_assignment.mentor_id',$userId);
+            // $totalCount = MentorsAssignment::has('entrepreneur_details')->where('mentors_assignment.mentor_id',$userId)->count();
         }
-           
-        $result = $result->limit($limit)->offset($offset);
 
         if($status){
-            $result = $result->where('mentors_assignment.status',$status);
-        }  
+            $query->where('mentors_assignment.status',$status);
+        } 
+           
+        $result = $query->orderBy('created_at','desc')
+        ->limit($limit)
+        ->offset($offset)
+        ->get();
 
-        $result = $result->get();
-
+        $totalCount = $query->count();
+ 
         return [
             'totalCount' => $totalCount,
             'limit' => $limit,
