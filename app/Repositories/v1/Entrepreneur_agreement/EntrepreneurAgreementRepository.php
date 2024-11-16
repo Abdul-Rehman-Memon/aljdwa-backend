@@ -97,11 +97,13 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
         $userId = Auth::id();
         $data['signed_At'] = Carbon::now()->toDateTimeString();
-        $agreement = EntrepreneurAgreement::with(['agreement_status', ////entrepreneur_agreement -> lookup_details,
-             'agreement_entrepreneur_detail' => function ($query) use ($userId){
-                $query->where('user_id',$userId);
-             }
-        ])->first();
+        $data['status'] = appHelpers::lookUpId('Agreement_status',$data['status']);
+        $agreement = EntrepreneurAgreement::with([
+            'agreement_status',
+            'agreement_entrepreneur_detail'
+        ])->whereHas('agreement_entrepreneur_detail', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->first();
         
         if ($agreement && $agreement->update($data)) {
             $updatedAgreement = $agreement->fresh(

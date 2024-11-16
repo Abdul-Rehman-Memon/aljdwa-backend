@@ -111,11 +111,11 @@ class EntrepreneurController extends Controller
         $validatedData = $request->validated();
 
         try {
-
-            $validatedData['status'] = appHelpers::lookUpId('Agreement_status',$validatedData['status']);
-
-            $user = $this->entreprenuerAgreementService->updateEntrepreneurAgreement($validatedData);
-            return ResponseHelper::success($user,'Agreement updated successfully');
+            $result = $this->entreprenuerAgreementService->updateEntrepreneurAgreement($validatedData);
+            if (!$result)
+                return ResponseHelper::notFound('Agreement not found'); 
+            
+            return ResponseHelper::success($result,'Agreement updated successfully');
 
         } catch (Exception $e) {
             // Handle the error
