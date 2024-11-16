@@ -38,12 +38,6 @@ class EntreprenuerDetailsService
         return $application;
     }
 
-    public function updateEntrepreneurApplicationStatusByAdmin($data, $applicationId)
-    {
-        $application = $this->entreprenuerDetailsRepository->updateEntrepreneurApplicationStatusByAdmin($data, $applicationId);
-
-        return $application;
-    }
 
     public function updateEntrepreneurApplication($data, $applicationId)
     {

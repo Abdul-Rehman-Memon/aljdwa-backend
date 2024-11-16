@@ -64,8 +64,8 @@ class UpdateApplicationRequest extends FormRequest
         if ($userRole === 3) {
             $rules = array_merge($rules, [
                
-                'position' => 'required|string', 
-                'major' => 'required|string', 
+                'position' => 'nullable|string', 
+                'major' => 'nullable|string', 
                 'resume' => 'nullable|file|mimes:pdf|max:5120',//5MB
                 'website' => 'string|url', // Assuming it's an array
                 // 'websites.*' => 'string|url', // Validate each website entry
@@ -73,6 +73,10 @@ class UpdateApplicationRequest extends FormRequest
                 'problem_solved' => 'required|string',
                 'solution_offering' => 'required|string',
                 'previous_investment' => 'nullable|numeric', // Allow null or numeric
+                'company_registered' => 'required|string', 
+                'saudi_vision_alignment' => 'required|string', 
+                'positive_impact' => 'required|string',
+                'help_needed' => 'required|string',
                 'industry_sector' => 'required|string',
                 'business_model' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB
                 'patent' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB

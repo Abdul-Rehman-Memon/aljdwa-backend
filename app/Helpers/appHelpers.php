@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\Lookup;
 use App\Models\LookupDetail;
 use App\Models\MentorsAssignment;
+
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -61,6 +64,30 @@ class appHelpers
             })
             ->where('mentor_id',$mentorId)
             ->first();
+    }
+
+    /*-- Upload File --*/
+    public static function uploadFile(array $data)
+    {
+        $userId   = $data['user_id'];
+        $userRole = self::getUserRole($userId);
+        $file     = $data['file'];
+        $fileName = $data['fileName'];
+        // Define the directory path: user_role/user_id/fileName/
+        $directory = "{$userRole}/{$userId}/{$fileName}";
+
+        // Check if directory exists, create it if it doesn’t
+        if (!File::exists(storage_path("app/{$directory}"))) {
+            File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
+        }
+
+        $timestamp = time();
+        $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
+
+         // Generate the full URL for accessing the file
+        $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
+
+        return $fullUrl;
     }
 
 }

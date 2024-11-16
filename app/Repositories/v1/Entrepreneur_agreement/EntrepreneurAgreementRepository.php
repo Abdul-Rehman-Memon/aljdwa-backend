@@ -29,27 +29,21 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
         $file = $data['agreement_document'];
         $data['admin_id'] =  Auth::id();
-
-        // Define the directory path: entrepreneur_details_id/agreement/
-        $directory = "public/{$entrepreneur_details_id}/agreement";
-
-        // Check if directory exists, create it if it doesn’t
-        if (!File::exists(storage_path("app/{$directory}"))) {
-            File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
+        $filePath = null;
+        if (isset($data['agreement_document'])) {
+            $fileInfo['user_id'] = $entrepreneur['user_id']; 
+            $fileInfo['file'] = $data['agreement_document']; 
+            $fileInfo['fileName'] = 'agreement_document'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['agreement_document'] = $filePath;
         }
 
-        $filePath = Storage::disk('public')->putFileAs($directory, $file, $file->getClientOriginalName());
-        $data['agreement_document'] = $filePath;
         $agreement = EntrepreneurAgreement::create($data);
 
         // Send email notification to the entrepreneur user
         $user = User::find($entrepreneur['user']['id']); // Assuming user_id is passed in $data
         $userName = $user->founder_name;
         $agreementDetails = $data['agreement_details'] ?? null;
-
-        // $appDomain = config('app.url');
-        // $appDomain =  "$appDomain/storage/";
-        // $agreementDocumentPath = $appDomain.''.$filePath ?? null;
         $agreementDocumentPath = $filePath ?? null;
 
         // Mail::to($user->email)->send(new AgreementNotification($userName, $agreementDetails, $agreementDocumentPath));

@@ -6,5 +6,4 @@ interface MessagesInterface
 {
     public function createMessage(array $data);
     public function getMessage(string $senderId);
-    public function uploadAttachmentFile(array $data);
 }

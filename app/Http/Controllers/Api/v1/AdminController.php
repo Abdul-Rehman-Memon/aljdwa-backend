@@ -340,7 +340,7 @@ class AdminController extends Controller
             return ResponseHelper::created($agreement,'Entrepreneur agreement created successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to create entrepreneur agreement.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to create entrepreneur agreement.',500,$e->getMessage()."Line no:".$e->getLine());
         }
     }
 

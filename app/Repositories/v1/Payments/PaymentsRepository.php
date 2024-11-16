@@ -40,23 +40,16 @@ class PaymentsRepository implements PaymentsInterface
         $data['status'] = appHelpers::lookUpId('Payment_status',$status);
 
        /* -- voucher file--*/ 
-        $file = $data['voucher'] ?? null;
         $fullUrl = null;
-        if($file){
-            $fileName = 'payment_voucher';
-            $directory = "public/entrepreneur/{$userId}/{$fileName}";
 
-            if (!File::exists(storage_path("app/{$directory}"))) {
-                File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
-            }
-
-            $timestamp = time();
-            $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
-
-            $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
-            $data['voucher']  = $fullUrl;
+        if (isset($data['voucher'])) {
+            $fileInfo['user_id'] = $userId; 
+            $fileInfo['file'] = $data['voucher']; 
+            $fileInfo['fileName'] = 'voucher'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['voucher'] = $filePath;
         }
-
+    
         $payment =  Payment::create($data);
 
         // Load payment status for returning full data
@@ -220,24 +213,13 @@ class PaymentsRepository implements PaymentsInterface
             ])
             ->find($paymentId);
 
-        $file = $data['voucher'] ?? null;
-
-        $fullUrl = null;
-
-        if($payment && $file){
-            $fileName = 'payment_voucher';
-            $directory = "public/entrepreneur/{$payment->entrepreneur_id}/{$fileName}";
-
-            if (!File::exists(storage_path("app/{$directory}"))) {
-                File::makeDirectory(storage_path("app/{$directory}"), 0755, true);
-            }
-
-            $timestamp = time();
-            $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
-
-            $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
-            $data['voucher']  = $fullUrl;
-        }          
+        if ($payment && isset($data['voucher'])) {
+            $fileInfo['user_id'] = $payment->entrepreneur_id; 
+            $fileInfo['file'] = $data['voucher']; 
+            $fileInfo['fileName'] = 'voucher'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['voucher'] = $filePath;
+        }
         
         if ($payment && $payment->update($data)) {
             $updatedPayment = $payment->fresh(
