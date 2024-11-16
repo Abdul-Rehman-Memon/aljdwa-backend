@@ -25,7 +25,7 @@ class Payment extends Model
     // Define fillable fields if needed
     protected $fillable = [
         'payments_details',
-        'payment_refrence',
+        'payment_reference',
         'entrepreneur_id',
         'entrepreneur_details_id',
         'invoice_Id',

@@ -14,6 +14,8 @@ use App\Mail\PaymentNotificationForAdmin;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class PaymentsRepository implements PaymentsInterface
 {
@@ -21,15 +23,25 @@ class PaymentsRepository implements PaymentsInterface
     /*********** For Entrepeneur User ***********/
     public function createPayment(array $data)
     {
+        
         $userId = Auth::user()->id;
         $data['entrepreneur_id'] = $userId;
         $data['payment_date'] = Carbon::now()->toDateTimeString();
 
-        
+        $status = 'unpaid';
+        /* -- use stripe payment gateway -- */
+        $response = $this->stripePaymentgateWay($data);
+
+        if ($response) {    
+            $status = $response['success']? 'paid' : 'unpaid';
+            $data['payment_reference'] = $response['success']? $response['payment_intent_id'] : null;            
+        }
+
+        $data['status'] = appHelpers::lookUpId('Payment_status',$status);
+
+       /* -- voucher file--*/ 
         $file = $data['voucher'] ?? null;
-
         $fullUrl = null;
-
         if($file){
             $fileName = 'payment_voucher';
             $directory = "public/entrepreneur/{$userId}/{$fileName}";
@@ -44,6 +56,7 @@ class PaymentsRepository implements PaymentsInterface
             $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
             $data['voucher']  = $fullUrl;
         }
+
         $payment =  Payment::create($data);
 
         // Load payment status for returning full data
@@ -55,15 +68,70 @@ class PaymentsRepository implements PaymentsInterface
         $amount = $payment['amount'];
 
         // Format payment_date to a more readable date-time format
-        $paymentDate = Carbon::parse($payment['payment_date'])->format('d M Y, h:i A');
+        // $paymentDate = Carbon::parse($payment['payment_date'])->format('d M Y, h:i A');
 
-        $adminEmail = config('mail.admin_email'); // Ensure this is set in the .env
+        // $adminEmail = config('mail.admin_email'); // Ensure this is set in the .env
         // Send email to user
         // Mail::to($userEmail)->send(new PaymentConfirmationForUser($userName, $amount, $paymentDate));
         // Send email to admin
         // Mail::to($adminEmail)->send(new PaymentNotificationForAdmin($userName, $amount, $paymentDate));
 
         return $payment;
+    }
+
+    public function stripePaymentgateWay(array $data)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET')); // Your Stripe Secret Key
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $data['amount'] * 100, // Convert to cents
+            'currency' => $data['currency'],
+            'payment_method' => $data['token'],
+            // 'confirmation_method' => 'manual',
+            'confirm' => true, // Automatically confirm the payment
+            // 'automatic_payment_methods' => [
+            //     'enabled' => true,
+            //     'allow_redirects' => 'never',
+            // ],
+            'return_url' => 'https://your-frontend-url.com/payment-success',
+        ]);
+
+        if ($paymentIntent->status === 'requires_action') {
+            return [
+                'requires_action' => true,
+                'payment_intent_client_secret' => $paymentIntent->client_secret,
+            ];
+        } else if ($paymentIntent->status === 'succeeded') {
+            // Handle successful payment
+            return [
+                'success' => true,
+                'payment_intent_id' => $paymentIntent->id,
+            ];
+        }
+
+        return null;
+    }
+
+    public function verifyStripePayment(string $paymentIntentId)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET')); // Your Stripe Secret Key
+
+        $paymentIntent = PaymentIntent::retrieve($paymentIntentId);
+
+        // Check the status
+        if ($paymentIntent->status === 'succeeded') {
+            return [
+                'success' => true,
+                'message' => 'Payment verified successfully.',
+                'data' => $paymentIntent,
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Payment not completed.',
+                'status' => $paymentIntent->status,
+            ];
+        }
     }
 
     public function getEntrepreneurPayment()

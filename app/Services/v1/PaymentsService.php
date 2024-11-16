@@ -28,6 +28,13 @@ class PaymentsService
         return $payment;
     }
 
+    public function verifyStripePayment($paymentIntentId)
+    {
+        $payment = $this->paymentsRepository->verifyStripePayment($paymentIntentId);
+
+        return $payment;
+    }
+
     /***********Admin Section - Payments ***********/
     public function getAllPayments($data)
     {

@@ -132,12 +132,22 @@ class EntrepreneurController extends Controller
         $validatedData = $request->validated();
 
         try {
-            $validatedData['status'] = appHelpers::lookUpId('Payment_status',$validatedData['status']);
             $payment = $this->paymentService->createPayment($validatedData);
             return ResponseHelper::created($payment,'Entrepreneur payment created successfully');
         } catch (Exception $e) {
             // Handle the error
             return ResponseHelper::error('Failed to create entrepreneur payment.',500,$e->getMessage());
+        }
+    }
+
+    public function verifyStripePayment($paymentIntentId)
+    {
+        try {
+            $payment = $this->paymentService->verifyStripePayment($paymentIntentId);
+            return ResponseHelper::success($payment,'Stripe payment details retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to fetch stripe payment details.',500,$e->getMessage());
         }
     }
 

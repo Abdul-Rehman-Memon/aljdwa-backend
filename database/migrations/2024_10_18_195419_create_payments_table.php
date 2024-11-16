@@ -15,16 +15,8 @@ return new class extends Migration
 
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('payments_details');
-            // $table->integer('payment_refrence');
-            // $table->foreign('payment_refrence')->references('id')->on('lookups');
-            $table->bigInteger('payment_refrence');
-            // $table->unsignedInteger('payment_refrence');
-            // $table->foreign('payment_refrence')->references('id')->on('lookup_details')
-            // ->cascadeOnUpdate()
-            // ->cascadeOnDelete();
-
-            // $table->integer('entrepreneur');
+            $table->text('payments_details')->nullable();
+            $table->text('payment_reference')->nullable();
             $table->foreignUuid('entrepreneur_id')->constrained('users')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
@@ -33,7 +25,7 @@ return new class extends Migration
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
 
-            $table->bigInteger('invoice_Id');
+            $table->bigInteger('invoice_Id')->nullable();
             $table->bigInteger('amount');
             $table->text('voucher')->nullable();
             // $table->integer('status');

@@ -40,15 +40,17 @@ class PaymentRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'payments_details' => 'required|string',
-            'payment_refrence' => 'required|int',
+            'payments_details' => 'nullable|string',
+            'payment_refrence' => 'nullable|string',
             // 'entrepreneur_id' => 'required|exists:users,id',
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
-            'invoice_Id' => 'required|int',
+            'invoice_Id' => 'nullable|int',
             'amount' => 'required|int',
-            'voucher' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
+            'currency' => 'required|string',
+            'token' => 'required|string',
+            'voucher' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
             // 'payment_date' => 'required|date',
-            'status' => 'required|string|in:paid,unpaid',
+            // 'status' => 'nullable|string|in:paid,unpaid',
         ];
 
     }

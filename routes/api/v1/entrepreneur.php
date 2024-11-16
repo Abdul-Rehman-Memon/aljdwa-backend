@@ -24,6 +24,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
     Route::prefix('payment-management')->group(function () {
         Route::post('/payments', [EntrepreneurController::class, 'createPayment']);
         Route::get('/payments', [EntrepreneurController::class, 'getEntrepreneurPayment']);
+        Route::get('/verify-payment/{id}', [EntrepreneurController::class, 'verifyStripePayment']);
     });
 
     //Mentor Assignment
