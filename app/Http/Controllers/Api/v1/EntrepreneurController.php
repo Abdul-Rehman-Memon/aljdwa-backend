@@ -106,18 +106,15 @@ class EntrepreneurController extends Controller
         }
     }
 
-    public function updateAgreement(UpdateEntrepreneurAgreementRequest $request,$agreementId)
+    public function updateAgreement(UpdateEntrepreneurAgreementRequest $request)
     {
         $validatedData = $request->validated();
 
         try {
-            $agreement= $this->entreprenuerAgreementService->getEntrepreneurAgreement($agreementId);
-            if (!$agreement) {
-                return ResponseHelper::notFound('Agreement not found');
-            }
+
             $validatedData['status'] = appHelpers::lookUpId('Agreement_status',$validatedData['status']);
 
-            $user = $this->entreprenuerAgreementService->updateEntrepreneurAgreement($validatedData, $agreementId);
+            $user = $this->entreprenuerAgreementService->updateEntrepreneurAgreement($validatedData);
             return ResponseHelper::success($user,'Agreement updated successfully');
 
         } catch (Exception $e) {

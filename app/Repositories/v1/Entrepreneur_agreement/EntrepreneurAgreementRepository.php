@@ -92,12 +92,16 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
             
     }
 
-    public function updateEntrepreneurAgreement(array $data, int $agreementId)
+    public function updateEntrepreneurAgreement(array $data)
     {
+
+        $userId = Auth::id();
         $data['signed_At'] = Carbon::now()->toDateTimeString();
         $agreement = EntrepreneurAgreement::with(['agreement_status', ////entrepreneur_agreement -> lookup_details,
-             'agreement_entrepreneur_detail'
-            ])->find($agreementId);
+             'agreement_entrepreneur_detail' => function ($query) use ($userId){
+                $query->where('user_id',$userId);
+             }
+        ])->first();
         
         if ($agreement && $agreement->update($data)) {
             $updatedAgreement = $agreement->fresh(
@@ -107,12 +111,12 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
                ]);
 
             // Get the user's response status (accepted/rejected)
-            $responseStatus = $updatedAgreement['agreement_status']['value'];
-            $userName = $updatedAgreement->agreement_entrepreneur_detail->user->founder_name ?? 'User';
-            $agreementDetails = $updatedAgreement->agreement_details;
+            // $responseStatus = $updatedAgreement['agreement_status']['value'];
+            // $userName = $updatedAgreement->agreement_entrepreneur_detail->user->founder_name ?? 'User';
+            // $agreementDetails = $updatedAgreement->agreement_details;
 
             // Define the admin email
-            $adminEmail = config('mail.admin_email');
+            // $adminEmail = config('mail.admin_email');
 
             // Send the email to admin about the user's response
             // Mail::to($adminEmail)->send(new AgreementResponseNotification($userName, $agreementDetails, $responseStatus));

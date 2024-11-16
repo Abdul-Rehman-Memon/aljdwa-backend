@@ -17,7 +17,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Entrepreneur'])->prefix(
     //Entrepreneur Agreement
     Route::prefix('agreement-management')->group(function () {
         Route::get('/agreements', [EntrepreneurController::class, 'getAgreement']);
-        Route::put('/agreements/{id}', [EntrepreneurController::class, 'updateAgreement']);
+        Route::put('/agreements', [EntrepreneurController::class, 'updateAgreement']);
     });
 
     //Entrepreneur Payment
