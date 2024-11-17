@@ -43,9 +43,8 @@ class AuthController extends Controller
 
         $user = User::with([
                 'user_role', 'user_status', 
-                'entreprenuer_details',
-                'entreprenuer_details.user_entrepreneur_details_agreement',
-                'entreprenuer_details.user_entrepreneur_details_payment',
+                'entreprenuer_details.user_entrepreneur_details_agreement.agreement_status',
+                'entreprenuer_details.user_entrepreneur_details_payment.payment_status',
                 'latest_application_status.application_status',
         ])
         ->where('email', $request->email)
