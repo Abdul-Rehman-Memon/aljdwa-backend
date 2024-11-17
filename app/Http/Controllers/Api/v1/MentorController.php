@@ -100,20 +100,8 @@ class MentorController extends Controller
     {
 
         try {
-            $meetings = $this->meetingsService->getAllMeetings($request);
-            $data = $meetings['meetings'];
-            $totalCount = $meetings['totalCount'];
-            $limit = $meetings['limit'];
-            $offset = $meetings['offset'];
-            $message =  'Meetings retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('meeting not found'); 
-            // }else{
-                
-            // }
-
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->meetingsService->getAllMeetings($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());

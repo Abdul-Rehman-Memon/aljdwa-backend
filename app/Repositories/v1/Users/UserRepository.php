@@ -80,7 +80,6 @@ class UserRepository implements UserRepositoryInterface
         $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
         $search   = $data->input('search') ?? NULL;
 
-        $totalCount = User::where('role',2);
         $users = User::with([
             'entreprenuer_details',
             'user_role',
@@ -92,29 +91,20 @@ class UserRepository implements UserRepositoryInterface
         // Ensure only users with entrepreneur details are fetched
         if ($status) {
             $users->where('users.status',$status);
-            $totalCount = $totalCount->where('users.status',$status);
         }
         
         if ($fromDate || $toDate) {
 
             if ($fromDate) {
                 $users->where('created_at', '>=', $fromDate);
-                $totalCount = $totalCount->where('users.created_at', '>=', $fromDate);
             }
             if ($toDate) {
                 $users->where('created_at', '<=', $toDate);
-                $totalCount = $totalCount->where('users.created_at', '<=', $toDate);
             }
         }
 
         if ($search) {
-            $users = $users->where(function ($query) use ($search) {
-                $query->where('founder_name', 'LIKE', "%{$search}%")
-                      ->orWhere('email', 'LIKE', "%{$search}%")
-                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
-            });
-    
-            $totalCount = $totalCount->where(function ($query) use ($search) {
+            $users->where(function ($query) use ($search) {
                 $query->where('founder_name', 'LIKE', "%{$search}%")
                       ->orWhere('email', 'LIKE', "%{$search}%")
                       ->orWhere('phone_number', 'LIKE', "%{$search}%");
@@ -126,13 +116,13 @@ class UserRepository implements UserRepositoryInterface
         ->offset($offset)
         ->get();
 
-        $totalCount = $totalCount->count();
+        $totalCount = $users->count();
 
         return [
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'users' => $users
+            'result' => $users
         ]; 
     }
  

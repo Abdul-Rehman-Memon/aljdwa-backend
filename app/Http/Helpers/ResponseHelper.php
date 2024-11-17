@@ -37,16 +37,16 @@ class ResponseHelper
      /**
      * Success response with pagination
      */
-    public static function successWithPagination($data,$totalCount,$limit,$offset, $message = 'Data retrieved successfully', $statusCode = 200)
+    public static function successWithPagination($data,$message = 'Data retrieved successfully', $statusCode = 200)
     {
         return response()->json([
             'meta_data' => [
-                'success' => true,
-                'message' => $message,
+                'success'     => true,
+                'message'     => $message,
                 'status_code' => $statusCode,
-                'total_count' => $totalCount,
-                'limit' => $limit,
-                'offset' => $offset,
+                'total_count' => $data['totalCount'],
+                'limit'       => $data['limit'],
+                'offset'      => $data['offset'],
                 // 'pagination' => [
                 //     'total_count' => $pagination->total(),
                 //     'limit' => $pagination->perPage(),
@@ -58,7 +58,7 @@ class ResponseHelper
                    
     
             ],
-            'data' => $data,
+            'data' => $data['result'],
         ], $statusCode);
     }
 

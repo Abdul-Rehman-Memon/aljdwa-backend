@@ -54,16 +54,16 @@ class AppointmentsRepository implements AppointmentsInterface
         $totalCount = Appointment::query();
 
         // Fetch the appointments with the linked status and apply pagination
-        $appointments = Appointment::with('appointment_status');
+        $result = Appointment::with('appointment_status');
 
         if ($status) {
-            $appointments = $appointments->where('appointments.status',$status);
+            $appointments = $result->where('appointments.status',$status);
             $totalCount = $totalCount->where('appointments.status',$status);
         }
 
         $totalCount = $totalCount->count();
 
-        $appointments = $appointments
+        $result = $result
             ->limit($limit)
             ->offset($offset)
             ->orderBy('id', 'desc')
@@ -73,7 +73,7 @@ class AppointmentsRepository implements AppointmentsInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'appointments' => $appointments
+            'result' => $result
         ];    
     }
 

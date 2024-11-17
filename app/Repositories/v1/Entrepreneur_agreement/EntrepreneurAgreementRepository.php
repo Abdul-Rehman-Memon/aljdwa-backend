@@ -167,7 +167,7 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'agreements' => $result
+            'result' => $result
         ];        
     }
 

@@ -57,9 +57,8 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
         $search   = $data->input('search') ?? NULL;
 
-        $totalCount = User::has('entreprenuer_details');
 
-        $entrepreneur_applications = User::with([
+        $result = User::with([
             'user_role',
             'user_status',
             'entreprenuer_details.entrepreneur_details_agreement.agreement_status',
@@ -70,30 +69,21 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         
         // Ensure only users with entrepreneur details are fetched
         if ($status) {
-            $entrepreneur_applications->where('users.status',$status);
-            $totalCount = $totalCount->where('users.status',$status);
+            $result->where('users.status',$status);
         }
         
         if ($fromDate || $toDate) {
 
             if ($fromDate) {
-                $entrepreneur_applications->where('created_at', '>=', $fromDate);
-                $totalCount = $totalCount->where('users.created_at', '>=', $fromDate);
+                $result->where('created_at', '>=', $fromDate);
             }
             if ($toDate) {
-                $entrepreneur_applications->where('created_at', '<=', $toDate);
-                $totalCount = $totalCount->where('users.created_at', '<=', $toDate);
+                $result->where('created_at', '<=', $toDate);
             }
         }
 
         if ($search) {
-            $entrepreneur_applications = $entrepreneur_applications->where(function ($query) use ($search) {
-                $query->where('founder_name', 'LIKE', "%{$search}%")
-                      ->orWhere('email', 'LIKE', "%{$search}%")
-                      ->orWhere('phone_number', 'LIKE', "%{$search}%");
-            });
-    
-            $totalCount = $totalCount->where(function ($query) use ($search) {
+                $result->where(function ($query) use ($search) {
                 $query->where('founder_name', 'LIKE', "%{$search}%")
                       ->orWhere('email', 'LIKE', "%{$search}%")
                       ->orWhere('phone_number', 'LIKE', "%{$search}%");
@@ -101,18 +91,18 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         }
 
 
-        $entrepreneur_applications = $entrepreneur_applications->orderBy('created_at','desc')
+        $result = $result->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
 
-        $totalCount = $totalCount->count();
+        $totalCount = $result->count();
 
         return [
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'entrepreneur_applications' => $entrepreneur_applications
+            'result' => $result
         ];    
     }
 

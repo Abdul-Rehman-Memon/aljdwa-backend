@@ -188,7 +188,7 @@ class PaymentsRepository implements PaymentsInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'payments' => $result
+            'result' => $result
         ];        
     }
 

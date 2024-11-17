@@ -96,9 +96,8 @@ class MeetingsRepository implements MeetingsInterface
         $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
 
         $userId = Auth::id();
-        $totalCount = Meeting::query();
 
-        $meetings = Meeting::with([
+        $result = Meeting::with([
             'initiator',
             'participant',
             'meeting_status',
@@ -107,33 +106,30 @@ class MeetingsRepository implements MeetingsInterface
 
 
         if ($status) {
-            $meetings = $meetings->where('meetings.status',$status);
-            $totalCount = $totalCount->where('meetings.status',$status);
+            $result->where('meetings.status',$status);
         }
         
         if ($fromDate || $toDate) {
 
             if ($fromDate) {
-                $meetings = $meetings->where('created_at', '>=', $fromDate);
-                $totalCount = $totalCount->where('meetings.created_at', '>=', $fromDate);
+                $result->where('created_at', '>=', $fromDate);
             }
             if ($toDate) {
-                $meetings = $meetings->where('created_at', '<=', $toDate);
-                $totalCount = $totalCount->where('meetings.created_at', '<=', $toDate);
+                $result->where('created_at', '<=', $toDate);
             }
         }
-        $meetings = $meetings->orderBy('created_at','desc')
+        $result = $result->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
 
-        $totalCount = $totalCount->count();
+        $totalCount = $result->count();
 
         return [
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'meetings' => $meetings
+            'result' => $result
         ];    
     }
 
@@ -180,7 +176,7 @@ class MeetingsRepository implements MeetingsInterface
                 $query->where('created_at', '<=', $toDate);
             }
         }
-        $meetings = $query->orderBy('created_at','desc')
+        $result = $query->orderBy('created_at','desc')
         ->limit($limit)
         ->offset($offset)
         ->get();
@@ -191,7 +187,7 @@ class MeetingsRepository implements MeetingsInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'meetings' => $meetings
+            'result' => $result
         ];    
     }
 

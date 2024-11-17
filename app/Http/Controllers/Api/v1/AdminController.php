@@ -84,18 +84,9 @@ class AdminController extends Controller
     /*********** Appointment Request ***********/
     public function indexAppointments(Request $request)
     {
-    
         try {
-            $appointments = $this->appointmentService->getAllAppointments($request);
-            $data = $appointments['appointments'];
-            $totalCount = $appointments['totalCount'];
-            $limit = $appointments['limit'];
-            $offset = $appointments['offset'];
-            $message =  'Appointments retrieved successfully';
-            // if(count($data) === 0){
-            //     $message =  'Could not find Appointments';
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->appointmentService->getAllAppointments($request);
+            return ResponseHelper::successWithPagination($data);
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve appointments.', 500, $e->getMessage());
         }
@@ -147,17 +138,8 @@ class AdminController extends Controller
         $offset = $request->input('offset', 0);
 
         try {
-            $applications = $this->entreprenuerDetailsService->getEntrepreneurApplications($request);
-            $data = $applications['entrepreneur_applications'];
-            $totalCount = $applications['totalCount'];
-            $limit = $applications['limit'];
-            $offset = $applications['offset'];
-            $message =  'User application requests retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('User Application not found'); 
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->entreprenuerDetailsService->getEntrepreneurApplications($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
@@ -205,19 +187,9 @@ class AdminController extends Controller
     /*********** Mentor Application ***********/
     public function getMentorApplications(Request $request)
     {
-
         try {
-            $application = $this->userService->getMentorApplications($request);
-            $data = $application['users'];
-            $totalCount = $application['totalCount'];
-            $limit = $application['limit'];
-            $offset = $application['offset'];
-            $message =  'Mentor users retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('Mentor user not found'); 
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->userService->getMentorApplications($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve mentor users.', 500, $e->getMessage());
@@ -278,20 +250,8 @@ class AdminController extends Controller
     {
 
         try {
-            $meetings = $this->meetingsService->getAllAdminScheduledMeetings($request);
-            $data = $meetings['meetings'];
-            $totalCount = $meetings['totalCount'];
-            $limit = $meetings['limit'];
-            $offset = $meetings['offset'];
-            $message =  'Meetings retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('meeting not found'); 
-            // }else{
-                
-            // }
-
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->meetingsService->getAllAdminScheduledMeetings($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
@@ -302,20 +262,8 @@ class AdminController extends Controller
     {
 
         try {
-            $meetings = $this->meetingsService->getAllMeetings($request);
-            $data = $meetings['meetings'];
-            $totalCount = $meetings['totalCount'];
-            $limit = $meetings['limit'];
-            $offset = $meetings['offset'];
-            $message =  'Meetings retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('meeting not found'); 
-            // }else{
-                
-            // }
-
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->meetingsService->getAllMeetings($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
@@ -356,20 +304,8 @@ class AdminController extends Controller
     public function getAllAgreements(Request $request)
     {
         try {
-            $agreement = $this->entreprenuerAgreementService->getAllAgreements($request);
-            $data = $agreement['agreements'];
-            $totalCount = $agreement['totalCount'];
-            $limit = $agreement['limit'];
-            $offset = $agreement['offset'];
-            $message =  'Agreements retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('agreement not found'); 
-            // }else{
-                
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
-            
+            $data = $this->entreprenuerAgreementService->getAllAgreements($request);
+            return ResponseHelper::successWithPagination($data);    
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve agreements.', 500, $e->getMessage());
         }
@@ -417,19 +353,8 @@ class AdminController extends Controller
     public function getAllMentorAssignments(Request $request)
     {
         try {
-            $result = $this->mentorsAssignmentService->getAllMentorAssignments($request);
-            $data = $result['mentor_assignment'];
-            $totalCount = $result['totalCount'];
-            $limit = $result['limit'];
-            $offset = $result['offset'];
-            $message =  'Mentor Assignments retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('mentor assignment not found'); 
-            // }else{
-                
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->mentorsAssignmentService->getAllMentorAssignments($request);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve mentor assignments.', 500, $e->getMessage());
@@ -459,20 +384,8 @@ class AdminController extends Controller
             if (!$user)
                 return ResponseHelper::notFound('Invalid User Id'); 
 
-            $result = $this->mentorsAssignmentService->MentorAssignmentByUserId($request,$userId);
-
-            $data = $result['mentor_assignment'];
-            $totalCount = $result['totalCount'];
-            $limit = $result['limit'];
-            $offset = $result['offset'];
-            $message =  'Mentor Assignments retrieved successfully';
-
-            // if(count($data) === 0){
-            //     return ResponseHelper::notFound('mentor assignment not found'); 
-            // }else{
-                
-            // }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->mentorsAssignmentService->MentorAssignmentByUserId($request,$userId);
+            return ResponseHelper::successWithPagination($data);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve mentor assignments.', 500, $e->getMessage());
@@ -482,19 +395,8 @@ class AdminController extends Controller
      public function getAllPayments(Request $request)
      {
          try {
-             $result = $this->paymentService->getAllPayments($request);
-             $data = $result['payments'];
-             $totalCount = $result['totalCount'];
-             $limit = $result['limit'];
-             $offset = $result['offset'];
-             $message =  'Payments retrieved successfully';
- 
-            //  if(count($data) === 0){
-            //      return ResponseHelper::notFound('payment not found'); 
-            //  }else{
-                 
-            //  }
-            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
+            $data = $this->paymentService->getAllPayments($request);
+            return ResponseHelper::successWithPagination($data);
              
          } catch (Exception $e) {
              return ResponseHelper::error('Failed to retrieve payments.', 500, $e->getMessage());

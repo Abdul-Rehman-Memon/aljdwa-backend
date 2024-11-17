@@ -75,7 +75,7 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'mentor_assignment' => $result
+            'result' => $result
         ];        
     }
 
@@ -133,7 +133,7 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
             'totalCount' => $totalCount,
             'limit' => $limit,
             'offset' => $offset,
-            'mentor_assignment' => $result
+            'result' => $result
         ];        
     }
 
