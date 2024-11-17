@@ -39,28 +39,35 @@ class PaymentRequest extends FormRequest
     public function rules(): array
     {
         // Initialize the common rules
+        // return  [
+        //     'payments_details' => 'nullable|string',
+        //     'payment_refrence' => 'nullable|string',
+        //     'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
+        //     'invoice_Id' => 'nullable|int',
+        //     'amount' => 'required|int',
+        //     'currency' => 'required|string',
+        //     'token' => 'required|string',
+        //     'voucher' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
+        //     // 'payment_date' => 'required|date',
+        //     // 'status' => 'nullable|string|in:paid,unpaid',
+        // ];
+
         return  [
             'payments_details' => 'nullable|string',
-            'payment_refrence' => 'nullable|string',
-            // 'entrepreneur_id' => 'required|exists:users,id',
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
-            'invoice_Id' => 'nullable|int',
             'amount' => 'required|int',
             'currency' => 'required|string',
-            'token' => 'required|string',
-            'voucher' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',//5MB
-            // 'payment_date' => 'required|date',
-            // 'status' => 'nullable|string|in:paid,unpaid',
+            'card_type' => 'nullable|string',
         ];
 
     }
 
-    public function messages()
-    {
-        return [
-            'status' => 'Staus can be Paid/Unpaid',
-            'voucher' => 'File can be pdf/jpg/jpeg/png',
-            'voucher.max' => 'FIle size should not exceed than 5MB',
-        ];
-    }
+    // public function messages()
+    // {
+    //     return [
+    //         'status' => 'Staus can be Paid/Unpaid',
+    //         'voucher' => 'File can be pdf/jpg/jpeg/png',
+    //         'voucher.max' => 'FIle size should not exceed than 5MB',
+    //     ];
+    // }
 }

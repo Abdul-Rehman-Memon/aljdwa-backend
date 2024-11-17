@@ -29,12 +29,14 @@ class PaymentsRepository implements PaymentsInterface
         $data['payment_date'] = Carbon::now()->toDateTimeString();
 
         $status = 'unpaid';
-        /* -- use stripe payment gateway -- */
-        $response = $this->stripePaymentgateWay($data);
 
+        // return $data;
+        /* -- use stripe payment gateway -- */
+        // $response = $this->stripePaymentgateWay($data);
+         $response = appHelpers::hyperPayPaymentgateWay($data);
         if ($response) {    
-            $status = $response['success']? 'paid' : 'unpaid';
-            $data['payment_reference'] = $response['success']? $response['payment_intent_id'] : null;            
+            $status = $response ? 'paid' : 'unpaid';
+            $data['payment_reference'] = $response['id'] ?? null;            
         }
 
         $data['status'] = appHelpers::lookUpId('Payment_status',$status);
@@ -104,6 +106,7 @@ class PaymentsRepository implements PaymentsInterface
 
         return null;
     }
+
 
     public function verifyStripePayment(string $paymentIntentId)
     {
