@@ -85,7 +85,6 @@ class UserRepository implements UserRepositoryInterface
             'entreprenuer_details',
             'user_role',
             'user_status',
-            'latest_application_status',
             'latest_application_status.application_status'
         ])
         ->where('role',2);//2 = mentor
@@ -143,10 +142,7 @@ class UserRepository implements UserRepositoryInterface
         return $user ? $user->load([
             'user_role',
             'user_status',
-            'user_application_status' => function ($query) {
-                $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
-            },
-            'user_application_status.application_status'
+            'latest_application_status.application_status'
         ]) : null;
     }
 
