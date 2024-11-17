@@ -12,6 +12,7 @@ use App\Http\Requests\v1\Applications\ApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\EntrepreneurAgreementRequest;
 use App\Http\Requests\v1\Payments\UpdatePaymentRequest;
+use App\Http\Requests\v1\Messages\MessageRequest;
 
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 
@@ -23,9 +24,12 @@ use App\Services\v1\MeetingService;
 use App\Services\v1\EntreprenuerAgreementService;
 use App\Services\v1\PaymentsService;
 use App\Services\v1\MentorsAssignmentService;
+use App\Services\v1\MessageService;
 
 use Exception;
 use App\Http\Helpers\ResponseHelper;
+
+use Illuminate\Container\Attributes\Auth;
 
 class AdminController extends Controller
 {
@@ -37,6 +41,7 @@ class AdminController extends Controller
     protected $entreprenuerAgreementService;
     protected $paymentService;
     protected $mentorsAssignmentService;
+    protected $messageService;
     
     public function __construct(
         UserService $userService,
@@ -47,6 +52,7 @@ class AdminController extends Controller
         EntreprenuerAgreementService $entreprenuerAgreementService,
         PaymentsService $paymentService,
         MentorsAssignmentService $mentorsAssignmentService,
+        MessageService $messageService,
         )
     {
         $this->userService = $userService;
@@ -57,6 +63,7 @@ class AdminController extends Controller
         $this->entreprenuerAgreementService = $entreprenuerAgreementService;
         $this->paymentService = $paymentService;
         $this->mentorsAssignmentService = $mentorsAssignmentService;
+        $this->messageService = $messageService;
         
     }
 
@@ -525,5 +532,28 @@ class AdminController extends Controller
             return ResponseHelper::error('Failed to update payment.',500,$e->getMessage());
         }
     }
+
+     /*********** Messages ***********/
+     public function sendMessageToUser(MessageRequest $request){
+        $validatedData = $request->validated();
+        try {
+            
+            $message = $this->messageService->createMessage($validatedData);
+            return ResponseHelper::success($message,'Message Sent successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage()."Line no :".$e->getLine());
+        }
+    }
+
+    public function getUsersMessages($userId){
+         try { 
+             $message = $this->messageService->getMessage($userId);
+             return ResponseHelper::success($message,'Message retrieved successfully');
+         } catch (Exception $e) {
+             // Handle the error
+             return ResponseHelper::error('Failed to retrieve message.',500,$e->getMessage());
+         }
+     }
 
 }

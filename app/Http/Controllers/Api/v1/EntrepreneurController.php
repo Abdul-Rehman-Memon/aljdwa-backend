@@ -243,12 +243,16 @@ class EntrepreneurController extends Controller
         $userId = Auth::user()->id;
         $validatedData = $request->validated();
         try {
-            $mentor_assigned = appHelpers::isMentorAssigned($userId,$validatedData['receiver_id']);
-            if(!$mentor_assigned)
-            return ResponseHelper::error('This mentor is not assigned to you.');
-            
+
+            $is_admin = appHelpers::isAdmin($validatedData['receiver_id']);
+            if(!$is_admin){
+                $mentor_assigned = appHelpers::isMentorAssigned($userId,$validatedData['receiver_id']);
+                if(!$mentor_assigned)
+                return ResponseHelper::error('This mentor is not assigned to you.');
+            }
+                
             $message = $this->messageService->createMessage($validatedData);
-            return ResponseHelper::success($message,'Message Sent successfully');
+                return ResponseHelper::success($message,'Message Sent successfully');
         } catch (Exception $e) {
             // Handle the error
             return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage()."Line no :".$e->getLine());
@@ -258,9 +262,12 @@ class EntrepreneurController extends Controller
     public function getMentorMessages($mentorId){
        $userId = Auth::user()->id;
         try {
-            $mentor_assigned = appHelpers::isMentorAssigned($userId,$mentorId);
-            if(!$mentor_assigned)
-            return ResponseHelper::error('This mentor is not assigned to you.');
+            $is_admin = appHelpers::isAdmin($mentorId);
+            if(!$is_admin){
+                $mentor_assigned = appHelpers::isMentorAssigned($userId,$mentorId);
+                if(!$mentor_assigned)
+                return ResponseHelper::error('This mentor is not assigned to you.');
+            }
 
             $message = $this->messageService->getMessage($mentorId);
             return ResponseHelper::success($message,'Message retrieved successfully');

@@ -140,9 +140,13 @@ class MentorController extends Controller
         $userId = Auth::user()->id;
         $validatedData = $request->validated();
         try {
-            $mentor_assigned = appHelpers::isMentorAssigned($validatedData['receiver_id'],$userId);
-            if(!$mentor_assigned)
-            return ResponseHelper::error('You are not assigned to this entrepreneur.');
+
+            $is_admin = appHelpers::isAdmin($validatedData['receiver_id']);
+            if(!$is_admin){
+                $mentor_assigned = appHelpers::isMentorAssigned($validatedData['receiver_id'],$userId);
+                if(!$mentor_assigned)
+                return ResponseHelper::error('You are not assigned to this entrepreneur.');
+            }
             
             $message = $this->messageService->createMessage($validatedData);
             return ResponseHelper::success($message,'Message Sent successfully');
@@ -152,10 +156,18 @@ class MentorController extends Controller
         }
     }
 
-    public function getEntrepreneurMessages($userId){
+    public function getEntrepreneurMessages($entrepreneurId){
        
+        $userId = Auth::user()->id;
         try {
-            $message = $this->messageService->getMessage($userId);
+            $is_admin = appHelpers::isAdmin($entrepreneurId);
+            if(!$is_admin){
+                $mentor_assigned = appHelpers::isMentorAssigned($entrepreneurId,$userId);
+                if(!$mentor_assigned)
+                return ResponseHelper::error('You are not assigned to this entrepreneur.');
+            }
+            
+            $message = $this->messageService->getMessage($entrepreneurId);
             return ResponseHelper::success($message,'Message retrieved successfully');
         } catch (Exception $e) {
             // Handle the error
