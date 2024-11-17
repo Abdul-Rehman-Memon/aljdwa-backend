@@ -55,6 +55,17 @@ class EntrepreneurDetail extends Model
         return $this->belongsTo(User::class);
     }
 
+    /*-- hasOne relation for login api --*/
+    public function user_entrepreneur_details_agreement()
+    {
+        return $this->hasOne(EntrepreneurAgreement::class,'entrepreneur_details_id','id');
+    }
+    /*-- hasOne relation for login api --*/
+    public function user_entrepreneur_details_payment()
+    {
+        return $this->hasOne(Payment::class,'entrepreneur_details_id','id');
+    }
+    /*-- hasMany relations for other apis --*/
     public function entrepreneur_details_agreement()
     {
         return $this->hasMany(EntrepreneurAgreement::class,'entrepreneur_details_id','id');

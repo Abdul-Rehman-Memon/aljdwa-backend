@@ -42,11 +42,11 @@ class AuthController extends Controller
     public function login(LoginRequest $request){
 
         $user = User::with([
-                    'user_role', 'user_status', 
-                //     'latest_application_status' => function ($query) {
-                //     $query->latest('id')->limit(1); // Fetch the last inserted record based on the ID
-                // },
-                'latest_application_status.application_status'
+                'user_role', 'user_status', 
+                'entreprenuer_details',
+                'entreprenuer_details.user_entrepreneur_details_agreement',
+                'entreprenuer_details.user_entrepreneur_details_payment',
+                'latest_application_status.application_status',
         ])
         ->where('email', $request->email)
         ->first();
