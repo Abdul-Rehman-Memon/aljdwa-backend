@@ -41,6 +41,11 @@ class appHelpers
         $user =  User::find($userId)->load('user_role');
         return $user->user_role->value;
     }
+
+    public static function isAdmin($userId = null) {
+        $user =  User::find($userId)->load('user_role');
+        return ($user->user_role->value === 'admin') ?? false;
+    }
     
     public static function isMentor($userId = null) {
         $user =  User::find($userId)->load('user_role');
@@ -59,11 +64,14 @@ class appHelpers
 
     /* check is mentor assigned to current logged in entrepreneur */
     public static function isMentorAssigned($entrepreneurId,$mentorId) {
-        return MentorsAssignment::whereHas('entrepreneur_details', function ($query) use ($entrepreneurId) {
-                $query->where('user_id', $entrepreneurId);
-            })
-            ->where('mentor_id',$mentorId)
-            ->first();
+        if(self::getUserRole($entrepreneurId) !== 'admin' )
+            return MentorsAssignment::whereHas('entrepreneur_details', function ($query) use ($entrepreneurId) {
+                    $query->where('user_id', $entrepreneurId);
+                })
+                ->where('mentor_id',$mentorId)
+                ->first();
+                
+        return true;
     }
 
     /*-- Upload File --*/

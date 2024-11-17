@@ -62,6 +62,12 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
         // Route::put('/payments/{id}', [AdminController::class, 'updatePayment']);
         Route::post('/payments/{id}', [AdminController::class, 'updatePayment']);
     });
+
+    //Messages
+    Route::prefix('message-management')->group(function () {
+        Route::post('/messages', [AdminController::class, 'sendMessageToUser']);
+        Route::get('/messages/{id}', [AdminController::class, 'getUsersMessages']);
+    });
 });
 
 Route::prefix('visitor')->group(function () {
