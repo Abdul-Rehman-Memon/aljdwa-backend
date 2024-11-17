@@ -211,11 +211,12 @@ class EntrepreneurController extends Controller
             $offset = $meetings['offset'];
             $message =  'Meetings retrieved successfully';
 
-            if(count($data) === 0){
-                return ResponseHelper::notFound('meeting not found'); 
-            }else{
-                return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
-            }
+            // if(count($data) === 0){
+            //     return ResponseHelper::notFound('meeting not found'); 
+            // }else{
+                
+            // }
+            return ResponseHelper::successWithPagination($data,$totalCount,$limit,$offset,$message);
             
         } catch (Exception $e) {
             return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
