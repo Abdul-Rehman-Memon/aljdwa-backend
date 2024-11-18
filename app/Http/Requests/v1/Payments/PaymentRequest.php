@@ -58,6 +58,7 @@ class PaymentRequest extends FormRequest
             'amount' => 'required|int',
             'currency' => 'required|string',
             'card_type' => 'nullable|string',
+            'payment_id' => 'required|string',
         ];
 
     }

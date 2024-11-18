@@ -14,6 +14,13 @@ class PaymentsService
         $this->paymentsRepository = $paymentsRepository;
     }
 
+    public function createCheckout($data)
+    {
+        $payment = $this->paymentsRepository->createCheckout($data);
+
+        return $payment;
+    }
+
     public function createPayment(array $data)
     {
         $payment = $this->paymentsRepository->createPayment($data);

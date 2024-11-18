@@ -5,6 +5,7 @@ namespace App\Repositories\v1\Payments;
 interface PaymentsInterface
 {
     public function createPayment(array $data);
+    public function createCheckout(array $data);
     public function stripePaymentgateWay(array $data);
     public function verifyStripePayment(string $paymentIntentId);
     public function getEntrepreneurPayment();

@@ -17,10 +17,17 @@ use Illuminate\Support\Facades\Storage;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
+
 class PaymentsRepository implements PaymentsInterface
 {
     
     /*********** For Entrepeneur User ***********/
+    
+    public function createCheckout(array $data)
+    {
+       return appHelpers::hyperPayCreateCheckout($data);
+    }
+    
     public function createPayment(array $data)
     {
         
@@ -33,7 +40,7 @@ class PaymentsRepository implements PaymentsInterface
         // return $data;
         /* -- use stripe payment gateway -- */
         // $response = $this->stripePaymentgateWay($data);
-         $response = appHelpers::hyperPayPaymentgateWay($data);
+        $response = appHelpers::hyperPayPaymentgateWay($data);
         if ($response) {    
             $status = $response ? 'paid' : 'unpaid';
             $data['payment_reference'] = $response['id'] ?? null;            
@@ -56,6 +63,8 @@ class PaymentsRepository implements PaymentsInterface
 
         // Load payment status for returning full data
         $payment = $payment->load('payment_status');
+
+        $payment['hyperpay'] = $response;
 
         // Get user and admin emails
         $userEmail = Auth::user()->email;

@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\v1\Applications\UpdateApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\UpdateEntrepreneurAgreementRequest;
+use App\Http\Requests\v1\Payments\createCheckoutRequest;
 use App\Http\Requests\v1\Payments\PaymentRequest;
 use App\Http\Requests\v1\Mentor_assignment\MentorAssignmentRequest;
 use App\Http\Requests\v1\Messages\MessageRequest;
+
 
 use App\Services\v1\UserService;
 use App\Services\v1\EntreprenuerDetailsService;
@@ -124,6 +126,18 @@ class EntrepreneurController extends Controller
     }
 
     /*********** Entrepeneur Payment ***********/
+    public function createCheckout(createCheckoutRequest $request)
+    {
+        $validatedData = $request->validated();
+        try {
+            $payment = $this->paymentService->createCheckout($validatedData);
+            return ResponseHelper::created($payment,'checkout created successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to create checkout.',500,$e->getMessage());
+        }
+    }
+
     public function createPayment(PaymentRequest $request)
     {
         $validatedData = $request->validated();
