@@ -55,8 +55,9 @@ class PaymentRequest extends FormRequest
         return  [
             'payments_details' => 'nullable|string',
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
-            'amount' => 'required|int',
-            'currency' => 'required|string',
+            'currency' => 'required|string|max:3',
+            'amount' => 'required|numeric|min:0',
+            'tax' => 'required|numeric|min:0',
             'card_type' => 'required|string',
             'payment_id' => 'required|string',
         ];

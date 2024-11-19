@@ -46,6 +46,8 @@ class PaymentsRepository implements PaymentsInterface
             $data['payment_reference'] = $response['id'] ?? null;            
         }
 
+        $data['total_amount'] = $data['tax'] ? ($data['amount'] + $data['tax']) : $data['amount'];
+
         $data['status'] = appHelpers::lookUpId('Payment_status',$status);
 
        /* -- voucher file--*/ 
