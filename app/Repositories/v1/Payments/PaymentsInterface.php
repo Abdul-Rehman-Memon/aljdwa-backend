@@ -4,6 +4,8 @@ namespace App\Repositories\v1\Payments;
 
 interface PaymentsInterface
 {
+    public function createPaymentInvoice(array $data);
+    public function getPaymentInvoice();
     public function createPayment(array $data);
     public function createCheckout(array $data);
     public function stripePaymentgateWay(array $data);

@@ -4,6 +4,8 @@ namespace App\Repositories\v1\Payments;
 
 use App\helpers\appHelpers;
 use App\Models\Payment;
+use App\Models\User;
+use App\Models\EntrepreneurDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +28,37 @@ class PaymentsRepository implements PaymentsInterface
     public function createCheckout(array $data)
     {
        return appHelpers::hyperPayCreateCheckout($data);
+    }
+
+    public function createPaymentInvoice(array $data)
+    {
+        $entrepreneur_details_id = $data['entrepreneur_details_id'];
+        $user = User::with([
+            'entreprenuer_details',
+        ])
+        ->whereHas('entreprenuer_details', function ($query) use ($entrepreneur_details_id) {
+            $query->where('id', $entrepreneur_details_id);
+        })->first();
+
+        $entrepreneur_id =  $user['id'];
+        $data['entrepreneur_id'] = $entrepreneur_id;
+
+        $status = 'pending';
+        $data['status'] = appHelpers::lookUpId('Payment_status',$status);
+        
+        $data['total_amount'] = $data['tax'] ? ($data['amount'] + $data['tax']) : $data['amount'];
+        $payment =  Payment::create($data);
+        // Load payment status for returning full data
+        $payment = $payment->load('payment_status');
+
+        return $payment;
+    }
+
+    public function getPaymentInvoice()
+    {
+        $userId = Auth::user()->id;
+        return  Payment::with('payment_status')
+            ->where('payments.entrepreneur_id',$userId)->first();
     }
     
     public function createPayment(array $data)

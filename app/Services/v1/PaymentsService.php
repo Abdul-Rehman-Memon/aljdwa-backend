@@ -21,6 +21,20 @@ class PaymentsService
         return $payment;
     }
 
+    public function createPaymentInvoice(array $data)
+    {
+        $payment = $this->paymentsRepository->createPaymentInvoice($data);
+
+        return $payment;
+    }
+
+    public function getPaymentInvoice()
+    {
+        $payment = $this->paymentsRepository->getPaymentInvoice();
+
+        return $payment;
+    }
+
     public function createPayment(array $data)
     {
         $payment = $this->paymentsRepository->createPayment($data);

@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Admin'])->prefix('admin'
 
     //Entrepreneur Payment
     Route::prefix('payment-management')->group(function () {
+        Route::post('/payments', [AdminController::class, 'createPaymentInvoice']);
         Route::get('/payments', [AdminController::class, 'getAllPayments']);
         Route::get('/payments/{id}/review', [AdminController::class, 'getPayment']);
         // Route::put('/payments/{id}', [AdminController::class, 'updatePayment']);

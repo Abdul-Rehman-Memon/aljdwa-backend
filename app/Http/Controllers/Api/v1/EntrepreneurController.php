@@ -126,6 +126,17 @@ class EntrepreneurController extends Controller
     }
 
     /*********** Entrepeneur Payment ***********/
+    public function getPaymentInvoice()
+    {
+        try {
+            $payment = $this->paymentService->getPaymentInvoice();
+            return ResponseHelper::success($payment,'Payment invoice retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to retrieved payment invoice .',500,$e->getMessage());
+        }
+    }
+
     public function createCheckout(createCheckoutRequest $request)
     {
         $validatedData = $request->validated();

@@ -11,6 +11,7 @@ use App\Http\Requests\v1\Appointments\AppointmentUpdateRequest;
 use App\Http\Requests\v1\Applications\ApplicationRequest;
 use App\Http\Requests\v1\Meetings\MeetingRequest;
 use App\Http\Requests\v1\Entrepreneur_agreement\EntrepreneurAgreementRequest;
+use App\Http\Requests\v1\Payments\createPaymentInvoiceRequest;
 use App\Http\Requests\v1\Payments\UpdatePaymentRequest;
 use App\Http\Requests\v1\Messages\MessageRequest;
 
@@ -392,6 +393,19 @@ class AdminController extends Controller
         }
     }
      /*********** Payments ***********/
+     public function createPaymentInvoice(createPaymentInvoiceRequest $request)
+     {
+         $validatedData = $request->validated();
+ 
+         try {
+             $payment = $this->paymentService->createPaymentInvoice($validatedData);
+             return ResponseHelper::created($payment,'Entrepreneur payment created successfully');
+         } catch (Exception $e) {
+             // Handle the error
+             return ResponseHelper::error('Failed to create entrepreneur payment.',500,$e->getMessage());
+         }
+     }
+     
      public function getAllPayments(Request $request)
      {
          try {
