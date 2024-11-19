@@ -34,7 +34,8 @@ class GotMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("chat.{$this->message['receiver_id']}"),
+            // new PrivateChannel("chat.{$this->message['receiver_id']}"),
+            new PrivateChannel("send-message"),
         ];
     }
 
