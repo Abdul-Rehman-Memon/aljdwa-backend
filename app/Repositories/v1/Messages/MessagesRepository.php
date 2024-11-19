@@ -30,8 +30,10 @@ class MessagesRepository implements MessagesInterface
         }
 
         $message = Message::create($data);
+        $receiver = User::find($data['receiver_id']);
+        $sender = User::find($data['sender_id']);
 
-        broadcast(new GotMessage($message->toArray()))->toOthers(); 
+        broadcast(new GotMessage($receiver, $sender, $message));
         return $message; 
     }
 
