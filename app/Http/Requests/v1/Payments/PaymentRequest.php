@@ -57,7 +57,7 @@ class PaymentRequest extends FormRequest
             'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
             'amount' => 'required|int',
             'currency' => 'required|string',
-            'card_type' => 'nullable|string',
+            'card_type' => 'required|string',
             'payment_id' => 'required|string',
         ];
 

@@ -100,41 +100,34 @@ class appHelpers
 
     public static function  hyperPayCreateCheckout($data)
     {
-
+        $url = env('PAYMENT_URL') . "/v1/checkouts";
         $isTestMode = env('IS_TEST_MODE'); //testMode=EXTERNAL
-        $createRegistration = env('createRegistration'); //testMode=EXTERNAL
-        $ENTITY_ID  = $data['payment_id'] ?? env('PAYMENT_ENTITY_ID');
-        // $bearer_token = env('PAYMENT_KEY') ?? '';
-        $bearer_token = 'OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==';
+        $createRegistration = env('createRegistration');
+        $bearer_token = env('PAYMENT_KEY');
+
+        $ENTITY_ID  = env('PAYMENT_ENTITY_ID');
         
+        $cardType = $data['card_type'] ?? NULL;
 
-        // $cardType == $data['card_type'] ?? NULL;
+        if ($cardType && $cardType == 'mada') {
+            $ENTITY_ID = env('MADA_ENTITY_ID');
+        }
+        if ($cardType && $cardType == 'applePay') {
+            $ENTITY_ID = env('APPLEPAY_ENTITY_ID');
+        }
 
-        // if ($cardType && $cardType == 'mada') {
-        //     $ENTITY_ID = env('MADA_ENTITY_ID');
-        // }
-        // if ($cardType && $cardType == 'applePay') {
-        //     $ENTITY_ID = env('APPLEPAY_ENTITY_ID');
-        // }
-
-        // $url = env('PAYMENT_URL') . "/v1/checkouts";
-        $url = "https://eu-test.oppwa.com/v1/checkouts";
-        $data = "entityId=8acda4c770585c8601707ba4acc5562e" .
-                    "&testMode=EXTERNAL" .
-                    "&createRegistration=true";
-
-        // $data = "entityId=" . $ENTITY_ID;
-        // if ($isTestMode) {
-        //     $data = $data . "&testMode=EXTERNAL";
-        // } 
-        // if ($createRegistration) {
-        //     $data = $data . "&createRegistration=true";
-        // }            
-    
+        $data = "entityId=" . $ENTITY_ID;
+        if ($isTestMode) {
+            $data = $data . "&testMode=" .$isTestMode;
+        } 
+        if ($createRegistration) {
+            $data = $data . "&createRegistration=true";
+        }
+             
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                       'Authorization:Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==' ));
+                       'Authorization:Bearer ' . $bearer_token));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);// this should be set to true in production
@@ -149,41 +142,52 @@ class appHelpers
     }
     
     
-    public static function  hyperPayPaymentgateWay2($data)
+    public static function  hyperPayPaymentgateWay($data)
     {
+
+        $url = env('PAYMENT_URL') . "/v1/checkouts";
         $isTestMode = env('IS_TEST_MODE'); //testMode=EXTERNAL
-        // $ENTITY_ID  = $data['payment_id'] ?? env('PAYMENT_ENTITY_ID');
-        $ENTITY_ID  = '8acda4c770585c8601707ba4acc5562e';
+        $bearer_token = env('PAYMENT_KEY');
+
+        $ENTITY_ID  = env('PAYMENT_ENTITY_ID');
+
+
         $getLastId  = $data['entrepreneur_details_id'];
         $merchantTransactionId = strval($getLastId);
         $email = Auth::user()->email;
         $name  = Auth::user()->founder_name;
+        $registration_id = $data['payment_id'];
         $amount    = $data['amount'];
         $currency  = $data['currency'];
-        $cardType  = $data['card_type'] ?? null;
         $user_id   = $data['entrepreneur_id'];
         $user_id   = strval($user_id);
         $memo      = 'subscription';
 
-        if ($cardType == 'mada') {
-            $ENTITY_ID = $data['payment_id'] ?? env('MADA_ENTITY_ID');
+         $cardType = $data['card_type'] ?? NULL;
+
+        if ($cardType && $cardType == 'mada') {
+            $ENTITY_ID = env('MADA_ENTITY_ID');
         }
-        if ($cardType == 'applePay') {
-            $ENTITY_ID = $data['payment_id'] ?? env('APPLEPAY_ENTITY_ID');
+        if ($cardType && $cardType == 'applePay') {
+            $ENTITY_ID = env('APPLEPAY_ENTITY_ID');
         }
 
-        $url = env('PAYMENT_URL') . "/v1/checkouts";
-        $url = "https://eu-test.oppwa.com/v1/checkouts";
-
+        $url = env('PAYMENT_URL') . "/v1/registrations/{$registration_id}/payments";
         $data = "entityId=" . $ENTITY_ID .
+            "&paymentBrand=VISA" .
+            "&paymentType=DB" .
             "&amount=$amount.00" .
             "&currency=$currency" .
-            "&paymentType=DB" .
+            "&standingInstruction.type=UNSCHEDULED" .
+            "&standingInstruction.mode=INITIAL" .
+            "&standingInstruction.source=CIT" .
+            
             "&merchantMemo=$memo" .
             "&merchantTransactionId=$merchantTransactionId" .
             "&customer.email=$email" .
             "&customer.givenName=$name" .
             "&customer.surname=$name";
+
         if ($isTestMode) {
             $data = $data . "&testMode=EXTERNAL";
         }
@@ -194,13 +198,13 @@ class appHelpers
                 "&customParameters[bill_number]=$merchantTransactionId";
         }
 
+        // return $data;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        //     'Authorization:Bearer ' . env('PAYMENT_KEY')
-        // ));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization:Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==' ));
+            'Authorization:Bearer ' . $bearer_token 
+        ));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, env('PAYMENT_CURLOPT_SSL_VERIFYPEER')); // this should be set to true in production
@@ -215,67 +219,5 @@ class appHelpers
         return json_decode($responseData, true);
     }
 
-    public static function hyperPayPaymentgateWay($data){
-
-        $isTestMode = env('IS_TEST_MODE'); //testMode=EXTERNAL
-        // $ENTITY_ID  = $data['payment_id'] ?? env('PAYMENT_ENTITY_ID');
-        $ENTITY_ID  = '8acda4c770585c8601707ba4acc5562e';
-        $getLastId  = $data['entrepreneur_details_id'];
-        $merchantTransactionId = strval($getLastId);
-        $registration_id = $data['payment_id'];
-        $email = Auth::user()->email;
-        $name  = Auth::user()->founder_name;
-        $amount    = $data['amount'];
-        $currency  = $data['currency'];
-        $cardType  = $data['card_type'] ?? null;
-        $user_id   = $data['entrepreneur_id'];
-        $user_id   = strval($user_id);
-        $memo      = 'subscription';
-
-            $url = "https://eu-test.oppwa.com/v1/registrations/{$registration_id}/payments";
-            $data = "entityId=" . $ENTITY_ID .
-            "&paymentBrand=VISA" .
-            "&amount=$amount.00" .
-            "&currency=$currency" .
-            "&paymentType=DB" .
-            "&merchantMemo=$memo" .
-            // "&merchantTransactionId=$merchantTransactionId" .
-            "&customer.email=$email" .
-            "&customer.givenName=$name" .
-            "&customer.surname=$name"  .
-            "&standingInstruction.type=UNSCHEDULED" .
-                        "&standingInstruction.mode=INITIAL" .
-                        "&standingInstruction.source=CIT"
-            ;
-        if ($isTestMode) {
-            $data = $data . "&testMode=EXTERNAL";
-        }
-        if ($cardType == 'mada') {
-            $data = $data . "&customParameters[branch_id]=1" .
-                "&customParameters[teller_id]=1" .
-                "&customParameters[device_id]=1" .
-                "&customParameters[bill_number]=$merchantTransactionId";
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        //     'Authorization:Bearer ' . env('PAYMENT_KEY')
-        // ));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization:Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==' ));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, env('PAYMENT_CURLOPT_SSL_VERIFYPEER')); // this should be set to true in production
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $responseData = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return curl_error($ch);
-        }
-        curl_close($ch);
-
-        // return $responseData;
-        return json_decode($responseData, true);
-    }
 }
     
