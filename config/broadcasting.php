@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('REVERB_CLUSTER', 'mt1'),
                 // 'host' => env('REVERB_HOST'),
-                'host' => env('REVERB_HOST','0.0.0.0'),
+                'host' => env('REVERB_HOST','127.0.0.1'),
                 // 'port' => env('REVERB_PORT', 443),
                 'port' => env('REVERB_PORT', 9090),
                 'scheme' => env('REVERB_SCHEME', 'https'),

@@ -142,7 +142,7 @@ class MentorController extends Controller
             return ResponseHelper::success($message,'Message Sent successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to sent message to mentor.',500,$e->getMessage()." ".$e->getLine());
         }
     }
 
