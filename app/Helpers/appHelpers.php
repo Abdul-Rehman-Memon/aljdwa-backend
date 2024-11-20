@@ -214,7 +214,7 @@ class appHelpers
                 "&customParameters[device_id]=1" .
                 "&customParameters[bill_number]=$merchantTransactionId";
         }
-
+        // $data = $data . "&integrity=true";
         // return $data;
 
         $ch = curl_init();

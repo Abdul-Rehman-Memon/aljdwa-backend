@@ -200,6 +200,7 @@ class PaymentsRepository implements PaymentsInterface
         $status   = $data->input('status')   ? appHelpers::lookUpId('Payment_status',$data->input('status'))   : NULL;
         $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
         $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+        $userId   = $data->input('user_id') ?? null;
 
         $query = Payment::with(
             ['payment_status', ////payment -> lookup_details,
@@ -219,6 +220,10 @@ class PaymentsRepository implements PaymentsInterface
             if ($toDate) {
                 $query->where('created_at', '<=', $toDate);
             }
+        }
+
+        if ($userId) {
+            $query->where('payments.entrepreneur_id',$userId);
         }
 
         $result = $query->orderBy('created_at','desc')
