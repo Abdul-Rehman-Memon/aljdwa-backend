@@ -107,7 +107,9 @@ class UserRepository implements UserRepositoryInterface
         
         // Ensure only users with entrepreneur details are fetched
         if ($status) {
-            $users->where('users.status',$status);
+            $users->whereHas('latest_application_status.application_status', function ($query) use ($status) {
+                $query->where('status', $status); // Adjust 'status' to the actual column name
+            });
         }
         
         if ($fromDate || $toDate) {
