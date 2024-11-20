@@ -138,6 +138,8 @@ class appHelpers
         if ($createRegistration) {
             $data = $data . "&createRegistration=true";
         }
+
+        $data = $data . "&integrity=true";
              
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
