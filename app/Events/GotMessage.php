@@ -18,13 +18,15 @@ use function Illuminate\Log\log;
 class GotMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    // public $message;
     /**
      * Create a new event instance.
      */
     public function __construct(public User $receiver, public User $sender, public string $message)
     {
         //
+        // \Log::info("GotMessage event instantiated for receiver ID: ");
+        // $this->message = $messag;
     }
 
     /**
@@ -35,7 +37,8 @@ class GotMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("chat.{$this->receiver->id}"),
+            new Channel("chat"),
+            // new PrivateChannel("chat.{$this->receiver->id}"),
         ];
     }
 

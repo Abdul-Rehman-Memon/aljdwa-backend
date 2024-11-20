@@ -32,7 +32,7 @@ class MessagesRepository implements MessagesInterface
         $message = Message::create($data);
         $receiver = User::find($data['receiver_id']);
         $sender = User::find($data['sender_id']);
-
+        // GotMessage::dispatch($receiver, $sender,"We've got a new announcement!");
         broadcast(new GotMessage($receiver, $sender, $message));
         return $message; 
     }
