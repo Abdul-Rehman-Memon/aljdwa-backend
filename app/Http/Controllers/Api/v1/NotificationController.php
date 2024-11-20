@@ -22,7 +22,7 @@ class NotificationController extends Controller
             return ResponseHelper::success($result,'Notifications retrieved successfully');
             
         } catch (Exception $e) {
-            return ResponseHelper::error('Failed to retrieve notifications.', 500, $e->getMessage());
+            return ResponseHelper::error('Failed to retrieve notifications.', 500, $e->getMessage().' Line No : '.$e->getLine());
         }
     }
 

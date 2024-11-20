@@ -16,6 +16,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+use App\Events\GotNotification;
+use App\Events\AdminNotification;
+
 class appHelpers
 {
 
@@ -234,7 +237,15 @@ class appHelpers
     //Manage Notifications
     public static function addNotification($data){
 
-        return Notification::create($data);
+        $notification =  Notification::create($data);
+        $receiver = User::find($notification['receiver_id']);
+        // $sender = User::find($notification['sender_id']);
+
+        // if ($receiver) {
+        //     broadcast(new GotNotification($receiver, $notification->toArray()));
+        // }else{
+        //     broadcast(new AdminNotification($notification->toArray()))->toOthers(); 
+        // }   
     }
 
     public static function getNotifications($id = null){

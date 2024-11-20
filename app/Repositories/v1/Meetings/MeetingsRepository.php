@@ -45,7 +45,7 @@ class MeetingsRepository implements MeetingsInterface
         $participant = User::find($meeting['participant_id']);
 
         $notification = [
-            'sender_id' =>  NULL,
+            'sender_id' =>  $userId,
             'receiver_id' => $meeting['participant_id'], 
             'message'           => "$user->founder_name scheduled a meeting with you.",
             'notification_type' => 'meeting',

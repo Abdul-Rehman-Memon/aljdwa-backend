@@ -48,17 +48,17 @@ class GotMessage implements ShouldBroadcast
     // }
 
     public function broadcastWith(): array
-{
-    \Log::info('Broadcasting message', [
-        'receiver_id' => $this->receiver->id,
-        'sender_id' => $this->sender->id,
-        'message' => $this->message
-    ]);
-    
-    return [
-        'receiver_id' => $this->receiver->id,
-        'sender_id' => $this->sender->id,
-        'message' => $this->message
-    ];
-}
+    {
+        // \Log::info('Broadcasting message', [
+        //     'receiver_id' => $this->receiver->id,
+        //     'sender_id' => $this->sender->id,
+        //     'message' => $this->message
+        // ]);
+        
+        return [
+            'receiver_id' => $this->receiver->id,
+            'sender_id' => $this->sender->id,
+            'message' => $this->message
+        ];
+    }
 }
