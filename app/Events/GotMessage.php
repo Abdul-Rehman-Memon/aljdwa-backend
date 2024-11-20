@@ -12,6 +12,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+use function Illuminate\Log\log;
+
+
 class GotMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -40,4 +43,19 @@ class GotMessage implements ShouldBroadcast
 
     //     return $this->message;
     // }
+
+    public function broadcastWith(): array
+{
+    \Log::info('Broadcasting message', [
+        'receiver_id' => $this->receiver->id,
+        'sender_id' => $this->sender->id,
+        'message' => $this->message
+    ]);
+    
+    return [
+        'receiver_id' => $this->receiver->id,
+        'sender_id' => $this->sender->id,
+        'message' => $this->message
+    ];
+}
 }
