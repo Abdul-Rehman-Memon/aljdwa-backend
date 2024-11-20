@@ -14,6 +14,8 @@ use App\Mail\NewUserRegistrationForAdmin;
 use App\Mail\UserWelcomeNotification;
 use App\Mail\UserStatusNotification;
 use App\Mail\UserProfileUpdatedNotification;
+use Illuminate\Support\Facades\Auth;
+
 
 use Illuminate\Support\Carbon;
 

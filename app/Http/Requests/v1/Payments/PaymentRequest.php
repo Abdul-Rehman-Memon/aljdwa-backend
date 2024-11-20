@@ -58,6 +58,7 @@ class PaymentRequest extends FormRequest
             'currency' => 'required|string|max:3',
             'amount' => 'required|numeric|min:0',
             'tax' => 'required|numeric|min:0',
+            'tax_rate' => 'required|string',
             'card_type' => 'required|string',
             'payment_id' => 'required|string',
         ];

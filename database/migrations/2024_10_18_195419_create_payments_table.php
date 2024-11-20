@@ -29,6 +29,7 @@ return new class extends Migration
             $table->text('currency');
             $table->decimal('amount', 15, 2); // Up to 15 digits, 2 decimal places
             $table->decimal('tax', 15, 2)->default(0);
+            $table->text('tax_rate');
             $table->decimal('total_amount', 15, 2);
             $table->text('voucher')->nullable();
             // $table->integer('status');

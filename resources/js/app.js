@@ -11,7 +11,7 @@ window.Echo = new Echo({
     forceTLS: true
 });
 
-window.Echo.channel('send-message')
+window.Echo.private('chat.9d829585-50dc-4852-ae32-e209f6084751')
     .listen('GotMessage', (e) => {
         const messageList = document.getElementById('messages');
         const messageElement = document.createElement('li');

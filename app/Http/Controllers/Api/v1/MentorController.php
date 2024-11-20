@@ -56,6 +56,24 @@ class MentorController extends Controller
         
     }
 
+    /*********** Mentor Application ***********/
+    public function reviewMentorApplication()
+    {
+        $applicationId = Auth::user()->id;
+        try {
+            $application = $this->userService->reviewMentorApplication($applicationId);
+
+            if($application){
+                return ResponseHelper::success($application,'Mentor Application retrieved successfully');
+            }else{
+                return ResponseHelper::notFound('Entreprenuer Application not found'); 
+            }
+            
+        } catch (Exception $e) {
+            return ResponseHelper::error('Failed to retrieve application.', 500, $e->getMessage());
+        }
+    }
+
     /*********** Mentor Assignment ***********/
     public function getAllEntrepreneurAssignedToMentor(){
        

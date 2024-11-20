@@ -45,6 +45,7 @@ class createPaymentInvoiceRequest extends FormRequest
             'currency' => 'required|string|max:3',
             'amount' => 'required|numeric|min:0',
             'tax' => 'required|numeric|min:0',
+            'tax_rate' => 'required|string',
         ];
 
     }

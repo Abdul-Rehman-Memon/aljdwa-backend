@@ -32,6 +32,7 @@ class Payment extends Model
         'currency',
         'amount',
         'tax',
+        'tax_rate',
         'total_amount',
         'voucher',
         'payment_date',

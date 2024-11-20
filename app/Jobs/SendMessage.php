@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Events\GotMessage;
+use App\Models\Message;
 
 class SendMessage implements ShouldQueue
 {
@@ -16,7 +17,7 @@ class SendMessage implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(public Message $message)
     {
         //
     }
