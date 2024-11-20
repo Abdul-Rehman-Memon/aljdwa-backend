@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\LookupDetail;
 use App\Models\EntreprenuerDetail;
 use App\Models\ApplicationStatus;
+use App\Models\Notification;
 
 
 class User extends Authenticatable
@@ -113,6 +114,18 @@ class User extends Authenticatable
     public function entreprenuer_details(){
 
         return $this->hasOne(EntrepreneurDetail::class,'user_id','id');
+
+    }
+
+    public function sender_notifications(){
+
+        return $this->hasOne(Notification::class,'sender_id','id');
+
+    }
+
+    public function receiver_notifications(){
+
+        return $this->hasOne(Notification::class,'receiver_id','id');
 
     }
 }

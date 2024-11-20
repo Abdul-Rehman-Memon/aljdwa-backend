@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Api\v1\VisitorController;
 use App\Http\Controllers\Api\v1\AdminController;
+use App\Http\Controllers\Api\v1\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\CheckRole;
@@ -80,4 +81,11 @@ Route::prefix('visitor')->group(function () {
     Route::prefix('appointment-schedule-management')->group(function () {
         Route::get('/appointment-schedules', [VisitorController::class, 'getAppointmentSchedules']);
     });
+});
+
+//
+Route::middleware(['auth:sanctum'])->prefix('notification-management')->group(function () {
+
+    Route::get('/notifications',[NotificationController::class, 'getNotifications']);
+    Route::get('/notifications/{id}',[NotificationController::class, 'getSingleNotification']);
 });

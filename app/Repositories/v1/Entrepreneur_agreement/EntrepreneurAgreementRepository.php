@@ -46,6 +46,14 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
         $agreementDetails = $data['agreement_details'] ?? null;
         $agreementDocumentPath = $filePath ?? null;
 
+        $notification = [
+            'sender_id' => Null ,
+            'receiver_id' => $user['id'], 
+            'message'           => "An agreement has been created for you by Admin.",
+            'notification_type' => 'agreement',
+        ];
+        appHelpers::addNotification($notification); 
+
         // Mail::to($user->email)->send(new AgreementNotification($userName, $agreementDetails, $agreementDocumentPath));
 
         return $agreement;
@@ -110,6 +118,16 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
             // $responseStatus = $updatedAgreement['agreement_status']['value'];
             // $userName = $updatedAgreement->agreement_entrepreneur_detail->user->founder_name ?? 'User';
             // $agreementDetails = $updatedAgreement->agreement_details;
+
+            $userName = $updatedAgreement->agreement_entrepreneur_detail->user->founder_name;
+            $status = appHelpers::lookUpValue($updatedAgreement['status']); 
+            $notification = [
+                'sender_id' =>  $userId,
+                'receiver_id' => NULL, 
+                'message'           => "Agreement $status by $userName.",
+                'notification_type' => 'agreement',
+            ];
+            appHelpers::addNotification($notification); 
 
             // Define the admin email
             // $adminEmail = config('mail.admin_email');

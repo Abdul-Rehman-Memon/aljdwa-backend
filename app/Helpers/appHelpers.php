@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Lookup;
 use App\Models\LookupDetail;
 use App\Models\MentorsAssignment;
+use App\Models\Notification;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +25,14 @@ class appHelpers
         ->first();
         if($result){
             return $result->id;
+        }
+        return null; 
+    }
+
+    public static function lookUpValue($id) {
+        $result =  LookupDetail::where('id',$id)->first();
+        if($result){
+            return $result->value;
         }
         return null; 
     }
@@ -217,6 +226,45 @@ class appHelpers
 
         // return $responseData;
         return json_decode($responseData, true);
+    }
+
+    //Manage Notifications
+    public static function addNotification($data){
+
+        return Notification::create($data);
+    }
+
+    public static function getNotifications($id = null){
+        $userId = Auth::user()->id;
+
+        $userRole = self::getUserRole($userId);
+        $query = Notification::query();
+        if ($userRole === 'admin') {
+            $query->where('receiver_id',NULL);  
+        }else{
+            $query->where('receiver_id',$userId); 
+        }
+
+        if ($id) {
+            $query->where('id',$id); 
+        }
+
+        $result =  $query->get();
+
+        if ($id && $result) {
+           self::updateNotificationStatus($id);
+        }
+
+        return $result->load(['sender','receiver']);
+        
+    }
+
+    public static function updateNotificationStatus($id = null){
+
+        $result = Notification::find($id); 
+        if ($result) {
+            $result->update(['is_read'=>1]);
+        }      
     }
 
 }

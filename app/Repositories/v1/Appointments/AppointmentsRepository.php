@@ -5,6 +5,7 @@ namespace App\Repositories\v1\Appointments;
 use App\helpers\appHelpers;
 use App\Models\Appointment;
 use App\Models\AppointmentSchedule;
+use App\Models\Notification;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,11 @@ class AppointmentsRepository implements AppointmentsInterface
         $data['request_time'] = Carbon::createFromTimestamp($data['request_time'])->format('g:i A');
 
 
+        $notification = [
+            'message'           => 'A new appointment request has been submitted by '. $data['first_name'] . ' ' . $data['last_name'],
+            'notification_type' => 'appointment_request',
+        ];
+        appHelpers::addNotification($notification); 
         // Send email to visitor
         // Mail::to($data['email'])->send(new AppointmentConfirmationForVisitor($data));
 

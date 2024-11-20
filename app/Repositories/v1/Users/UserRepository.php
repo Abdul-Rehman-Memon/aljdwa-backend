@@ -26,6 +26,14 @@ class UserRepository implements UserRepositoryInterface
 
         $user = User::create($data);
 
+        $notification = [
+            'sender_id' => NULL ,
+            'receiver_id' => NULL, 
+            'message'           => 'A new application request has been submitted by '. $data['founder_name'],
+            'notification_type' => 'application_request',
+        ];
+        appHelpers::addNotification($notification); 
+
         // Send email to the admin
         // $adminEmail = config('mail.admin_email'); // Make sure the admin email is set in .env as MAIL_ADMIN_EMAIL
         // if ($adminEmail) {
@@ -35,7 +43,6 @@ class UserRepository implements UserRepositoryInterface
         // Send welcome email to the user
         // Mail::to($user->email)->send(new UserWelcomeNotification($user->founder_name));
     
-        // Load additional relationships if needed
         return $user->load(['user_role', 'user_status']);
 
     }
@@ -69,6 +76,14 @@ class UserRepository implements UserRepositoryInterface
 
     public function applicationStatus(array $data)
     {
+        $status = appHelpers::lookUpValue($data['status']); 
+        $notification = [
+            'sender_id' => Null ,
+            'receiver_id' => $data['user_id'], 
+            'message'           => "Your Application status updated as $status by Admin.",
+            'notification_type' => 'application_request',
+        ];
+        appHelpers::addNotification($notification); 
         return ApplicationStatus::create($data);
     }
 
@@ -160,6 +175,14 @@ class UserRepository implements UserRepositoryInterface
                 DB::rollBack();
                 return false; // Rollback if application status fails
             }
+
+            $notification = [
+                'sender_id' => $userId ,
+                'receiver_id' => NULL, 
+                'message'           => "The user $user->founder_name has updated their profile after it was returned for further modifications.",
+                'notification_type' => 'application_request',
+            ];
+            appHelpers::addNotification($notification); 
 
             // $user['status'] = 'resubmit'; // it was used for email status 
             // $adminEmail = config('mail.admin_email');

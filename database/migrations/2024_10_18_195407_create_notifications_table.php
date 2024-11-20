@@ -18,14 +18,14 @@ return new class extends Migration
             // $table->foreignUuid('user_id')->constrained();
             $table->foreignUuid('sender_id')->constrained('users')
             ->cascadeOnUpdate()
-            ->cascadeOnDelete();
+            ->cascadeOnDelete()->nullable();
 
             $table->foreignUuid('receiver_id')->constrained('users')
             ->cascadeOnUpdate()
-            ->cascadeOnDelete();
+            ->cascadeOnDelete()->nullable();
             $table->text('message');
             $table->string('notification_type');
-            $table->boolean('is_read');
+            $table->boolean('is_read')->default(0);
             $table->timestamps();
         });
 

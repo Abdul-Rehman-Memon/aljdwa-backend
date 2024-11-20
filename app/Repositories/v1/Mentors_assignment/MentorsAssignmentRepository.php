@@ -23,8 +23,26 @@ class MentorsAssignmentRepository implements MentorsAssignmentInterface
         $assignment = MentorsAssignment::create($data);
           // Notify both users
         if ($entrepreneur && $mentor) {
+            $entrepreneurId = $entrepreneur->user->id;
             $entrepreneurName = $entrepreneur->user->founder_name; // Assuming there's a user relation
             $mentorName = $mentor->founder_name;
+            // Send notification to mentor
+            $notification = [
+                'sender_id' =>  NULL,
+                'receiver_id' => $data['mentor_id'], 
+                'message'           => "You have been assigned as a mentor to $entrepreneurName by the admin.",
+                'notification_type' => 'mentor_assignment',
+            ];
+            appHelpers::addNotification($notification);
+             // Send notification to entrepreneur
+            $notification = [
+                'sender_id' =>  NULL,
+                'receiver_id' => $entrepreneurId, 
+                'message'           => "You have been assigned to mentor $mentorName by the admin.",
+                'notification_type' => 'mentor_assignment',
+            ];
+            appHelpers::addNotification($notification); 
+
             // Send emails
             // Mail::to($mentor->email)->send(new MentorAssignedNotification($entrepreneurName, $mentorName));
             // Mail::to($entrepreneur->user->email)->send(new EntrepreneurAssignedNotification($entrepreneurName, $mentorName));
