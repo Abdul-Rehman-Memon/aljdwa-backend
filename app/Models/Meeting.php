@@ -15,10 +15,13 @@ class Meeting extends Model
     protected $fillable = [
         'initiator_id',
         'participant_id',
-        'link',
+        'start_url',
+        'meeting_id',
         'meeting_password',
+        'join_url',
         'agenda',
         'meeting_date_time',
+        'duration',
         'status',
     ];
 

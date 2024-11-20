@@ -29,10 +29,14 @@ return new class extends Migration
             ->cascadeOnDelete();
             
             
-            $table->string('link');
+            $table->longText('start_url');
+            $table->string('meeting_id');
             $table->string('meeting_password');
+            $table->text('join_url');
+
             $table->text('agenda');
             $table->timestamp('meeting_date_time');
+            $table->string('duration');
             
             // $table->integer('resheduled_id');
             // $table->foreign('resheduled_id')->references('id')->on('meetings');

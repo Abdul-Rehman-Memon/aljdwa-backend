@@ -40,8 +40,11 @@ class AppointmentUpdateRequest extends FormRequest
     {
         // Initialize the common rules
         return [
-            'link' => 'nullable|url|required_if:status,booked',  // Required if status is 'booked'
-            'meeting_password' => 'nullable|string|required_if:status,booked',  // Required if status is 'booked'
+            // 'link' => 'nullable|url|required_if:status,booked',  // Required if status is 'booked'
+            // 'meeting_password' => 'nullable|string|required_if:status,booked',  // Required if status is 'booked'
+            'agenda' => 'required|string',
+            'meeting_date_time' => 'required|date',
+            'duration_in_minute' => 'required|numeric',
             'status' => [
                 'required',
                 'string',
@@ -55,8 +58,8 @@ class AppointmentUpdateRequest extends FormRequest
     {
         return [
             'status.regex' => 'Status can be Pending/Booked/Cancelled/Completed',
-            'link.required_if' => 'The link field is required when the status is booked.',
-            'meeting_password.required_if' => 'The meeting password is required when the status is booked.',
+            // 'link.required_if' => 'The link field is required when the status is booked.',
+            // 'meeting_password.required_if' => 'The meeting password is required when the status is booked.',
         ];
     }
 }

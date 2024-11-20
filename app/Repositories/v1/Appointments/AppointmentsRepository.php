@@ -99,8 +99,21 @@ class AppointmentsRepository implements AppointmentsInterface
             return null;  // Handle this scenario appropriately, e.g., throw an exception
         }
 
+        $zoom_response = NULL;
+
+        if (appHelpers::lookUpValue($data['status']) == 'booked') {
+            $zoom_response = appHelpers::createMeeting($data);
+        
+            $data['start_url']         = $zoom_response['start_url'] ?? NULL ;
+            $data['meeting_id']        = $zoom_response['id'] ?? NULL ;
+            $data['meeting_password']  = $zoom_response['password'] ?? NULL ;
+            $data['join_url']          = $zoom_response['join_url'] ?? NULL ;
+            $data['meeting_date_time'] = Carbon::parse($zoom_response['start_time'])->toDateTimeString(); 
+            $data['duration']          = $zoom_response['duration'] ?? NULL;
+        }
         // Update the appointment data in the database
         $appointment->update($data);
+        $appointment = Appointment::with('appointment_status')->find($appointmentId);
 
         // Format `request_date` and `request_time` as human-readable for the email
         $appointment->request_date = Carbon::createFromTimestamp($appointment->request_date)->format('F j, Y');

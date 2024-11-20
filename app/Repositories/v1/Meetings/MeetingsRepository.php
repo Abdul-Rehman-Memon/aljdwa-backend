@@ -22,24 +22,49 @@ class MeetingsRepository implements MeetingsInterface
 
         $userRole = $user->user_role->value;
         $data['initiator_id'] = $userId;
+
+        $zoom_response = appHelpers::createMeeting($data);
+
+        $status = $zoom_response['type'] ?? NULL;
+        $status = ($status == 2) ? 'scheduled' : NULL;
+        $data['status'] = appHelpers::lookUpId('Meeting_status',$status);
+
+        $data['start_url']         = $zoom_response['start_url'];
+        $data['meeting_id']        = $zoom_response['id'];
+        $data['meeting_password']  = $zoom_response['password'];
+        $data['join_url']          = $zoom_response['join_url'];
+        $data['meeting_date_time'] = Carbon::parse($zoom_response['start_time'])->toDateTimeString(); 
+        $data['duration']          = $zoom_response['duration'];
+
+        // return $data;
+
         $meeting =  Meeting::create($data);
 
         $meeting = $meeting->load('meeting_status');
 
-
         $participant = User::find($meeting['participant_id']);
+
+        $notification = [
+            'sender_id' =>  NULL,
+            'receiver_id' => $meeting['participant_id'], 
+            'message'           => "$user->founder_name scheduled a meeting with you.",
+            'notification_type' => 'meeting',
+        ];
+        appHelpers::addNotification($notification);
 
         // Meeting details to pass to email
         $meetingDetails = [
-            'senderName'   => $user->founder_name,
-            'receiverName' => $participant->founder_name,
-            'link' => $meeting['link'],
+            'senderName'      => $user->founder_name,
+            'receiverName'    => $participant->founder_name,
+            'link'            => $meeting['start_url'],
+            'join_url'        => $meeting['join_url'],
+            'meetingId'       => $meeting['meeting_id'] ?? null,
             'meetingPassword' => $meeting['meeting_password'] ?? null,
-            'agenda' => $meeting['agenda'],
+            'agenda'          => $meeting['agenda'],
             'meetingDateTime' => Carbon::parse($meeting['meeting_date_time'])->format('d M Y, h:i A'),
-            'status' => 'Scheduled', // Or other status as per logic
-            'senderRole' => $userRole, 
-            'receiverRole' => $participant->user_role->value,
+            'status'          => 'Scheduled', // Or other status as per logic
+            'senderRole'      => $userRole, 
+            'receiverRole'    => $participant->user_role->value,
         ];
 
         if ($userRole === 'admin') {  
@@ -49,6 +74,7 @@ class MeetingsRepository implements MeetingsInterface
             //         $meetingDetails['senderName'],
             //         $meetingDetails['receiverName'],
             //         $meetingDetails['link'],
+            //         $meetingDetails['meetingId'],
             //         $meetingDetails['meetingPassword'],
             //         $meetingDetails['agenda'],
             //         $meetingDetails['meetingDateTime'],
@@ -62,6 +88,7 @@ class MeetingsRepository implements MeetingsInterface
             //     $meetingDetails['senderName'],
             //     $meetingDetails['receiverName'],
             //     $meetingDetails['link'],
+            //     $meetingDetails['meetingId'],
             //     $meetingDetails['meetingPassword'],
             //     $meetingDetails['agenda'],
             //     $meetingDetails['meetingDateTime'],
@@ -76,6 +103,7 @@ class MeetingsRepository implements MeetingsInterface
             //     $meetingDetails['senderRole'],
             //     $meetingDetails['receiverRole'],
             //     $meetingDetails['link'],
+            //     $meetingDetails['meetingId'],
             //     $meetingDetails['meetingPassword'],
             //     $meetingDetails['agenda'],
             //     $meetingDetails['meetingDateTime'],

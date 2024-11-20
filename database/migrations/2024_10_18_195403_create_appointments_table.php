@@ -22,8 +22,13 @@ return new class extends Migration
             $table->text('message')->nullable();
             $table->string('request_date');
             $table->string('request_time');
-            $table->string('link')->nullable();
+            $table->longText('start_url')->nullable();
+            $table->string('meeting_id')->nullable();
             $table->string('meeting_password')->nullable();
+            $table->string('join_url')->nullable();
+            $table->text('agenda')->nullable();
+            $table->timestamp('meeting_date_time')->nullable();
+            $table->string('duration')->nullable();
 
             $table->unsignedInteger('status')->default(7);
             $table->foreign('status')->references('id')->on('lookup_details')

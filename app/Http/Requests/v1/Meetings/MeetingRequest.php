@@ -41,10 +41,12 @@ class MeetingRequest extends FormRequest
         // Initialize the common rules
         return  [
             'participant_id' => 'required|exists:users,id',
-            'link' => 'required|string',
-            'meeting_password' => 'required|string',
             'agenda' => 'required|string',
             'meeting_date_time' => 'required|date',
+            'duration_in_minute' => 'required|numeric',
+                       
+            // 'link' => 'required|string',
+            // 'meeting_password' => 'required|string',
         ];
 
     }
