@@ -10,7 +10,7 @@ Route::middleware(['auth:sanctum', CheckRole::class . ':Mentor'])->prefix('mento
     //Mentor Application Request
     Route::prefix('application-management')->group(function () {
         Route::get('/mentor-applications', [MentorController::class, 'reviewMentorApplication']);
-        // Route::put('/entrepreneur-applications/{id}', [MentorController::class, 'updateMentorApplication']);
+        Route::put('/mentor-applications/{id}', [MentorController::class, 'updateMentorApplication']);
     });
 
     //Entrepreneur Assigned to Mentor

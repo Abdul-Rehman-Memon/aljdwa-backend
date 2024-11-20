@@ -66,6 +66,11 @@ class UserService
         });
     }
 
+    public function updateUserApplication($data, $applicationId){
+
+        return $this->userRepository->updateUser($data, $applicationId);
+    }
+
     public function forgetPassword(array $data){
 
         return $this->userRepository->forgetPassword($data);

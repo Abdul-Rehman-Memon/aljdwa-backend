@@ -74,6 +74,26 @@ class MentorController extends Controller
         }
     }
 
+    public function updateMentorApplication(UpdateApplicationRequest $request, $applicationId)
+    {
+
+        $validatedData = $request->validated();
+
+        try {
+            $application = $this->userService->getUser($applicationId);
+            if (!$application) {
+                return ResponseHelper::notFound('Application not found');
+            }
+
+            $user = $this->userService->updateUserApplication($validatedData, $applicationId);
+            return ResponseHelper::success($user,'Application updated successfully');
+
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to update application.',500,$e->getMessage());
+        }
+    }
+
     /*********** Mentor Assignment ***********/
     public function getAllEntrepreneurAssignedToMentor(){
        

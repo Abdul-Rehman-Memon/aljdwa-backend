@@ -146,16 +146,26 @@ class UserRepository implements UserRepositoryInterface
 
     public function updateUser(array $data, string $userId)
     {
-       
+        $userId = Auth::user()->id;
         $user = User::find($userId);
        
         if ($user && $user->update($data)) {
 
-            $user['status'] = 'resubmit';
+            $applicationData['status'] = 13;//resubmit
+            $applicationData['user_id'] = $userId;
+            $applicationData['status_by'] = $userId;//here user update his status
 
+            $applicationStatus = $this->applicationStatus($applicationData);
+            if (!$applicationStatus) {
+                DB::rollBack();
+                return false; // Rollback if application status fails
+            }
+
+            // $user['status'] = 'resubmit'; // it was used for email status 
             // $adminEmail = config('mail.admin_email');
             // Mail::to($adminEmail)->send(new UserProfileUpdatedNotification($user));
-            return $user;
+
+            return $user->load(['user_role','latest_application_status.application_status']);
         }
 
         return false;

@@ -5,6 +5,7 @@ namespace App\Http\Requests\v1\Applications;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateApplicationRequest extends FormRequest
 {
