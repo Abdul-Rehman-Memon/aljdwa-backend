@@ -40,7 +40,14 @@ class createCheckoutRequest extends FormRequest
     {
         // Initialize the common rules
         return  [
-            'card_type' => 'nullable|string',
+            'payments_details' => 'nullable|string',
+            'entrepreneur_details_id' => 'required|exists:entrepreneur_details,id',
+            'currency' => 'required|string|max:3',
+            'amount' => 'required|numeric|min:0',
+            'tax' => 'required|numeric|min:0',
+            'tax_rate' => 'required|string',
+            'card_type' => 'required|string',
+            // 'payment_id' => 'required|string',
         ];
 
     }

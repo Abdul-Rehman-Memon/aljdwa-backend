@@ -13,12 +13,13 @@ Route::get('testing', function () {
     return view('layouts/testing');
 });
 
-Route::get('payment', function () {
-    return view('layouts/payment');
-});
+// Route::get('payment', function () {
+//     return view('layouts/payment');
+// });
+
 
 Route::get('payment', function ($request) {
-    return dd($request);
-})->name('stripe.post');
+    // return dd($request);
+})->name('hyper.post');
 
 

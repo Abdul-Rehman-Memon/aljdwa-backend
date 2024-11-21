@@ -27,7 +27,21 @@ class PaymentsRepository implements PaymentsInterface
     
     public function createCheckout(array $data)
     {
-       return appHelpers::hyperPayCreateCheckout($data);
+        $userId = Auth::user()->id;
+        $data['payment_date'] = Carbon::now()->toDateTimeString();
+
+        // return $data;
+        $response = appHelpers::hyperPayCreateCheckout($data);
+        if ($response['result']['code'] == '000.200.100') {    
+            $data['payment_reference'] = $response['id'] ?? null;            
+        }
+        $payment = Payment::where('entrepreneur_details_id',$data['entrepreneur_details_id'])
+        ->first();
+        if ($payment) {
+            $payment->update($data);
+        }
+
+        return $response;
     }
 
     public function createPaymentInvoice(array $data)
@@ -70,31 +84,16 @@ class PaymentsRepository implements PaymentsInterface
 
         $status = 'unpaid';
 
-        // return $data;
-        /* -- use stripe payment gateway -- */
-        // $response = $this->stripePaymentgateWay($data);
-        $response = appHelpers::hyperPayPaymentgateWay($data);
-        if ($response) {    
-            $status = $response ? 'paid' : 'unpaid';
-            $data['payment_reference'] = $response['id'] ?? null;            
+        $response = appHelpers::verifyHyperPay($data);
+        if ($response['result']['code'] == '000.200.100') {    
+            $status = 'paid';          
         }
-
-        $data['total_amount'] = $data['tax'] ? ($data['amount'] + $data['tax']) : $data['amount'];
-
         $data['status'] = appHelpers::lookUpId('Payment_status',$status);
-
-       /* -- voucher file--*/ 
-        $fullUrl = null;
-
-        if (isset($data['voucher'])) {
-            $fileInfo['user_id'] = $userId; 
-            $fileInfo['file'] = $data['voucher']; 
-            $fileInfo['fileName'] = 'voucher'; 
-            $filePath = appHelpers::uploadFile($fileInfo);
-            $data['voucher'] = $filePath;
+        $payment = Payment::where('entrepreneur_details_id',$data['entrepreneur_details_id'])
+        ->first();
+        if ($payment) {
+            $payment->update($data);
         }
-    
-        $payment =  Payment::create($data);
 
         // Load payment status for returning full data
         $payment = $payment->load('payment_status');
@@ -102,9 +101,9 @@ class PaymentsRepository implements PaymentsInterface
         $payment['hyperpay'] = $response;
 
         // Get user and admin emails
-        $userEmail = Auth::user()->email;
-        $userName = Auth::user()->founder_name;
-        $amount = $payment['amount'];
+        // $userEmail = Auth::user()->email;
+        // $userName = Auth::user()->founder_name;
+        // $amount = $payment['amount'];
 
         // Format payment_date to a more readable date-time format
         // $paymentDate = Carbon::parse($payment['payment_date'])->format('d M Y, h:i A');

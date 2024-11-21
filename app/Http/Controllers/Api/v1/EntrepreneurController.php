@@ -158,7 +158,7 @@ class EntrepreneurController extends Controller
             return ResponseHelper::created($payment,'Entrepreneur payment created successfully');
         } catch (Exception $e) {
             // Handle the error
-            return ResponseHelper::error('Failed to create entrepreneur payment.',500,$e->getMessage());
+            return ResponseHelper::error('Failed to create entrepreneur payment.',500,$e->getMessage()." ".$e->getLine());
         }
     }
 

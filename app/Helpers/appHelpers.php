@@ -115,10 +115,11 @@ class appHelpers
 
     public static function  hyperPayCreateCheckout($data)
     {
+
         $url = env('PAYMENT_URL') . "/v1/checkouts";
-        $isTestMode = env('IS_TEST_MODE'); //testMode=EXTERNAL
-        $createRegistration = env('createRegistration');
         $bearer_token = env('PAYMENT_KEY');
+        $isTestMode   = env('IS_TEST_MODE'); //testMode=EXTERNAL
+        $createRegistration = env('createRegistration');
 
         $ENTITY_ID  = env('PAYMENT_ENTITY_ID');
         
@@ -131,20 +132,47 @@ class appHelpers
             $ENTITY_ID = env('APPLEPAY_ENTITY_ID');
         }
 
+        $getLastId  = $data['entrepreneur_details_id'];
+        $merchantTransactionId = strval($getLastId);
+        $email = Auth::user()->email;
+        $name  = Auth::user()->founder_name;
+        $amount    = $data['amount'];
+        $currency  = $data['currency'];
+        $memo      = 'subscription';
+
         $data = "entityId=" . $ENTITY_ID;
-        if ($isTestMode) {
+        
+        if ($createRegistration) {
+            // $data = $data . "&createRegistration=true";
+        }
+         // "&paymentBrand=VISA" .
+         $data = $data ."&amount=$amount.00" .
+         "&currency=$currency" .
+         "&paymentType=DB" .
+         "&integrity=true";
+
+         if ($isTestMode) {
             $data = $data . "&testMode=" .$isTestMode;
         } 
-        if ($createRegistration) {
-            $data = $data . "&createRegistration=true";
-        }
 
-        $data = $data . "&integrity=true";
-             
+         $data = $data ."&customParameters[3DS2_enrolled]=true" .
+         "&merchantTransactionId=$merchantTransactionId" .
+        //  "&merchantMemo=$memo" .
+         "&customer.email=$email" .
+         // '&billing.street1=hyderabad' .
+         // '&billing.city=hyderabad' .
+         // '&billing.state=sindh' .
+         // '&billing.country=pakistan' .
+         // '&billing.postcode=7100' .
+         "&customer.givenName=$name" .
+         "&customer.surname=$name" ; 
+         
+        //  return $data;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                       'Authorization:Bearer ' . $bearer_token));
+                    'Authorization:Bearer ' .$bearer_token));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);// this should be set to true in production
@@ -155,12 +183,14 @@ class appHelpers
         }
         curl_close($ch);
         // return $responseData;
-        return json_decode($responseData, true);    
+        return json_decode($responseData, true);
     }
     
     
-    public static function  hyperPayPaymentgateWay($data)
+    public static function  verifyHyperPay($data)
     {
+
+        // return $data['amount'];
 
         $url = env('PAYMENT_URL') . "/v1/checkouts";
         $isTestMode = env('IS_TEST_MODE'); //testMode=EXTERNAL
@@ -168,19 +198,7 @@ class appHelpers
 
         $ENTITY_ID  = env('PAYMENT_ENTITY_ID');
 
-
-        $getLastId  = $data['entrepreneur_details_id'];
-        $merchantTransactionId = strval($getLastId);
-        $email = Auth::user()->email;
-        $name  = Auth::user()->founder_name;
-        $registration_id = $data['payment_id'];
-        $amount    = $data['amount'];
-        $currency  = $data['currency'];
-        $user_id   = $data['entrepreneur_id'];
-        $user_id   = strval($user_id);
-        $memo      = 'subscription';
-
-         $cardType = $data['card_type'] ?? NULL;
+        $cardType = $data['card_type'] ?? NULL;
 
         if ($cardType && $cardType == 'mada') {
             $ENTITY_ID = env('MADA_ENTITY_ID');
@@ -189,32 +207,16 @@ class appHelpers
             $ENTITY_ID = env('APPLEPAY_ENTITY_ID');
         }
 
-        $url = env('PAYMENT_URL') . "/v1/registrations/{$registration_id}/payments";
-        $data = "entityId=" . $ENTITY_ID .
-            "&paymentBrand=VISA" .
-            "&paymentType=DB" .
-            "&amount=$amount.00" .
-            "&currency=$currency" .
-            "&standingInstruction.type=UNSCHEDULED" .
-            "&standingInstruction.mode=INITIAL" .
-            "&standingInstruction.source=CIT" .
-            
-            "&merchantMemo=$memo" .
-            "&merchantTransactionId=$merchantTransactionId" .
-            "&customer.email=$email" .
-            "&customer.givenName=$name" .
-            "&customer.surname=$name";
+        $registration_id = $data['payment_id'];
+        $amount    = $data['amount'];
+        $currency  = $data['currency'];
 
-        if ($isTestMode) {
-            $data = $data . "&testMode=EXTERNAL";
-        }
-        if ($cardType == 'mada') {
-            $data = $data . "&customParameters[branch_id]=1" .
-                "&customParameters[teller_id]=1" .
-                "&customParameters[device_id]=1" .
-                "&customParameters[bill_number]=$merchantTransactionId";
-        }
-        // $data = $data . "&integrity=true";
+        $url = env('PAYMENT_URL') . "/v1/registrations/{$registration_id}/payments";
+        $data = "entityId=" . $ENTITY_ID;
+        $data = $data ."&amount=$amount.00" .
+         "&currency=$currency" .
+         "&paymentType=DB";
+        //  "&integrity=true";
         // return $data;
 
         $ch = curl_init();
