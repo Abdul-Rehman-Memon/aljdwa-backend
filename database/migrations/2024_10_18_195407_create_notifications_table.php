@@ -15,14 +15,15 @@ return new class extends Migration
 
         Schema::create('notifications', function (Blueprint $table) {
             $table->increments('id');
-            // $table->foreignUuid('user_id')->constrained();
-            $table->foreignUuid('sender_id')->constrained('users')
-            ->cascadeOnUpdate()
-            ->cascadeOnDelete()->nullable();
 
-            $table->foreignUuid('receiver_id')->constrained('users')
+            $table->foreignUuid('sender_id') ->nullable()->constrained('users')
             ->cascadeOnUpdate()
-            ->cascadeOnDelete()->nullable();
+            ->cascadeOnDelete();
+
+            $table->foreignUuid('receiver_id') ->nullable()->constrained('users')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+
             $table->text('message');
             $table->string('notification_type');
             $table->boolean('is_read')->default(0);
