@@ -4,6 +4,7 @@
 use App\Http\Controllers\Api\v1\VisitorController;
 use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\NotificationController;
+use App\Http\Controllers\Api\v1\MessageController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\CheckRole;
@@ -88,4 +89,10 @@ Route::middleware(['auth:sanctum'])->prefix('notification-management')->group(fu
 
     Route::get('/notifications',[NotificationController::class, 'getNotifications']);
     Route::get('/notifications/{id}',[NotificationController::class, 'getSingleNotification']);
+});
+
+//
+Route::middleware(['auth:sanctum'])->prefix('message-management')->group(function () {
+
+    Route::put('/messages/{id}', [MessageController::class, 'markMessageAsRead']);
 });

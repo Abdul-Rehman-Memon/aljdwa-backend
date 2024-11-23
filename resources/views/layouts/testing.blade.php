@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HyperPay Card Payment</title>
+    <?php
+    $checkoutId = '2CABB25A4BF8656A4CC792299A23813B.prod02-vm-tx09';
+    $integrity  = 'sha384-8oJNo16Mh47uY71kWWdD5AHLXyaLAD11xNyGaEhulnR0DmHbUVPszTqnTBco3ATl';
+    
+    ?>
     <script 
-	src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=F118790C28EF587C019D2B2C5A40A2D2.uat01-vm-tx03"integrity="sha384-IYx/b++r8lxpr0Qw0QP4TOtBSK61lEHiXKfNGQVAcVBd580LqoBRp26BIzEE2Fqz"crossorigin="anonymous" async = true>
+	src="https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=<?php echo $checkoutId?>"integrity="<?php echo $integrity?>"crossorigin="anonymous" async = true>
 </script>
 
 </head>

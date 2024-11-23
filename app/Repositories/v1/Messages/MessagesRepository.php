@@ -52,4 +52,16 @@ class MessagesRepository implements MessagesInterface
         ->get();  
     }
 
+    public function markMessageAsRead(string $senderId)
+    {
+        $userId   = Auth::id();
+        $userRole = appHelpers::getUserRole($userId);
+
+        $result = Message::where('sender_id', $senderId)
+                ->where('receiver_id', $userId);
+
+        return $result->update(['is_read' => 1]);
+    }
+
+
 }

@@ -27,4 +27,11 @@ class MessageService
 
         return $message;
     }
+
+    public function markMessageAsRead(string $senderId)
+    {
+        $message = $this->messageRepository->markMessageAsRead($senderId);
+
+        return $message;
+    }
 }
