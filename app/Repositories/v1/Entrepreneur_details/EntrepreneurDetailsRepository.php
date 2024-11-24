@@ -5,6 +5,7 @@ namespace App\Repositories\v1\Entrepreneur_details;
 use App\helpers\appHelpers;
 use App\Models\User;
 use App\Models\EntrepreneurDetail;
+use App\Models\CoFounder;
 use App\Models\ApplicationStatus;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,30 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         return EntrepreneurDetail::create($data);
     }
 
+    public function createCoFounders(array $data)
+    {
+        
+        // return $data;
+        foreach($data as $key=>$value){
+
+            $record = [
+                'co_founder_name' => $value['co_founder_name'],
+                'position'        => $value['position'],
+                'major'           => $value['major'],
+            ];
+            $record['user_id'] = $data['user_id'];
+
+            if (isset($value['resume'])) {
+                $fileInfo['user_id'] = $record['user_id']; 
+                $fileInfo['file'] = $value['resume']; 
+                $fileInfo['fileName'] = 'co_founder_resume'; 
+                $filePath = appHelpers::uploadFile($fileInfo);
+                $record['resume'] = $filePath;
+            }  
+            return CoFounder::create($record);
+        }
+    }
+
     public function getEntrepreneurApplications(object $data)
     {
 
@@ -61,6 +86,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         $result = User::with([
             'user_role',
             'user_status',
+            'co_founders',
             'entreprenuer_details.entrepreneur_details_agreement.agreement_status',
             'entreprenuer_details.entrepreneur_details_payment.payment_status',
             'latest_application_status.application_status',
@@ -111,6 +137,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         return User::with([
             'user_role',  
             'user_status',
+            'co_founders',
             'entreprenuer_details.entrepreneur_details_agreement.agreement_status',
             'entreprenuer_details.entrepreneur_details_payment.payment_status',
             'latest_application_status.application_status',

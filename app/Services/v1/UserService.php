@@ -27,6 +27,7 @@ class UserService
 
     public function registerUser(array $data)
     {  
+        // return $data['co_founders'];
         // Use a transaction to ensure data integrity
         return DB::transaction(function () use ($data) {
             // Create user and get the user instance
@@ -60,6 +61,11 @@ class UserService
 
                 // Create entrepreneur details using the entrepreneurDetailsRepository
                 $this->entrepreneurDetailsRepository->createEntrepreneurDetails($entrepreneurDetailData);
+                // Create co founders
+                $co_founder = $data['co_founders'] ?? null;
+                $co_founder['user_id'] = $user->id;
+                // return $co_founder;
+                $co_founder ? $this->entrepreneurDetailsRepository->createCoFounders($co_founder) : NULL;
             }
             // Return the user instance, which is successful
             return $user->load('latest_application_status.application_status');

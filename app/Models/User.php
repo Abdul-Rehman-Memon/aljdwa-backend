@@ -41,6 +41,7 @@ class User extends Authenticatable
         'country_code',
         'phone_number',
         'password',
+        'profile_photo',
         'linkedin_profile',
         'reject_reason',
         'approved_At',
@@ -107,6 +108,11 @@ class User extends Authenticatable
     public function user_status()
     {
         return $this->belongsTo(LookupDetail::class,'status','id');
+    }
+
+    public function co_founders()
+    {
+        return $this->hasMany(CoFounder::class, 'user_id', 'id');
     }
     
 

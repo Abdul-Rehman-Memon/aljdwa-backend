@@ -61,6 +61,7 @@ class RegisterRequest extends FormRequest
                 'string',
                 'regex:/^(admin|mentor|entrepreneur|investor)$/i', // Case-insensitive role validation
             ],
+            'profile_photo' => 'required|file|mimes:jpg,jpeg,png|max:5120',
         ];
 
         // Add rules conditionally based on the role
@@ -91,6 +92,13 @@ class RegisterRequest extends FormRequest
                 'industry_sector' => 'required|string',
                 'business_model' => 'required|file|mimes:pdf,doc,docx|max:5120',//5MB
                 'patent' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB
+
+                 // Validation for co_founders array
+                'co_founders' => 'nullable|array', // co_founders must be an array
+                'co_founders.*.co_founder_name' => 'required_with:co_founder|string|max:255',
+                'co_founders.*.position' => 'nullable|string|max:255',
+                'co_founders.*.major' => 'nullable|string|max:255',
+                'co_founders.*.resume' => 'nullable|file|mimes:pdf|max:5120',
             ]);
         }
 

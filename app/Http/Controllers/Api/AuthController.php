@@ -42,7 +42,8 @@ class AuthController extends Controller
     public function login(LoginRequest $request){
 
         $user = User::with([
-                'user_role', 'user_status', 
+                'user_role', 'user_status',
+                'co_founders', 
                 'entreprenuer_details.user_entrepreneur_details_agreement.agreement_status',
                 'entreprenuer_details.user_entrepreneur_details_payment.payment_status',
                 'latest_application_status.application_status',

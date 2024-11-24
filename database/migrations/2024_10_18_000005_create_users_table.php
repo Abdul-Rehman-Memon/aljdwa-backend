@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('country_code');
             $table->string('phone_number');
             $table->string('password');
+            $table->string('profile_photo')->nullable();  
             $table->string('linkedin_profile')->nullable();  
             // $table->text('reject_reason')->nullable();
             // $table->timestamp('approved_At')->nullable();
