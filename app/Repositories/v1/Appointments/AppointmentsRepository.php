@@ -55,25 +55,32 @@ class AppointmentsRepository implements AppointmentsInterface
         $limit  = $data->input('limit', 10);
         $offset = $data->input('offset', 0);
         $status = $data->input('status') ? appHelpers::lookUpId('Appointment_status',$data->input('status'))  : NULL;
-        $date   = $data->input('date') ?? NULL;
-
-        $totalCount = Appointment::query();
+        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
+        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
 
         // Fetch the appointments with the linked status and apply pagination
         $result = Appointment::with('appointment_status');
 
+
         if ($status) {
-            $appointments = $result->where('appointments.status',$status);
-            $totalCount = $totalCount->where('appointments.status',$status);
+            $result->where('appointments.status',$status);
         }
+        
+        if ($fromDate || $toDate) {
 
-        $totalCount = $totalCount->count();
+            if ($fromDate) {
+                $result->where('created_at', '>=', $fromDate);
+            }
+            if ($toDate) {
+                $result->where('created_at', '<=', $toDate);
+            }
+        }
+        $result = $result->orderBy('created_at','desc')
+        ->limit($limit)
+        ->offset($offset)
+        ->get();
 
-        $result = $result
-            ->limit($limit)
-            ->offset($offset)
-            ->orderBy('id', 'desc')
-            ->get();
+        $totalCount = $result->count();    
 
         return [
             'totalCount' => $totalCount,
