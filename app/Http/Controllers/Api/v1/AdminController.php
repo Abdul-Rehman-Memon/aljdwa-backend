@@ -295,6 +295,8 @@ class AdminController extends Controller
 
         try {
             $agreement = $this->entreprenuerAgreementService->createAgreement($validatedData);
+            if (!$agreement) 
+                return ResponseHelper::error('User application not approved yet');
             return ResponseHelper::created($agreement,'Entrepreneur agreement created successfully');
         } catch (Exception $e) {
             // Handle the error

@@ -24,10 +24,16 @@ class EntrepreneurAgreementRepository implements EntrepreneurAgreementInterface
 
         $entrepreneur_details_id = $data['entrepreneur_details_id'];
 
-        $entrepreneur = EntrepreneurDetail::with('user')
+        $entrepreneur = EntrepreneurDetail::with(['user.latest_application_status.application_status'])
        ->where('id',$entrepreneur_details_id)->first();
 
-        $file = $data['agreement_document'];
+       $status = $entrepreneur->user->latest_application_status->application_status->value;
+
+       if ($status === 'pending') {
+          return null;
+       }
+
+        $file = $data['agreement_document'] ?? NULL;
         $data['admin_id'] =  Auth::id();
         $filePath = null;
         if (isset($data['agreement_document'])) {

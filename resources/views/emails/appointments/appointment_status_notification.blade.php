@@ -44,7 +44,8 @@
                 <p>Your appointment request has been booked. Here are the details:</p>
                 <p><strong>Date:</strong> {{ $appointment['request_date'] }}</p>
                 <p><strong>Time:</strong> {{ $appointment['request_time'] }}</p>
-                <p><strong>Meeting Link:</strong> <a href="{{ $appointment['link'] }}">{{ $appointment['link'] }}</a></p>
+                <p><strong>Meeting Link:</strong> <a href="{{ $appointment['join_url'] }}">{{ $appointment['join_url'] }}</a></p>
+                <p><strong>Meeting Id:</strong> {{ $appointment['meeting_id'] }}</p>
                 <p><strong>Meeting Password:</strong> {{ $appointment['meeting_password'] }}</p>
                 <p>We look forward to seeing you!</p>
             @else
