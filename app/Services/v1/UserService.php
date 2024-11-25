@@ -63,9 +63,11 @@ class UserService
                 $this->entrepreneurDetailsRepository->createEntrepreneurDetails($entrepreneurDetailData);
                 // Create co founders
                 $co_founder = $data['co_founders'] ?? null;
-                $co_founder['user_id'] = $user->id;
-                // return $co_founder;
-                $co_founder ? $this->entrepreneurDetailsRepository->createCoFounders($co_founder) : NULL;
+                if($co_founder){
+                    $co_founder['user_id'] = $user->id;
+                    return $co_founder;
+                    $co_founder ? $this->entrepreneurDetailsRepository->createCoFounders($co_founder) : NULL;
+                }
             }
             // Return the user instance, which is successful
             return $user->load('latest_application_status.application_status');
