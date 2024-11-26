@@ -95,4 +95,5 @@ Route::middleware(['auth:sanctum'])->prefix('notification-management')->group(fu
 Route::middleware(['auth:sanctum'])->prefix('message-management')->group(function () {
 
     Route::put('/messages/{id}', [MessageController::class, 'markMessageAsRead']);
+    Route::get('/message-count', [MessageController::class, 'getUnreadMessagesCount']);
 });

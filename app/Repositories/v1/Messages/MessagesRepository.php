@@ -64,5 +64,20 @@ class MessagesRepository implements MessagesInterface
         return $result->update(['is_read' => 1]);
     }
 
+    public function getUnreadMessagesCount()
+    {
+        $userId = Auth::id();
+    
+        // Get unread messages count grouped by `sender_id`
+        $unreadMessages = Message::selectRaw('sender_id, receiver_id, COUNT(*) as unread_count')
+        ->where('receiver_id', $userId)
+        ->where('is_read', 0)
+        ->groupBy('sender_id', 'receiver_id')
+        ->with(['sender', 'receiver']) // Eager load relationships
+        ->get();
+    
+        return $unreadMessages;
+    }
+
 
 }

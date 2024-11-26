@@ -7,4 +7,5 @@ interface MessagesInterface
     public function createMessage(array $data);
     public function getMessage(string $senderId);
     public function markMessageAsRead(string $senderId);
+    public function getUnreadMessagesCount();
 }

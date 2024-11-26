@@ -30,5 +30,16 @@ class MessageController extends Controller
         }
     }
 
+    public function getUnreadMessagesCount()
+    {
+        try {
+            $user = $this->messageService->getUnreadMessagesCount();
+            return ResponseHelper::created($user,'Unread Messages retrieved successfully');
+        } catch (Exception $e) {
+            // Handle the error
+            return ResponseHelper::error('Failed to retrievd unread messages.',500,$e->getMessage());
+        }
+    }
+
 
 }

@@ -34,4 +34,11 @@ class MessageService
 
         return $message;
     }
+
+    public function getUnreadMessagesCount()
+    {
+        $message = $this->messageRepository->getUnreadMessagesCount();
+
+        return $message;
+    }
 }
