@@ -9,6 +9,8 @@ class Message extends Model
 {
     protected $table = 'messages';
 
+    protected $primaryKey = 'message_id';
+
     use HasFactory;
 
     // Define fillable fields if needed

@@ -22,7 +22,7 @@ class GotMessage implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $receiver, public User $sender, public string $message)
+    public function __construct(public User $receiver, public User $sender, public array $message)
     {
         //
         // \Log::info("GotMessage event instantiated for receiver ID: ");
