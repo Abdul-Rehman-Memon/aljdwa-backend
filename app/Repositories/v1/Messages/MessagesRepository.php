@@ -69,7 +69,12 @@ class MessagesRepository implements MessagesInterface
         $userId = Auth::id();
     
         // Get unread messages count grouped by `sender_id`
-        $unreadMessages = Message::selectRaw('sender_id, receiver_id, COUNT(*) as unread_count')
+        $unreadMessages = Message::selectRaw(
+            'sender_id, receiver_id, 
+            COUNT(*) as unread_count, 
+            UNIX_TIMESTAMP(MAX(created_at)) as latest_created_at, 
+            UNIX_TIMESTAMP(MAX(updated_at)) as latest_updated_at'
+        )
         ->where('receiver_id', $userId)
         ->where('is_read', 0)
         ->groupBy('sender_id', 'receiver_id')
