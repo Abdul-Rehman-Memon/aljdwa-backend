@@ -79,10 +79,10 @@ class EntreprenuerDetailsService
                 'entreprenuer_details',
                 'user_role',
                 'user_status',
-                'user_application_status' => function ($query) {
-                    $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
-                },
-                'user_application_status.application_status'
+                // 'user_application_status' => function ($query) {
+                //     $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
+                // },
+                'latest_application_status.application_status'
             ]);
 
             return $userUpdated;
