@@ -173,8 +173,8 @@ class MeetingsRepository implements MeetingsInterface
         $role = appHelpers::getUserRole($userId);
 
         $query = Meeting::with([
-            'initiator',
-            'participant',
+            'initiator.user_role',
+            'participant.user_role',
             'meeting_status',
         ]);
         
@@ -225,8 +225,8 @@ class MeetingsRepository implements MeetingsInterface
         $role = appHelpers::getUserRole($userId);
         
         $query = Meeting::with([
-            'initiator',
-            'participant',
+            'initiator.user_role',
+            'participant.user_role',
             'meeting_status',
         ]);
        // Apply the condition if the role is not 'admin'
