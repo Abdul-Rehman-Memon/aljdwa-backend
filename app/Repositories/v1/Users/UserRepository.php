@@ -87,14 +87,17 @@ class UserRepository implements UserRepositoryInterface
 
     public function applicationStatus(array $data)
     {
-        $status = appHelpers::lookUpValue($data['status']); 
-        $notification = [
-            'sender_id' => Null ,
-            'receiver_id' => $data['user_id'], 
-            'message'           => "Your Application status updated as $status by Admin.",
-            'notification_type' => 'application_request',
-        ];
-        appHelpers::addNotification($notification); 
+        $status = appHelpers::lookUpValue($data['status']);
+        if ($status !== 'pending') {
+            $notification = [
+                'sender_id' => Null ,
+                'receiver_id' => $data['user_id'], 
+                'message'           => "Your Application status updated as $status by Admin.",
+                'notification_type' => 'application_request',
+            ];
+            appHelpers::addNotification($notification); 
+        } 
+        
         return ApplicationStatus::create($data);
     }
 

@@ -58,8 +58,13 @@ class appHelpers
     }
 
     public static function isAdmin($userId = null) {
-        $user =  User::find($userId)->load('user_role');
-        return ($user->user_role->value === 'admin') ?? false;
+        $user =  User::find($userId);
+        if ($user) {
+            $user = $user->load('user_role');
+            return ($user->user_role->value === 'admin') ?? false;
+        }
+        return null;
+        
     }
     
     public static function isMentor($userId = null) {
