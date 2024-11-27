@@ -15,12 +15,13 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['*'],
 
     'allowed_methods' => ['*'],
 
-   'allowed_origins' => ['*.' . env('FRONTEND_URL', 'https://dvb.dev.aljdwa.com')],
-
+    'allowed_origins' => [env('FRONTEND_URL', 'http://dvb.dev.aljdwa.com')],
+    // 'allowed_origins' => ['*'],
+    
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],

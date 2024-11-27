@@ -151,17 +151,17 @@ class appHelpers
             // $data = $data . "&createRegistration=true";
         }
          // "&paymentBrand=VISA" .
-         $data = $data ."&amount=$amount" .
+         $data = $data ."&amount=$amount.00" .
          "&currency=$currency" .
          "&paymentType=DB" .
          "&integrity=true";
 
          if ($isTestMode) {
-            $data = $data . "&testMode=" .$isTestMode;//for testing purpose only
+            $data = $data . "&testMode=" .$isTestMode;
         } 
 
-         $data = $data ."&customParameters[3DS2_enrolled]=true";//for testing purpose only
-         $data = $data ."&merchantTransactionId=$merchantTransactionId" .
+         $data = $data ."&customParameters[3DS2_enrolled]=true" .
+         "&merchantTransactionId=$merchantTransactionId" .
         //  "&merchantMemo=$memo" .
          "&customer.email=$email" .
          // '&billing.street1=hyderabad' .
@@ -218,7 +218,7 @@ class appHelpers
 
         $url = env('PAYMENT_URL') . "/v1/registrations/{$registration_id}/payments";
         $data = "entityId=" . $ENTITY_ID;
-        $data = $data ."&amount=$amount" .
+        $data = $data ."&amount=$amount.00" .
          "&currency=$currency" .
          "&paymentType=DB";
         //  "&integrity=true";
