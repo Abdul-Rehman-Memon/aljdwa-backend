@@ -124,7 +124,7 @@ class appHelpers
         // $baseUrl = rtrim(env('APP_URL'), '/'); // Get APP_URL and remove any trailing slash
         // $relativePath = Storage::url($filePath); // Get the relative file path
         // $fullUrl = $baseUrl . $relativePath;
-
+ 
         $fullUrl = Storage::url($filePath);;
 
         return $fullUrl;

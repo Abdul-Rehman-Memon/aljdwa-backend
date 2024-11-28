@@ -84,7 +84,7 @@ class RegisterRequest extends FormRequest
                 'project_description' => 'required|string',
                 'problem_solved' => 'required|string',
                 'solution_offering' => 'required|string',
-                'previous_investment' => 'nullable|numeric', // Allow null or numeric
+                'previous_investment' => 'required|numeric', // Allow null or numeric
                 'company_registered' => 'required|string',
                 'saudi_vision_alignment' => 'required|string', 
                 'positive_impact' => 'required|string', 

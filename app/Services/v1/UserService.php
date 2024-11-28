@@ -65,7 +65,7 @@ class UserService
                 $co_founder = $data['co_founders'] ?? null;
                 if($co_founder){
                     $co_founder['user_id'] = $user->id;
-                    return $co_founder;
+                    // return $co_founder;
                     $co_founder ? $this->entrepreneurDetailsRepository->createCoFounders($co_founder) : NULL;
                 }
             }

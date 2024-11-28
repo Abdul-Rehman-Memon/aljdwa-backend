@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('position')->nullable();
             $table->string('major')->nullable();
             $table->text('resume')->nullable();
-            $table->string('website');
+            $table->string('website')->nullable();
             $table->text('project_description');
             $table->text('problem_solved');
             $table->text('solution_offering');
