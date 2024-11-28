@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Http;
 
 use App\Events\GotNotification;
 use App\Events\AdminNotification;
+use Illuminate\Support\Env;
 
 class appHelpers
 {
@@ -120,8 +121,11 @@ class appHelpers
         $timestamp = time();
         $filePath = Storage::disk('public')->putFileAs($directory, $file, "{$timestamp}.{$file->getClientOriginalExtension()}");
 
-         // Generate the full URL for accessing the file
-        $fullUrl = asset("storage/" . str_replace('public/', '', $filePath));
+        // $baseUrl = rtrim(env('APP_URL'), '/'); // Get APP_URL and remove any trailing slash
+        // $relativePath = Storage::url($filePath); // Get the relative file path
+        // $fullUrl = $baseUrl . $relativePath;
+
+        $fullUrl = Storage::url($filePath);;
 
         return $fullUrl;
     }
