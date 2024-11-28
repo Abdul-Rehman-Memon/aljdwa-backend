@@ -126,8 +126,8 @@ class MeetingsRepository implements MeetingsInterface
         $userId = Auth::id();
 
         $result = Meeting::with([
-            'initiator',
-            'participant',
+            'initiator.user_role',
+            'participant.user_role',
             'meeting_status',
         ])
         ->where('initiator_id',$userId);
