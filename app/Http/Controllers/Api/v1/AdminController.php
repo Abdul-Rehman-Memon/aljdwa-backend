@@ -339,6 +339,9 @@ class AdminController extends Controller
         try {
             // $isMentor = appHelpers::lookUpId('status','Pending');
             // return response()->json($isMentor);
+            $result = appHelpers::isMentorAlreadyAssigned($entrepreneur_details_id,$mentor_id);
+            if($result)
+            return ResponseHelper::notFound('Mentor already assigned.');
             $isMentor = appHelpers::isMentor($mentor_id);
             if(!$isMentor)
             return ResponseHelper::notFound('Invalid Mentor id/Not Mentor role');

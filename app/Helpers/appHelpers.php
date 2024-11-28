@@ -94,6 +94,14 @@ class appHelpers
         return true;
     }
 
+     /* check is mentor already assigned to entrepreneur */
+     public static function isMentorAlreadyAssigned($entrepreneurDetailsId,$mentorId) {
+        return MentorsAssignment::where('entrepreneur_details_id',$entrepreneurDetailsId)
+            ->where('mentor_id',$mentorId)
+            ->first();   
+                
+    }
+
     /*-- Upload File --*/
     public static function uploadFile(array $data)
     {
