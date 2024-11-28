@@ -72,6 +72,29 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         }
     }
 
+    public function updateCoFounders(array $data,string $userId)
+    {
+        foreach($data as $key=>$value){
+
+            // $co_founder = CoFounder::find($value['co_founder_id']);
+            $co_founder = CoFounder::where(['id'=>$value['co_founder_id'] , 'user_id' => $userId])
+                ->first();
+
+            if ($co_founder) {
+
+                if (isset($value['resume'])) {
+                    $fileInfo['user_id'] = $co_founder->user_id; 
+                    $fileInfo['file'] = $value['resume']; 
+                    $fileInfo['fileName'] = 'resume'; 
+                    $filePath = appHelpers::uploadFile($fileInfo);
+                    $value['resume'] = $filePath;
+                }
+
+                return $co_founder->update($value);
+            }
+        }
+    }
+
     public function getEntrepreneurApplications(object $data)
     {
 
@@ -150,6 +173,30 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
     public function updateEntrepreneurApplication(array $data, string $applicationId)
     {
         $entrepreneurDetail = EntrepreneurDetail::where('user_id', $applicationId)->first();
+
+        if (isset($data['resume'])) {
+            $fileInfo['user_id'] = $applicationId; 
+            $fileInfo['file'] = $data['resume']; 
+            $fileInfo['fileName'] = 'resume'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['resume'] = $filePath;
+        }
+
+        if (isset($data['business_model'])) {
+            $fileInfo['user_id'] = $applicationId; 
+            $fileInfo['file'] = $data['business_model']; 
+            $fileInfo['fileName'] = 'business_model'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['business_model'] = $filePath;
+        }
+
+        if (isset($data['patent'])) {
+            $fileInfo['user_id'] = $applicationId; 
+            $fileInfo['file'] = $data['patent']; 
+            $fileInfo['fileName'] = 'patent'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['patent'] = $filePath;
+        }
 
         if ($entrepreneurDetail && $entrepreneurDetail->update($data)) {
             return $entrepreneurDetail;

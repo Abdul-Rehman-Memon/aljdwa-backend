@@ -41,6 +41,7 @@ class UpdateApplicationRequest extends FormRequest
     {
         // Initialize the common rules
         $rules = [
+            '_method' => 'required|in:PUT',
             'project_name' => 'nullable|string|max:255',
             'founder_name' => 'nullable|string|max:255',
             // 'email' => 'nullable|email|unique:users',
@@ -57,6 +58,7 @@ class UpdateApplicationRequest extends FormRequest
             //     'regex:/[@$!%*#?&]/', // At least one special character
             // ],
             'linkedin_profile' => 'nullable|string|url',
+            'profile_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:5120',
         ];
 
            // Access the authenticated user's role
@@ -81,6 +83,14 @@ class UpdateApplicationRequest extends FormRequest
                 'industry_sector' => 'required|string',
                 'business_model' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB
                 'patent' => 'nullable|file|mimes:pdf,doc,docx|max:5120',//5MB
+
+                // Validation for co_founders array
+                'co_founders' => 'nullable|array', // co_founders must be an array
+                'co_founders.*.co_founder_id' => 'required:co_founder|string|exists:co_founders,id',
+                'co_founders.*.co_founder_name' => 'required_with:co_founder|string|max:255',
+                'co_founders.*.position' => 'nullable|string|max:255',
+                'co_founders.*.major' => 'nullable|string|max:255',
+                'co_founders.*.resume' => 'nullable|file|mimes:pdf|max:5120',
             ]);
         }
 

@@ -62,6 +62,18 @@ class EntreprenuerDetailsService
                 return false; // Rollback if entrepreneur update fails
             }
 
+            $co_founder = $data['co_founders'] ?? null;
+            if($co_founder){
+     
+                $coFounderUpdated = $this->entreprenuerDetailsRepository->updateCoFounders($co_founder,$applicationId);
+
+                if (!$coFounderUpdated) {
+                    DB::rollBack();
+                    return false; // Rollback if co_founder update fails
+                }
+            }
+
+
             $applicationData['status'] = 13;//resubmit
             $applicationData['user_id'] = $applicationId;
             $applicationData['status_by'] = $applicationId;//here user update his status
@@ -76,12 +88,10 @@ class EntreprenuerDetailsService
          
             // Reload 'entrepreneur_details' to ensure it reflects any recent changes
             $userUpdated = $userUpdated->fresh([
+                'co_founders',
                 'entreprenuer_details',
                 'user_role',
                 'user_status',
-                // 'user_application_status' => function ($query) {
-                //     $query->latest('id')->limit(1); // Fetch only the latest user_application_status record
-                // },
                 'latest_application_status.application_status'
             ]);
 

@@ -179,6 +179,14 @@ class UserRepository implements UserRepositoryInterface
     {
         $userId = Auth::user()->id;
         $user = User::find($userId);
+
+        if (isset($data['profile_photo'])) {
+            $fileInfo['user_id'] = $user->id; 
+            $fileInfo['file'] = $data['profile_photo']; 
+            $fileInfo['fileName'] = 'profile_photo'; 
+            $filePath = appHelpers::uploadFile($fileInfo);
+            $data['profile_photo'] = $filePath;
+        } 
        
         if ($user && $user->update($data)) {
 
