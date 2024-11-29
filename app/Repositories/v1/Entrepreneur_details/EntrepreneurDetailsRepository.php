@@ -77,25 +77,31 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
 
     public function updateCoFounders(array $data,string $userId)
     {
+        $flag = false;
         foreach($data as $key=>$value){
 
             // $co_founder = CoFounder::find($value['co_founder_id']);
-            $co_founder = CoFounder::where(['id'=>$value['co_founder_id'] , 'user_id' => $userId])
-                ->first();
+            $co_founder = CoFounder::where(['id' => $value['co_founder_id'], 'user_id' => $userId])
+                        ->first();
 
             if ($co_founder) {
+                // Prepare attributes to update
+                $updateData = $value;
 
+                // Handle resume file upload if present
                 if (isset($value['resume'])) {
-                    $fileInfo['user_id'] = $co_founder->user_id; 
-                    $fileInfo['file'] = $value['resume']; 
-                    $fileInfo['fileName'] = 'resume'; 
+                    $fileInfo['user_id'] = $co_founder->user_id;
+                    $fileInfo['file'] = $value['resume'];
+                    $fileInfo['fileName'] = 'resume';
                     $filePath = appHelpers::uploadFile($fileInfo);
-                    $value['resume'] = $filePath;
+                    $updateData['resume'] = $filePath;
                 }
 
-                return $co_founder->update($value);
+                // Update the CoFounder with the correct attributes
+                $flag = $co_founder->update($updateData);
             }
         }
+        return $flag;
     }
 
     public function getEntrepreneurApplications(object $data)
