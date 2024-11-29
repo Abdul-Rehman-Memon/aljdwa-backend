@@ -44,7 +44,16 @@ class appHelpers
         return null; 
     }
 
-    
+    public static function getAdmin($userId = null) {
+
+        $query = User::query();
+        if($userId){
+            $query->where('id',$userId);
+        }
+        return $query->where('role', 1)
+        ->with(['user_role', 'user_status'])
+        ->first();
+    }
 
     public static function getUser($userId = null) {
         if($userId){

@@ -52,14 +52,17 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
     {
         
         // return $data;
+        $user_id = $data['user_id'];
+        unset($data['user_id']);
         foreach($data as $key=>$value){
 
             $record = [
+                'user_id'         => $user_id,
                 'co_founder_name' => $value['co_founder_name'],
-                'position'        => $value['position'],
-                'major'           => $value['major'],
+                'position'        => $value['position'] ?? null,
+                'major'           => $value['major'] ?? null,
             ];
-            $record['user_id'] = $data['user_id'];
+            
 
             if (isset($value['resume'])) {
                 $fileInfo['user_id'] = $record['user_id']; 
@@ -68,7 +71,7 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
                 $filePath = appHelpers::uploadFile($fileInfo);
                 $record['resume'] = $filePath;
             }  
-            return CoFounder::create($record);
+            CoFounder::create($record);
         }
     }
 

@@ -41,6 +41,8 @@ class AuthController extends Controller
     }
     public function login(LoginRequest $request){
 
+        $admin =  appHelpers::getAdmin();
+
         $user = User::with([
                 'user_role', 'user_status',
                 'co_founders', 
@@ -50,6 +52,8 @@ class AuthController extends Controller
         ])
         ->where('email', $request->email)
         ->first();
+
+        $user['chunk_id'] = $admin->id;
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ResponseHelper::unauthorized('Invalid Email/Password.');
