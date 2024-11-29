@@ -28,9 +28,9 @@ class PaymentsService
         return $payment;
     }
 
-    public function getPaymentInvoice()
+    public function getPaymentInvoice($id = null)
     {
-        $payment = $this->paymentsRepository->getPaymentInvoice();
+        $payment = $this->paymentsRepository->getPaymentInvoice($id);
 
         return $payment;
     }

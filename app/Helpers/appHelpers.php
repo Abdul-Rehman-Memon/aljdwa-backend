@@ -145,6 +145,7 @@ class appHelpers
         $url = env('PAYMENT_URL') . "/v1/checkouts";
         $bearer_token = env('PAYMENT_KEY');
         $isTestMode   = env('IS_TEST_MODE'); //testMode=EXTERNAL
+        $customParameters = env('customParameters') ?? null;
         $createRegistration = env('createRegistration');
 
         $ENTITY_ID  = env('PAYMENT_ENTITY_ID');
@@ -177,12 +178,15 @@ class appHelpers
          "&paymentType=DB" .
          "&integrity=true";
 
-         if ($isTestMode) {
+        if ($isTestMode) {
             $data = $data . "&testMode=" .$isTestMode;//for testing purpose only
         } 
 
-         $data = $data ."&customParameters[3DS2_enrolled]=true";//for testing purpose only
-         $data = $data ."&merchantTransactionId=$merchantTransactionId" .
+        // if ($customParameters) {
+        //     $data = $data ."&customParameters[3DS2_enrolled]=true";//for testing purpose only
+        // } 
+        $data = $data ."&customParameters[3DS2_enrolled]=true";//for testing purpose only
+        $data = $data ."&merchantTransactionId=$merchantTransactionId" .
         //  "&merchantMemo=$memo" .
          "&customer.email=$email" .
          // '&billing.street1=hyderabad' .

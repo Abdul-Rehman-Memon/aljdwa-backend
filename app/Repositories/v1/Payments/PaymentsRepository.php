@@ -23,7 +23,7 @@ use Stripe\PaymentIntent;
 class PaymentsRepository implements PaymentsInterface
 {
     
-    /*********** For Entrepeneur User ***********/
+    /*********** For Entrepreneur User ***********/
     
     public function createCheckout(array $data)
     {
@@ -68,9 +68,13 @@ class PaymentsRepository implements PaymentsInterface
         return $payment;
     }
 
-    public function getPaymentInvoice()
+    public function getPaymentInvoice($id = null)
     {
         $userId = Auth::user()->id;
+        if ($id) {
+            $userId = EntrepreneurDetail::find($id)->value('user_id');
+        }
+        
         return  Payment::with('payment_status')
             ->where('payments.entrepreneur_id',$userId)->first();
     }
@@ -93,10 +97,9 @@ class PaymentsRepository implements PaymentsInterface
         ->first();
         if ($payment) {
             $payment->update($data);
-        }
-
-        // Load payment status for returning full data
-        $payment = $payment->load('payment_status');
+            // Load payment status for returning full data
+            $payment = $payment->load('payment_status');
+        }  
 
         $payment['hyperpay'] = $response;
 

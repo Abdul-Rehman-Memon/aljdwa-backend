@@ -154,6 +154,9 @@ class EntrepreneurController extends Controller
         $validatedData = $request->validated();
 
         try {
+            $isInvoiceExist = $this->paymentService->getPaymentInvoice($validatedData['entrepreneur_details_id']);
+            if (!$isInvoiceExist)
+                return ResponseHelper::notFound('No payment invoice found for this entrepreneur details.');
             $payment = $this->paymentService->createPayment($validatedData);
             return ResponseHelper::created($payment,'Entrepreneur payment created successfully');
         } catch (Exception $e) {
