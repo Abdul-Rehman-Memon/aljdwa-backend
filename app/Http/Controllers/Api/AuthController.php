@@ -53,11 +53,11 @@ class AuthController extends Controller
         ->where('email', $request->email)
         ->first();
 
-        $user['chunk_id'] = $admin->id;
-
         if (!$user || !Hash::check($request->password, $user->password)) {
             return ResponseHelper::unauthorized('Invalid Email/Password.');
         }
+
+        $user['chunk_id'] = $admin->id;
 
         // $applicationStatus = $user->user_application_status; 
         // $applicationStatus = $applicationStatus[0]; 
