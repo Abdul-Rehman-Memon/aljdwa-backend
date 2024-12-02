@@ -133,10 +133,10 @@ class EntrepreneurDetailsRepository implements EntrepreneurDetailsInterface
         if ($fromDate || $toDate) {
 
             if ($fromDate) {
-                $result->where('created_at', '>=', $fromDate);
+                $result->where('users.created_at', '>=', $fromDate);
             }
             if ($toDate) {
-                $result->where('created_at', '<=', $toDate);
+                $result->where('users.created_at', '<=', $toDate);
             }
         }
 
