@@ -15,21 +15,31 @@ return [
     |
     */
 
-    'paths' => ['*'],
-
-    'allowed_methods' => ['*'],
-
-    // 'allowed_origins' => [env('FRONTEND_URL', 'http://dvb.dev.aljdwa.com')],
-    'allowed_origins' => ['*'],
+        'paths' => ['api/*'], // Paths that will accept CORS requests.
     
-    'allowed_origins_patterns' => [],
-
-    'allowed_headers' => ['*'],
-
-    'exposed_headers' => [],
-
-    'max_age' => 0,
-
-    'supports_credentials' => true,
-
-];
+        'allowed_methods' => ['GET', 'POST', 'PUT', 'OPTIONS'], // HTTP methods allowed.
+    
+        'allowed_origins' => ['https://dvb.dev.aljdwa.com'], // Add other trusted origins.
+    
+        'allowed_origins_patterns' => ['*.dev.aljdwa.com'], // Use wildcards for subdomains if needed.
+    
+        'allowed_headers' => [
+            'Content-Type', 
+            'X-Requested-With', 
+            'Authorization', 
+            'Accept-Language', 
+            'Origin',
+            'Cache-Control'
+        ], // Specify commonly used headers for security.
+    
+        'exposed_headers' => [
+            'Authorization',
+            'X-RateLimit-Limit', 
+            'X-RateLimit-Remaining', 
+            'X-RateLimit-Reset'
+        ], // Headers that can be exposed to the browser.
+    
+        'max_age' => 3600, // Cache preflight response for 1 hour.
+    
+        'supports_credentials' => true, // Allow cookies or HTTP authentication with cross-origin requests.
+    ];
