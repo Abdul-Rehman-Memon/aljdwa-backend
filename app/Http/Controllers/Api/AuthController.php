@@ -57,7 +57,7 @@ class AuthController extends Controller
             return ResponseHelper::unauthorized('Invalid Email/Password.');
         }
 
-        $user['chunk_id'] = $admin->id;
+        $user['chunk_id'] = $admin ? $admin->id : null;
 
         // $applicationStatus = $user->user_application_status; 
         // $applicationStatus = $applicationStatus[0]; 
