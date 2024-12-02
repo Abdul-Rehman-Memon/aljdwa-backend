@@ -55,8 +55,8 @@ class AppointmentsRepository implements AppointmentsInterface
         $limit  = $data->input('limit', 10);
         $offset = $data->input('offset', 0);
         $status = $data->input('status') ? appHelpers::lookUpId('Appointment_status',$data->input('status'))  : NULL;
-        $fromDate = $data->input('fromDate') ? Carbon::createFromTimestamp($data->input('fromDate'))->startOfDay() : NULL;
-        $toDate   = $data->input('toDate')   ? Carbon::createFromTimestamp($data->input('toDate'))->endOfDay()     : NULL;
+        $fromDate = $data->input('fromDate') ?? NULL;
+        $toDate   = $data->input('toDate')   ?? NULL;
 
         // Fetch the appointments with the linked status and apply pagination
         $result = Appointment::with('appointment_status');
@@ -69,10 +69,10 @@ class AppointmentsRepository implements AppointmentsInterface
         if ($fromDate || $toDate) {
 
             if ($fromDate) {
-                $result->where('created_at', '>=', $fromDate);
+                $result->where('request_date', '>=', $fromDate);
             }
             if ($toDate) {
-                $result->where('created_at', '<=', $toDate);
+                $result->where('request_date', '<=', $toDate);
             }
         }
         $result = $result->orderBy('created_at','desc')
