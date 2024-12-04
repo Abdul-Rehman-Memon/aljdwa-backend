@@ -35,7 +35,7 @@ class MessagesRepository implements MessagesInterface
             $receiver = User::find($data['receiver_id']);
             $sender = User::find($data['sender_id']);
             // GotMessage::dispatch($receiver, $sender,"We've got a new announcement!");
-            broadcast(new GotMessage($receiver, $sender, $message->toArray()));
+            //broadcast(new GotMessage($receiver, $sender, $message->toArray()));
         }
 
         return $message; 

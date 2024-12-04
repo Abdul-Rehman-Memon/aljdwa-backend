@@ -274,12 +274,15 @@ class appHelpers
         $notification =  Notification::create($data);
         $receiver = User::find($notification['receiver_id']);
         $sender = User::find($notification['sender_id']);
+        
+        if (env('NOTIFICATION_STATUS', false)) {
 
-        if ($receiver) {
-            broadcast(new GotNotification($receiver, $notification->toArray()));
-        }else{
-            broadcast(new AdminNotification($notification->toArray()))->toOthers(); 
-        }   
+            if ($receiver) {
+                broadcast(new GotNotification($receiver, $notification->toArray()));
+            }else{
+                broadcast(new AdminNotification($notification->toArray()))->toOthers(); 
+            } 
+        }
     }
 
     public static function getNotifications($id = null){
