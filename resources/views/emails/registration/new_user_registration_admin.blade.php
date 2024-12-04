@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>New User Registration Request</title>
+    <title>طلب تسجيل مستخدم جديد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -9,6 +9,7 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 20px;
+            direction: rtl;
         }
         .container {
             max-width: 600px;
@@ -48,20 +49,20 @@
 </head>
 <body>
     <div class="container">
-        <h2>New User Registration Request</h2>
-        <p>Dear Admin,</p>
-        <p>A new user has requested to register on the platform. Please review the details below:</p>
+        <h2>طلب تسجيل مستخدم جديد</h2>
+        <p>عزيزي المسؤول،</p>
+        <p>قد طلب مستخدم جديد التسجيل على المنصة. يرجى مراجعة التفاصيل أدناه:</p>
         
         <div class="details">
-            <p><strong>Founder Name:</strong> {{ $founder_name }}</p>
-            <p><strong>Email:</strong> {{ $email }}</p>
+            <p><strong>اسم المؤسس:</strong> {{ $founder_name }}</p>
+            <p><strong>البريد الإلكتروني:</strong> {{ $email }}</p>
         </div>
 
-        <p>Please review the registration request and take the necessary action to approve or reject it.</p>
+        <p>يرجى مراجعة طلب التسجيل واتخاذ الإجراء اللازم للموافقة عليه أو رفضه.</p>
 
         <div class="footer">
-            <p>Thank you,</p>
-            <p>Aljdwa Team</p>
+            <p>شكرًا لك،</p>
+            <p>فريق الجوى</p>
         </div>
     </div>
 </body>

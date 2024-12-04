@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>Welcome to [Your Platform]</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرحباً بك في [منصتك]</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -9,6 +11,7 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 20px;
+            direction: rtl;
         }
         .container {
             max-width: 600px;
@@ -44,18 +47,18 @@
 </head>
 <body>
     <div class="container">
-        <h2>Welcome to Aljdwa, {{ $founder_name }}!</h2>
+        <h2>مرحباً بك في Aljdwa، {{ $founder_name }}!</h2>
         
         <div class="welcome-message">
-            <p>Thank you for registering on our platform. We’re thrilled to have you join us!</p>
+            <p>شكراً لتسجيلك في منصتنا. نحن متحمسون لانضمامك إلينا!</p>
         </div>
 
-        <p>Your registration request has been submitted and is currently pending approval. We will notify you once it has been reviewed.</p>
-        <p>If you have any questions in the meantime, feel free to reach out to our support team.</p>
+        <p>تم تقديم طلب تسجيلك وهو قيد المراجعة حالياً. سنقوم بإعلامك فور مراجعة طلبك.</p>
+        <p>إذا كان لديك أي استفسارات في هذه الأثناء، لا تتردد في التواصل مع فريق الدعم الخاص بنا.</p>
 
         <div class="footer">
-            <p>Best regards,</p>
-            <p>Aljdwa Team</p>
+            <p>أطيب التحيات،</p>
+            <p>فريق Aljdwa</p>
         </div>
     </div>
 </body>

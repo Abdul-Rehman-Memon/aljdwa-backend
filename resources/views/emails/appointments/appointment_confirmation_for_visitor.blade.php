@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>Appointment Confirmation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الموعد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -9,6 +11,8 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            direction: rtl;
+            text-align: right;
         }
         .container {
             max-width: 600px;
@@ -46,17 +50,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Appointment Request Received</h1>
+            <h1>تم استلام طلب الموعد</h1>
         </div>
         <div class="content">
-            <p>Dear {{ $appointment['first_name'] }} {{ $appointment['last_name'] }},</p>
-            <p>Thank you for submitting an appointment request. Here are the details:</p>
-            <p><strong>Request Date:</strong> {{ $appointment['request_date'] }}</p>
-            <p><strong>Request Time:</strong> {{ $appointment['request_time'] }}</p>
-            <p>We will notify you once the appointment is confirmed. If you have any questions, feel free to contact us.</p>
+            <p>عزيزي/عزيزتي {{ $appointment['first_name'] }} {{ $appointment['last_name'] }},</p>
+            <p>شكرًا لتقديم طلب الموعد. فيما يلي تفاصيل الطلب:</p>
+            <p><strong>تاريخ الطلب:</strong> {{ $appointment['request_date'] }}</p>
+            <p><strong>وقت الطلب:</strong> {{ $appointment['request_time'] }}</p>
+            <p>سنقوم بإبلاغك بمجرد تأكيد الموعد. إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.</p>
         </div>
         <div class="footer">
-            <p>Thank you,<br>Aljdwa</p>
+            <p>شكرًا لك،<br>الجدوى</p>
         </div>
     </div>
 </body>

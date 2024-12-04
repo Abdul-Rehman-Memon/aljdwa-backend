@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Update Notification</title>
+    <title>إشعار تحديث الحالة</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,7 @@
             background-color: #f7f7f7;
             color: #333;
             padding: 20px;
+            direction: rtl;
         }
         .container {
             background: #ffffff;
@@ -33,12 +34,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Hello, {{ $founder_name }}</h1>
+        <h1>مرحباً، {{ $founder_name }}</h1>
         <p>{{ $status_message }}</p>
-        <p>If you have any questions, feel free to reach out.</p>
+        <p>إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.</p>
     </div>
     <div class="footer">
-        <p>Thank you for using {{ config('app.name') }}!</p>
+        <p>شكراً لاستخدامك {{ config('app.name') }}!</p>
     </div>
 </body>
 </html>

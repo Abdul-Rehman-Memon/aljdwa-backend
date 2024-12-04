@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <style>
@@ -9,6 +9,7 @@
             color: #333333;
             margin: 0;
             padding: 0;
+            direction: rtl;
         }
         .email-container {
             max-width: 600px;
@@ -51,18 +52,18 @@
 <body>
     <div class="email-container">
         <div class="header">
-            Payment Confirmation
+            تأكيد الدفع
         </div>
         <div class="content">
-            <p>Dear {{ $userName }},</p>
-            <p>Thank you for your payment of <strong>${{ number_format($amount, 2) }}</strong> made on {{ $paymentDate }}.</p>
-            <p>We appreciate your promptness and are glad to have you as part of our community!</p>
-            <a href="#" class="button">View Details</a>
-            <p>If you have any questions, feel free to reach out to our support team.</p>
-            <p>Best regards,<br>{{ config('app.name') }} Team</p>
+            <p>عزيزي {{ $userName }}،</p>
+            <p>شكرًا لدفعك مبلغ <strong>${{ number_format($amount, 2) }}</strong> الذي تم في {{ $paymentDate }}.</p>
+            <p>نحن نقدر سرعة استجابتك ويسعدنا أن نكون جزءًا من مجتمعنا!</p>
+            <a href="{{ $detailsLink }}" class="button">عرض التفاصيل</a>
+            <p>إذا كانت لديك أي أسئلة، لا تتردد في التواصل مع فريق الدعم لدينا.</p>
+            <p>مع أطيب التحيات،<br>فريق {{ config('app.name') }}</p>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name') }}. جميع الحقوق محفوظة.
         </div>
     </div>
 </body>

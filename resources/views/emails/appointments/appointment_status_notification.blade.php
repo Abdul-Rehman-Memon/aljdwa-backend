@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>Appointment Status Notification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إشعار حالة الموعد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             color: #333;
             background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
         }
         .container {
             max-width: 600px;
@@ -30,33 +36,37 @@
             font-size: 14px;
             color: #777;
         }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            {{ $appointment['status'] == 'booked' ? 'Appointment Booked' : 'Appointment Cancelled' }}
+            {{ $appointment['status'] == 'booked' ? 'تم تأكيد الموعد' : 'تم إلغاء الموعد' }}
         </div>
         <div class="content">
-            <p>Dear {{ $appointment['first_name'] }} {{ $appointment['last_name'] }},</p>
+            <p>عزيزي/عزيزتي {{ $appointment['first_name'] }} {{ $appointment['last_name'] }},</p>
 
             @if ($appointment['status'] == 'booked')
-                <p>Your appointment request has been booked. Here are the details:</p>
-                <p><strong>Date:</strong> {{ $appointment['request_date'] }}</p>
-                <p><strong>Time:</strong> {{ $appointment['request_time'] }}</p>
-                <p><strong>Meeting Link:</strong> <a href="{{ $appointment['join_url'] }}">{{ $appointment['join_url'] }}</a></p>
-                <p><strong>Meeting Id:</strong> {{ $appointment['meeting_id'] }}</p>
-                <p><strong>Meeting Password:</strong> {{ $appointment['meeting_password'] }}</p>
-                <p>We look forward to seeing you!</p>
+                <p>لقد تم تأكيد موعدك. فيما يلي التفاصيل:</p>
+                <p><strong>التاريخ:</strong> {{ $appointment['request_date'] }}</p>
+                <p><strong>الوقت:</strong> {{ $appointment['request_time'] }}</p>
+                <p><strong>رابط الاجتماع:</strong> <a href="{{ $appointment['join_url'] }}">{{ $appointment['join_url'] }}</a></p>
+                <p><strong>معرّف الاجتماع:</strong> {{ $appointment['meeting_id'] }}</p>
+                <p><strong>كلمة مرور الاجتماع:</strong> {{ $appointment['meeting_password'] }}</p>
+                <p>نتطلع إلى رؤيتك!</p>
             @else
-                <p>We regret to inform you that your appointment request has been cancelled. Here are the details:</p>
-                <p><strong>Date:</strong> {{ $appointment['request_date'] }}</p>
-                <p><strong>Time:</strong> {{ $appointment['request_time'] }}</p>
-                <p>We apologize for any inconvenience this may have caused.</p>
+                <p>نأسف لإبلاغك بأن طلب الموعد الخاص بك قد تم إلغاؤه. فيما يلي التفاصيل:</p>
+                <p><strong>التاريخ:</strong> {{ $appointment['request_date'] }}</p>
+                <p><strong>الوقت:</strong> {{ $appointment['request_time'] }}</p>
+                <p>نعتذر عن أي إزعاج قد تسبب فيه ذلك.</p>
             @endif
         </div>
         <div class="footer">
-            <p>Thank you,<br>Aljdwa</p>
+            <p>شكرًا لك،<br>الجدوى</p>
         </div>
     </div>
 </body>

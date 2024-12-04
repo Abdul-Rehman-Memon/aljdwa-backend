@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>New Appointment Request</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب موعد جديد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -9,6 +11,8 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            direction: rtl;
+            text-align: right;
         }
         .container {
             max-width: 600px;
@@ -46,19 +50,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>New Appointment Request</h1>
+            <h1>طلب موعد جديد</h1>
         </div>
         <div class="content">
-            <p>A new appointment request has been submitted. Here are the details:</p>
-            <p><strong>Name:</strong> {{ $appointment['first_name'] }} {{ $appointment['last_name'] }}</p>
-            <p><strong>Email:</strong> {{ $appointment['email'] }}</p>
-            <p><strong>Phone:</strong> {{ $appointment['phone'] }}</p>
-            <p><strong>Request Date:</strong> {{ $appointment['request_date'] }}</p>
-            <p><strong>Request Time:</strong> {{ $appointment['request_time'] }}</p>
-            <p>Please review and approve the appointment at your earliest convenience.</p>
+            <p>تم تقديم طلب موعد جديد. فيما يلي التفاصيل:</p>
+            <p><strong>الاسم:</strong> {{ $appointment['first_name'] }} {{ $appointment['last_name'] }}</p>
+            <p><strong>البريد الإلكتروني:</strong> {{ $appointment['email'] }}</p>
+            <p><strong>رقم الهاتف:</strong> {{ $appointment['phone'] }}</p>
+            <p><strong>تاريخ الطلب:</strong> {{ $appointment['request_date'] }}</p>
+            <p><strong>وقت الطلب:</strong> {{ $appointment['request_time'] }}</p>
+            <p>يرجى مراجعة الطلب والموافقة عليه في أقرب وقت ممكن.</p>
         </div>
         <div class="footer">
-            <p>Thank you,<br>Aljdwa</p>
+            <p>شكرًا لك،<br>الجدوى</p>
         </div>
     </div>
 </body>

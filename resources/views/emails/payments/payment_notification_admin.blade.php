@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <style>
@@ -9,6 +9,7 @@
             color: #333333;
             margin: 0;
             padding: 0;
+            direction: rtl;
         }
         .email-container {
             max-width: 600px;
@@ -51,22 +52,22 @@
 <body>
     <div class="email-container">
         <div class="header">
-            New Payment Received
+            تم استلام دفعة جديدة
         </div>
         <div class="content">
-            <p>Hello Admin,</p>
-            <p>A payment has been made by <strong>{{ $userName }}</strong> on {{ $paymentDate }}.</p>
-            <p>Payment Details:</p>
+            <p>مرحبًا مدير النظام،</p>
+            <p>تمت عملية الدفع بواسطة <strong>{{ $userName }}</strong> في {{ $paymentDate }}.</p>
+            <p>تفاصيل الدفع:</p>
             <ul>
-                <li><strong>Amount:</strong> ${{ number_format($amount, 2) }}</li>
-                <li><strong>Date:</strong> {{ $paymentDate }}</li>
+                <li><strong>المبلغ:</strong> ${{ number_format($amount, 2) }}</li>
+                <li><strong>التاريخ:</strong> {{ $paymentDate }}</li>
             </ul>
-            <a href="#" class="button">View Transaction</a>
-            <p>Please log in to the system for more details.</p>
-            <p>Best regards,<br>{{ config('app.name') }} Team</p>
+            <a href="#" class="button">عرض المعاملة</a>
+            <p>يرجى تسجيل الدخول إلى النظام للحصول على المزيد من التفاصيل.</p>
+            <p>مع أطيب التحيات،<br>فريق {{ config('app.name') }}</p>
         </div>
         <div class="footer">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name') }}. جميع الحقوق محفوظة.
         </div>
     </div>
 </body>

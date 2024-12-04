@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name') }} Email</title>
+    <title>{{ config('app.name') }} البريد الإلكتروني</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            direction: rtl;
         }
         .email-container {
             background-color: #ffffff;
@@ -51,18 +52,18 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <h1>Welcome to {{ config('app.name') }}</h1>
+            <h1>مرحباً بك في {{ config('app.name') }}</h1>
         </div>
         <div class="content">
-            <p>Hello {{ $name ?? 'User' }},</p>
-            <p>Thank you for signing up for our platform. We’re excited to have you on board.</p>
-            <!-- <p>To get started, please verify your email by clicking the button below:</p> -->
-            <!-- <a href="{{ $verification_url ?? '#' }}" class="button">Verify Email</a>
-            <p>If you did not sign up for an account, you can safely ignore this email.</p> -->
+            <p>مرحباً {{ $name ?? 'المستخدم' }}،</p>
+            <p>شكرًا لك على التسجيل في منصتنا. نحن متحمسون لانضمامك إلينا.</p>
+            <!-- <p>للبدء، يرجى التحقق من بريدك الإلكتروني من خلال النقر على الزر أدناه:</p> -->
+            <!-- <a href="{{ $verification_url ?? '#' }}" class="button">تحقق من البريد الإلكتروني</a>
+            <p>إذا لم تقم بالتسجيل للحصول على حساب، يمكنك تجاهل هذا البريد الإلكتروني بأمان.</p> -->
         </div>
         <div class="footer">
-            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            <p>If you need assistance, contact our support team at 
+            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. جميع الحقوق محفوظة.</p>
+            <p>إذا كنت بحاجة إلى المساعدة، يمكنك الاتصال بفريق الدعم لدينا عبر البريد الإلكتروني 
                 <a href="mailto:{{ config('mail.support_address', 'support@example.com') }}">
                     {{ config('mail.support_address', 'support@example.com') }}
                 </a>.

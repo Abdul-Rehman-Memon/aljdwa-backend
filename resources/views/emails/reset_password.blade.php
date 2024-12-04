@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Reset Request</title>
+    <title>طلب إعادة تعيين كلمة المرور</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; direction: rtl; }
         .container { max-width: 600px; margin: auto; padding: 20px; }
         .header { background: #007BFF; color: white; padding: 10px; text-align: center; }
         .content { padding: 20px; }
@@ -15,17 +15,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Password Reset Request</h1>
+            <h1>طلب إعادة تعيين كلمة المرور</h1>
         </div>
         <div class="content">
-            <p>Hello, {{ $user->founder_name }}</p>
-            <p>Your new password is: <strong>{{ $newPassword }}</strong></p>
-            <p>Please log in with the new password and consider changing it after logging in.</p>
-            <p>Thank you!</p>
+            <p>مرحباً، {{ $user->founder_name }}</p>
+            <p>كلمة المرور الجديدة الخاصة بك هي: <strong>{{ $newPassword }}</strong></p>
+            <p>يرجى تسجيل الدخول باستخدام كلمة المرور الجديدة ويفضل تغييرها بعد تسجيل الدخول.</p>
+            <p>شكراً لك!</p>
         </div>
         <div class="footer">
-            <p>Best Regards,</p>
-            <p>The Support Team</p>
+            <p>أطيب التحيات،</p>
+            <p>فريق الدعم</p>
         </div>
     </div>
 </body>
