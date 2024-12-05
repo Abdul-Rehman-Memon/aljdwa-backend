@@ -111,8 +111,8 @@ class RegisterRequest extends FormRequest
             'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
             'password.min' => 'Password must be at least 8 characters long.',
             'role.regex' => 'Role can be Mentor/Entrepreneur/Investor',
-            'business_model' => 'File can be Pdf/Doc/Docs',
-            'business_model.max' => 'FIle size should not exceed than 5MB',
+            'business_model' => 'Business Model is Required and File can be Pdf/Doc/Docs',
+            'business_model.max' => 'Business Model File size should not exceed than 5MB',
             'patent' => 'File can be Pdf/Doc/Docs',
             'patent.max' => 'FIle size should not exceed than 5MB',
         ];
