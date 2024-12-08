@@ -72,7 +72,8 @@ class PaymentsRepository implements PaymentsInterface
     {
         $userId = Auth::user()->id;
         if ($id) {
-            $userId = EntrepreneurDetail::find($id)->value('user_id');
+            $userId = EntrepreneurDetail::find($id);
+            $userId = $userId ? $userId->user_id : null;
         }
         
         return  Payment::with('payment_status')
